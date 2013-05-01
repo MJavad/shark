@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{01fb787c-25b0-40e9-b16f-b4822b1fe7d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{d88a4696-b2a1-4378-982e-9e0fbf347e4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{3d17763b-5dea-4602-929f-0e342a2bda0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Misc">
+      <UniqueIdentifier>{7ddced9d-3478-49e7-b729-e72f762e6bd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Misc">
+      <UniqueIdentifier>{e0fcdacc-21f3-4238-8419-cac23a7a4447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Base">
+      <UniqueIdentifier>{814e57f8-d0e2-4ade-88f9-70b60ad8ba5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Base">
+      <UniqueIdentifier>{b46a910b-4880-4ae4-9cec-f25f1e26a6d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\UI">
+      <UniqueIdentifier>{6e99510b-52fb-4099-9916-94180b053e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\UI">
+      <UniqueIdentifier>{4ec9674c-171b-4e9f-8daf-f4f84de7c8f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\UI\Components">
+      <UniqueIdentifier>{8e7e3322-83d5-4d2d-99a8-259acdf3dc97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\UI\Components">
+      <UniqueIdentifier>{3d6dd4b4-2095-4f42-b049-6d0254c477b5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Misc\stdafx.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\WndProc.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\D3DManager.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\Delegates.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\Detours.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\DllEntry.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\ID3DInterface.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\Offsets.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\Event.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\Singleton.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\Vector.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\TokenManager.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\Mutex.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\IRenderTarget.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\TimerDispatcher.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\Color.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\GUIManager.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ClipStack.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ComponentInterface.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\D3DFont.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\D3DTexture.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\RenderTarget9.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\Log.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\Rectangle.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\IComponent.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\IDraggable.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\IRectComponent.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\ItemsControl.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ID3DFontObject.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ID3DSprite.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\D3DFontObject9.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\D3DSprite9.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ID3DTextureObject.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\D3DTextureObject9.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\RenderTarget11.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\Button.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\IHoverable.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\Label.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\IFocusable.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\ISizable.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\Frame.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\Texture.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ID3DSurface.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\D3DSurface9.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\ListBox.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\ListBoxEntry.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\SharkMemory.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\ByteBuffer.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\TabPage.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\TabControl.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\IPushable.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\ThreadGrabber.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\Components\EditBox.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\Handle.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc\Signal.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\Engine.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Misc\stdafx.cpp">
+      <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\WndProc.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\D3DManager.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\Delegates.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\Detours.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\DllEntry.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\Offsets.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\ClipStack.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\GUIManager.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\Rectangle.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\IComponent.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\IDraggable.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\IRectComponent.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\ItemsControl.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\ComponentInterface.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\D3DFont.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\D3DTexture.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\RenderTarget9.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\Log.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\D3DFontObject9.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\D3DSprite9.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\D3DTextureObject9.cpp">
+      <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\RenderTarget11.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\Button.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\IHoverable.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\Label.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\IFocusable.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\ISizable.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\Frame.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\Texture.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\ListBox.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\ListBoxEntry.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Misc\SharkMemory.cpp">
+      <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Misc\ByteBuffer.cpp">
+      <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\TabPage.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\TabControl.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\IPushable.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\EditBox.cpp">
+      <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\Engine.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shark.def" />
+  </ItemGroup>
+</Project>

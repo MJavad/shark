@@ -1,0 +1,4 @@
+LIBRARY
+EXPORTS
+	Load=LoadInternal
+	Unload=UnloadInternal

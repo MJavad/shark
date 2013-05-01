@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Base\Engine.h" />
+    <ClInclude Include="src\Base\Log.h" />
+    <ClInclude Include="src\Base\RenderTarget11.h" />
+    <ClInclude Include="src\Base\RenderTarget9.h" />
+    <ClInclude Include="src\Base\D3DManager.h" />
+    <ClInclude Include="src\Base\Delegates.h" />
+    <ClInclude Include="src\Base\Detours.h" />
+    <ClInclude Include="src\Base\DllEntry.h" />
+    <ClInclude Include="src\Base\ID3DInterface.h" />
+    <ClInclude Include="src\Base\IRenderTarget.h" />
+    <ClInclude Include="src\Base\Offsets.h" />
+    <ClInclude Include="src\Base\WndProc.h" />
+    <ClInclude Include="src\Misc\Color.h" />
+    <ClInclude Include="src\Misc\Event.h" />
+    <ClInclude Include="src\Misc\Handle.h" />
+    <ClInclude Include="src\Misc\SharkMemory.h" />
+    <ClInclude Include="src\Misc\ByteBuffer.h" />
+    <ClInclude Include="src\Misc\Signal.h" />
+    <ClInclude Include="src\Misc\ThreadGrabber.h" />
+    <ClInclude Include="src\Misc\Mutex.h" />
+    <ClInclude Include="src\Misc\Singleton.h" />
+    <ClInclude Include="src\Misc\TimerDispatcher.h" />
+    <ClInclude Include="src\Misc\TokenManager.h" />
+    <ClInclude Include="src\Misc\Vector.h" />
+    <ClInclude Include="src\Misc\stdafx.h" />
+    <ClInclude Include="src\UI\ComponentInterface.h" />
+    <ClInclude Include="src\UI\Components\Button.h" />
+    <ClInclude Include="src\UI\Components\EditBox.h" />
+    <ClInclude Include="src\UI\Components\Frame.h" />
+    <ClInclude Include="src\UI\Components\IComponent.h" />
+    <ClInclude Include="src\UI\Components\IDraggable.h" />
+    <ClInclude Include="src\UI\Components\IFocusable.h" />
+    <ClInclude Include="src\UI\Components\IHoverable.h" />
+    <ClInclude Include="src\UI\Components\IPushable.h" />
+    <ClInclude Include="src\UI\Components\IRectComponent.h" />
+    <ClInclude Include="src\UI\Components\ISizable.h" />
+    <ClInclude Include="src\UI\Components\ItemsControl.h" />
+    <ClInclude Include="src\UI\Components\Label.h" />
+    <ClInclude Include="src\UI\Components\ListBox.h" />
+    <ClInclude Include="src\UI\Components\ListBoxEntry.h" />
+    <ClInclude Include="src\UI\Components\Rectangle.h" />
+    <ClInclude Include="src\UI\Components\TabControl.h" />
+    <ClInclude Include="src\UI\Components\TabPage.h" />
+    <ClInclude Include="src\UI\Components\Texture.h" />
+    <ClInclude Include="src\UI\D3DFont.h" />
+    <ClInclude Include="src\UI\D3DFontObject9.h" />
+    <ClInclude Include="src\UI\D3DSprite9.h" />
+    <ClInclude Include="src\UI\D3DSurface9.h" />
+    <ClInclude Include="src\UI\D3DTexture.h" />
+    <ClInclude Include="src\UI\ClipStack.h" />
+    <ClInclude Include="src\UI\D3DTextureObject9.h" />
+    <ClInclude Include="src\UI\GUIManager.h" />
+    <ClInclude Include="src\UI\ID3DFontObject.h" />
+    <ClInclude Include="src\UI\ID3DSprite.h" />
+    <ClInclude Include="src\UI\ID3DSurface.h" />
+    <ClInclude Include="src\UI\ID3DTextureObject.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Base\Engine.cpp" />
+    <ClCompile Include="src\Base\Log.cpp" />
+    <ClCompile Include="src\Base\RenderTarget11.cpp" />
+    <ClCompile Include="src\Base\RenderTarget9.cpp" />
+    <ClCompile Include="src\Base\D3DManager.cpp" />
+    <ClCompile Include="src\Base\Delegates.cpp" />
+    <ClCompile Include="src\Base\Detours.cpp" />
+    <ClCompile Include="src\Base\DllEntry.cpp" />
+    <ClCompile Include="src\Base\Offsets.cpp" />
+    <ClCompile Include="src\Base\WndProc.cpp" />
+    <ClCompile Include="src\Misc\ByteBuffer.cpp" />
+    <ClCompile Include="src\Misc\SharkMemory.cpp" />
+    <ClCompile Include="src\Misc\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\UI\ComponentInterface.cpp" />
+    <ClCompile Include="src\UI\Components\Button.cpp" />
+    <ClCompile Include="src\UI\Components\EditBox.cpp" />
+    <ClCompile Include="src\UI\Components\Frame.cpp" />
+    <ClCompile Include="src\UI\Components\IFocusable.cpp" />
+    <ClCompile Include="src\UI\Components\IHoverable.cpp" />
+    <ClCompile Include="src\UI\Components\IPushable.cpp" />
+    <ClCompile Include="src\UI\Components\ISizable.cpp" />
+    <ClCompile Include="src\UI\Components\Label.cpp" />
+    <ClCompile Include="src\UI\Components\ListBox.cpp" />
+    <ClCompile Include="src\UI\Components\ListBoxEntry.cpp" />
+    <ClCompile Include="src\UI\Components\TabControl.cpp" />
+    <ClCompile Include="src\UI\Components\TabPage.cpp" />
+    <ClCompile Include="src\UI\Components\Texture.cpp" />
+    <ClCompile Include="src\UI\D3DFont.cpp" />
+    <ClCompile Include="src\UI\D3DFontObject9.cpp" />
+    <ClCompile Include="src\UI\D3DSprite9.cpp" />
+    <ClCompile Include="src\UI\D3DTexture.cpp" />
+    <ClCompile Include="src\UI\ClipStack.cpp" />
+    <ClCompile Include="src\UI\Components\IComponent.cpp" />
+    <ClCompile Include="src\UI\Components\IDraggable.cpp" />
+    <ClCompile Include="src\UI\Components\IRectComponent.cpp" />
+    <ClCompile Include="src\UI\Components\ItemsControl.cpp" />
+    <ClCompile Include="src\UI\Components\Rectangle.cpp" />
+    <ClCompile Include="src\UI\D3DTextureObject9.cpp" />
+    <ClCompile Include="src\UI\GUIManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shark.def" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath11)</VCTargetsPath>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{651F207D-4863-4624-8A34-32DF6475CFE1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>shark</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;.\src</IncludePath>
+    <LibraryPath>$(LibraryPath);$(DXSDK_DIR)Lib\x86;.\libs</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;.\src</IncludePath>
+    <LibraryPath>$(LibraryPath);$(DXSDK_DIR)Lib\x86;.\libs</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SHARK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>Misc/stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>shark.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SHARK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <CallingConvention>FastCall</CallingConvention>
+      <PrecompiledHeaderFile>Misc/stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>shark.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
