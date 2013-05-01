@@ -5,13 +5,8 @@ namespace Utils
 	class Thread
 	{
 	public:
-		Thread(uint32 id) : m_threadId(id), m_currentAccess(0),
-			m_threadHandle(nullptr) {}
-
-		~Thread() {
-			if (m_threadHandle != nullptr)
-				CloseHandle(m_threadHandle);
-		}
+		Thread(uint32 id) : m_threadId(id),
+			m_currentAccess(0) {}
 
 		bool open(DWORD dwAccess) {
 			if ((m_currentAccess & dwAccess) == dwAccess)
@@ -28,18 +23,15 @@ namespace Utils
 		}
 
 		void close() {
-			if (m_threadHandle != nullptr) {
-				CloseHandle(m_threadHandle);
-				m_threadHandle = nullptr;
-				m_currentAccess = 0;
-			}
+			m_threadHandle.close();
+			m_currentAccess = 0;
 		}
 
 		DWORD access() const {
 			return m_currentAccess;
 		}
 
-		HANDLE handle() const {
+		Handle handle() const {
 			return m_threadHandle;
 		}
 
@@ -47,9 +39,17 @@ namespace Utils
 			return m_threadId;
 		}
 
+		bool suspend() const {
+			return SuspendThread(m_threadHandle) != -1;
+		}
+
+		bool resume() const {
+			return ResumeThread(m_threadHandle) != -1;
+		}
+
 	private:
 		uint32 m_threadId;
-		HANDLE m_threadHandle;
+		Handle m_threadHandle;
 		DWORD m_currentAccess;
 	};
 

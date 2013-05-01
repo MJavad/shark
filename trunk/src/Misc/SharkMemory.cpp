@@ -152,9 +152,9 @@ namespace Utils {
 					lstCriticalThreads = _threadExecutingInstruction(lstThreads, dwAddress, uSize);
 					for (const auto& thread: lstCriticalThreads) {
 						if (thread->open(thread->access() | THREAD_SUSPEND_RESUME)) {
-							ResumeThread(thread->handle());
+							thread->resume();
 							Sleep(rand() % 10); // give him some time to move along... :D
-							SuspendThread(thread->handle());
+							thread->suspend();
 						}
 					}
 				}
@@ -218,7 +218,7 @@ namespace Utils {
 		for (const auto& thread: threads) {
 			if (thread->id() != curThreadId &&
 				thread->open(thread->access() | THREAD_SUSPEND_RESUME))
-				SuspendThread(thread->handle());
+				thread->suspend();
 		}
 	}
 
@@ -227,7 +227,7 @@ namespace Utils {
 		for (const auto& thread: threads) {
 			if (thread->id() != curThreadId &&
 				thread->open(thread->access() | THREAD_SUSPEND_RESUME))
-				ResumeThread(thread->handle());
+				thread->resume();
 		}
 	}
 
