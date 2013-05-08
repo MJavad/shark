@@ -62,15 +62,15 @@ typedef signed char int8;
 #include <codecvt>
 #include <atlbase.h>
 #include "Mutex.h"
-#include "ThreadGrabber.h"
 #include "Color.h"
 #include "Vector.h"
 #include "Singleton.h"
 #include "ByteBuffer.h"
 #include "Event.h"
+#include "Handle.h"
 #include "Signal.h"
 #include "TimerDispatcher.h"
-#include "Handle.h"
+#include "ThreadGrabber.h"
 #include "Base/Log.h"
 #include "SharkMemory.h"
 
@@ -82,8 +82,8 @@ typedef signed char int8;
 #define ROUND(number) (floor(number+0.5f))
 #define MIN_LIMIT(var,limit) if(var<limit) var=limit
 #define MAX_LIMIT(var,limit) if(var>limit) var=limit
-#define LOG_ERROR(error) sLog->OutDebug(boost::str(boost::wformat(L"[DEBUG] %s (%d) - %s") % __FILEW__ % __LINE__ % L##error))
-#define LOG_MESSAGE(msg) sLog->OutMessage(boost::str(boost::wformat(L"[MSG] %s (%d) - %s") % __FILEW__ % __LINE__ % L##msg))
+#define LOG_ERROR(error) sLog->OutDebug(boost::str(boost::wformat(L"[DEBUG] %s (%s:%d) - %s") % __FUNCTIONW__ % __FILEW__ % __LINE__ % L##error))
+#define LOG_MESSAGE(msg) sLog->OutMessage(boost::str(boost::wformat(L"[MSG] %s (%s:%d) - %s") % __FUNCTIONW__ % __FILEW__ % __LINE__ % L##msg))
 
 struct float2 {
 	float _1, _2;

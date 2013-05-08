@@ -26,8 +26,7 @@ HRESULT CALLBACK Detours::IDirect3DDevice9__EndScene(IDirect3DDevice9 *pDevice) 
 	if (sD3DMgr->IsCreated())
 		sD3DMgr->OnRender();
 
-	sDetours->OnFrameEvent();
-	sDetours->FrameTimer.DispatchTimers(timeGetTime());
+	sEngine->OnPulse();
 	HRESULT hFrame = sDelegates->IDirect3DDevice9__EndScene(pDevice);
 
 	// Shutdown?
@@ -68,8 +67,7 @@ HRESULT CALLBACK Detours::IDXGISwapChain__Present(IDXGISwapChain *pSwapChain, UI
 	if (sD3DMgr->IsCreated())
 		sD3DMgr->OnRender();
 
-	sDetours->OnFrameEvent();
-	sDetours->FrameTimer.DispatchTimers(timeGetTime());
+	sEngine->OnPulse();
 	HRESULT hFrame = sDelegates->IDXGISwapChain__Present(pSwapChain, SyncInterval, Flags);
 
 	// Shutdown?

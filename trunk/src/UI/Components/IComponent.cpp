@@ -1,6 +1,5 @@
 #include "Misc/stdafx.h"
 #include "IComponent.h"
-#include "Base/Detours.h"
 #include "Base/D3DManager.h"
 #include "Base/Engine.h"
 
@@ -190,7 +189,7 @@ namespace Components {
 			fVisib._3 == fCurrent._3 && fVisib._4 == fCurrent._4) {
 			FadeTo(time, fHighlight);
 
-			sDetours->FrameTimer.AddTimer(time * 2, [=] (const Utils::STimerDispatchEvt&) {
+			sEngine->PulseTimer.AddTimer(time * 2, [=] (const Utils::STimerDispatchEvt&) {
 				this->FadeTo(uint32(time * 1.5f), fVisib);
 				return TIMER_STOP_EXECUTION;
 			});

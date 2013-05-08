@@ -6,8 +6,6 @@ public:
 	Detours() {}
 	void Initialize();
 
-	Utils::TimerDispatcher FrameTimer;
-	Utils::Event<void ()> OnFrameEvent;
 	Utils::Event<void (IDirect3DDevice9*, D3DPRESENT_PARAMETERS*)> OnLostDeviceEvent;
 	Utils::Event<void (IDirect3DDevice9*, D3DPRESENT_PARAMETERS*)> OnResetDeviceEvent;
 

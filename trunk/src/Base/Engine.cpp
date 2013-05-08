@@ -8,6 +8,16 @@ bool Engine::s_isInitialized = false;
 
 void Engine::Initialize(HINSTANCE hInstance) {
 	m_instance = hInstance;
+	m_lastPulse = 0;
+}
+
+void Engine::OnPulse() {
+	uint32 time_now = timeGetTime();
+	uint32 time_diff = time_now - m_lastPulse;
+	m_lastPulse = time_now;
+
+	OnPulseEvent(time_now, time_diff);
+	PulseTimer.DispatchTimers(time_now);
 }
 
 void Engine::InitializeEnvironment() {

@@ -6,6 +6,7 @@ public:
 	void Initialize(HINSTANCE hInstance);
 	void InitializeEnvironment();
 	void OnShutDown();
+	void OnPulse();
 
 	void OnProcessDetach() {
 		s_isInitialized = false;
@@ -32,11 +33,16 @@ public:
 		return m_instance;
 	}
 
+	// Events and Timers...
+	Utils::TimerDispatcher PulseTimer;
+	Utils::Event<void (uint32, uint32)> OnPulseEvent;
+
 protected:
 	HINSTANCE m_instance;
 	static bool s_isInitialized;
 	Utils::Signal m_shutdownEvent;
 	Utils::Signal m_shutdownComplete;
+	uint32 m_lastPulse;
 
 	static BOOL WINAPI _shutdownThread(LPVOID lpParam);
 };
