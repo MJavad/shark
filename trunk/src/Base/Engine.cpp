@@ -37,8 +37,18 @@ void Engine::OnShutDown() {
 	m_shutdownComplete.set();
 }
 
+bool Engine::InitializeShutdown() const {
+	DWORD dwThreadId = 0;
+	Utils::Handle hThread = CreateThread(nullptr, 0,
+		reinterpret_cast<LPTHREAD_START_ROUTINE>(_shutdownThread),
+		nullptr, 0, &dwThreadId);
+
+	return !hThread.is_null();
+}
+
 BOOL WINAPI Engine::_shutdownThread(LPVOID lpParam) {
 	sEngine->m_shutdownEvent.set();
 	sEngine->m_shutdownComplete.wait();
 	FreeLibraryAndExitThread(sEngine->m_instance, EXIT_SUCCESS);
+	return EXIT_SUCCESS;
 }

@@ -6,7 +6,7 @@ namespace UI {
 	D3DSprite9::D3DSprite9(IDirect3DDevice9 *pDevice) {
 		HRESULT hResult = D3DXCreateSprite(pDevice, &m_d3dxSprite);
 		if (hResult != D3D_OK)
-			LOG_ERROR("Could not create sprite object!");
+			LOG_DEBUG("Could not create sprite object!");
 	}
 
 	void D3DSprite9::Draw(const std::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,

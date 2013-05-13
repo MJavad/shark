@@ -114,7 +114,7 @@ namespace Utils {
 	bool SharkMemory::DetourFunction(void **ppDelegate, const void *pRedirect) {
 		ThreadGrabber threadGrabber;
 		if (!threadGrabber.update(GetCurrentProcessId())) {
-			LOG_ERROR("Failed to get threads!");
+			LOG_DEBUG("Failed to get threads!");
 			return false;
 		}
 
@@ -144,12 +144,18 @@ namespace Utils {
 				hookInfo.size = uSize;
 				m_hooks[dwTrampoline] = hookInfo;
 
+				ByteBuffer jump(uSize, 0xCC);
+				jump << byte(0xE9);
+				jump << reinterpret_cast<DWORD_PTR>(pRedirect) - (dwAddress + 5);
+
 				const auto &lstThreads = threadGrabber.threads();
-				std::list<std::shared_ptr<Thread>> lstCriticalThreads;
+				std::list<std::shared_ptr<Thread>> lstCriticalThreads(lstThreads);
 				_detourSuspendThreads(lstThreads);
 
 				do {
-					lstCriticalThreads = _threadExecutingInstruction(lstThreads, dwAddress, uSize);
+					lstCriticalThreads = _threadExecutingInstruction(
+						lstCriticalThreads, dwAddress, uSize);
+
 					for (const auto& thread: lstCriticalThreads) {
 						if (thread->open(thread->access() | THREAD_SUSPEND_RESUME)) {
 							thread->resume();
@@ -160,20 +166,16 @@ namespace Utils {
 				}
 				while (!lstCriticalThreads.empty());
 
-				ByteBuffer jump(uSize, 0xCC);
-				jump << byte(0xE9);
-				jump << reinterpret_cast<DWORD_PTR>(pRedirect) - (dwAddress + 5);
-
 				WriteMemory_Safe(dwAddress, jump);
 				_detourResumeThreads(lstThreads);
 			}
 			else
-				LOG_ERROR("Trampoline heap alloc failed!");
+				LOG_DEBUG("Trampoline heap alloc failed!");
 
 			SetMemoryProtection(dwAddress, 0x20, dwOldProtect);
 		}
 		else
-			LOG_ERROR("Cannot set code protection!");
+			LOG_DEBUG("Cannot set code protection!");
 
 		return bSuccess;
 	}

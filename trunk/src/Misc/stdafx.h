@@ -82,8 +82,7 @@ typedef signed char int8;
 #define ROUND(number) (floor(number+0.5f))
 #define MIN_LIMIT(var,limit) if(var<limit) var=limit
 #define MAX_LIMIT(var,limit) if(var>limit) var=limit
-#define LOG_ERROR(error) sLog->OutDebug(boost::str(boost::wformat(L"[DEBUG] %s (%s:%d) - %s") % __FUNCTIONW__ % __FILEW__ % __LINE__ % L##error))
-#define LOG_MESSAGE(msg) sLog->OutMessage(boost::str(boost::wformat(L"[MSG] %s (%s:%d) - %s") % __FUNCTIONW__ % __FILEW__ % __LINE__ % L##msg))
+#define LOG_DEBUG(fmt, ...) sLog->OutDebugFormatted(__FUNCTIONW__, __FILEW__, __LINE__, fmt, __VA_ARGS__)
 
 struct float2 {
 	float _1, _2;

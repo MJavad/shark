@@ -14,7 +14,7 @@ namespace Components {
 	std::shared_ptr<EditBox> EditBox::Create(float fWidth, float fHeight,
 		float fHorizontalRounding, float fVerticalRounding) {
 		const auto pEditBox = std::make_shared<EditBox>();
-		const auto pLabel = Label::Create(L"", DT_CENTER | DT_VCENTER, fWidth, fHeight);
+		const auto pLabel = Label::Create(L"", DT_CENTER | DT_VCENTER | DT_SINGLELINE, fWidth, fHeight);
 		//pLabel->SetDropShadow(false);
 
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
@@ -125,9 +125,9 @@ namespace Components {
 	}
 
 	void EditBox::_onChar(wchar_t c) {
-		const auto pContent = GetContent();
-		if (pContent != nullptr)
-			pContent->SetText(pContent->GetText() + c);
+		std::wstring swText;
+		swText += c;
+		InsertText(std::move(swText));
 	}
 
 	void EditBox::_onKeyDown(int key) {
@@ -135,6 +135,23 @@ namespace Components {
 	}
 
 	void EditBox::_onMouseMove(const Utils::Vector2 &vPosition) {
+
+	}
+
+	void EditBox::InsertText(std::wstring swText) {
+		for (auto itr = swText.begin(), end = swText.end(); itr != end; ) {
+			if (!isprint(*itr))
+				swText.erase(itr++);
+			else
+				++itr;
+		}
+
+		const auto pContent = GetContent();
+		if (pContent != nullptr)
+			pContent->SetText(pContent->GetText() + swText);
+	}
+
+	void EditBox::EraseText(uint32 numChars) {
 
 	}
 

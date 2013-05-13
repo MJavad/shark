@@ -40,12 +40,14 @@ BOOL WINAPI LoadInternal(LPVOID lpParam) {
 		MessageBoxA(nullptr, e.what(), "ERROR", MB_OK);
 	}
 
-	//LOG_MESSAGE("Initialized!");
+	//LOG_DEBUG(L"Initialized!);
 	return EXIT_SUCCESS;
 }
 
 // EXPORTS: Unload
 BOOL WINAPI UnloadInternal(LPVOID lpParam) {
-	sEngine->InitializeShutdown();
+	if (!sEngine->IsShuttingDown())
+		sEngine->InitializeShutdown();
+
 	return EXIT_SUCCESS;
 }

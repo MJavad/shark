@@ -24,7 +24,7 @@ bool WndProc::Attach(HWND hWnd) {
 		reinterpret_cast<LONG_PTR>(WindowProc));
 
 	if (nResult == 0) {
-		LOG_ERROR("Failed to attach WndProc!");
+		LOG_DEBUG("Failed to attach WndProc!");
 		return false;
 	}
 

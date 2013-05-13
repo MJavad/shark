@@ -5,6 +5,8 @@ class Engine : public Utils::Singleton<Engine>
 public:
 	void Initialize(HINSTANCE hInstance);
 	void InitializeEnvironment();
+	bool InitializeShutdown() const;
+
 	void OnShutDown();
 	void OnPulse();
 
@@ -16,13 +18,6 @@ public:
 	// from destructors, when the dll unloads
 	static bool IsInitialized() {
 		return s_isInitialized;
-	}
-
-	void InitializeShutdown() const {
-		DWORD dwThreadId = 0;
-		Utils::Handle hThread = CreateThread(nullptr, 0,
-			reinterpret_cast<LPTHREAD_START_ROUTINE>(_shutdownThread),
-			nullptr, 0, &dwThreadId);
 	}
 
 	bool IsShuttingDown() const {

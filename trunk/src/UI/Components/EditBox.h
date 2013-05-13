@@ -44,6 +44,9 @@ namespace Components {
 				m_border->SetUIParent(shared_from_this());
 		}
 
+		void InsertText(std::wstring swText);
+		void EraseText(uint32 numChars);
+
 	protected:
 		static bool s_renderCaret;
 		static uint32 s_caretPosition;

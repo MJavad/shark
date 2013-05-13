@@ -56,7 +56,7 @@ namespace Components {
 				m_shadowTexture = pRenderTarget->CreateRenderTargetTexture((uint32) GetWidth(), (uint32) GetHeight());
 
 				if (m_shadowTexture == nullptr) {
-					LOG_ERROR("Could not create shadow texture!");
+					LOG_DEBUG("Could not create shadow texture!");
 					return;
 				}
 			}
