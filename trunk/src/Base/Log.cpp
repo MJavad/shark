@@ -30,9 +30,13 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	va_end(vaArgs);
 
 	std::wostringstream o;
+#ifdef DEBUG_USE_FUNCTIONNAMES
+	o << pswzFunction << L' ';
+#endif
+
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-	o << pswzFunction << L" (" << pswzFile
-	  << L':' << uLine << L") - " << conv.from_bytes(sBuffer);
+	o << L'(' << pswzFile << L':' << uLine << L") - "
+	  << conv.from_bytes(sBuffer);
 	OutDebug(o.str());
 }
 
@@ -47,7 +51,11 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	va_end(vaArgs);
 
 	std::wostringstream o;
-	o << pswzFunction << L" (" << pswzFile
-	  << L':' << uLine << L") - " << swBuffer;
+#ifdef DEBUG_USE_FUNCTIONNAMES
+	o << pswzFunction << L' ';
+#endif
+
+	o << L'(' << pswzFile << L':' << uLine << L") - "
+	  << swBuffer;
 	OutDebug(o.str());
 }

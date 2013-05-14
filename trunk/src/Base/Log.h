@@ -15,3 +15,9 @@ public:
 };
 
 #define sLog Utils::Singleton<Log>::Instance()
+
+#ifdef DEBUG_USE_FUNCTIONNAMES
+#define LOG_DEBUG(fmt, ...) sLog->OutDebugFormatted(__FUNCTIONW__, __FILEW__, __LINE__, fmt, __VA_ARGS__)
+#else
+#define LOG_DEBUG(fmt, ...) sLog->OutDebugFormatted(nullptr, __FILEW__, __LINE__, fmt, __VA_ARGS__)
+#endif

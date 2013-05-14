@@ -40,7 +40,7 @@ BOOL WINAPI LoadInternal(LPVOID lpParam) {
 		MessageBoxA(nullptr, e.what(), "ERROR", MB_OK);
 	}
 
-	//LOG_DEBUG(L"Initialized!);
+	//LOG_DEBUG(L"Initialized!");
 	return EXIT_SUCCESS;
 }
 

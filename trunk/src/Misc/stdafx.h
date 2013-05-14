@@ -7,6 +7,7 @@
 #pragma warning(disable: 4100)
 
 //#define VARIADIC_TEMPLATES_SUPPORTED
+#define DEBUG_USE_FUNCTIONNAMES
 
 typedef unsigned long long uint64;
 typedef signed long long int64;
@@ -82,7 +83,6 @@ typedef signed char int8;
 #define ROUND(number) (floor(number+0.5f))
 #define MIN_LIMIT(var,limit) if(var<limit) var=limit
 #define MAX_LIMIT(var,limit) if(var>limit) var=limit
-#define LOG_DEBUG(fmt, ...) sLog->OutDebugFormatted(__FUNCTIONW__, __FILEW__, __LINE__, fmt, __VA_ARGS__)
 
 struct float2 {
 	float _1, _2;
