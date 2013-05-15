@@ -12,8 +12,11 @@ namespace Utils {
 	class SharkMemory : public Singleton<SharkMemory>
 	{
 	public:
-		void Initialize();
-		~SharkMemory();
+		SharkMemory() : m_trampolineHeap(HEAP_CREATE_ENABLE_EXECUTE) {}
+
+		~SharkMemory() {
+			RemoveAllDetours();
+		}
 
 		static DWORD_PTR Allocate(uint32 uSize, DWORD dwProtection = PAGE_EXECUTE_READWRITE);
 		static bool Free(DWORD_PTR dwAddress);
@@ -35,7 +38,7 @@ namespace Utils {
 		bool RemoveAllDetours();
 
 	protected:
-		HANDLE m_trampolineHeap;
+		Heap m_trampolineHeap;
 		std::map<DWORD_PTR, SHookInformation> m_hooks;
 
 		void _detourSuspendThreads(const std::list<std::shared_ptr<Thread>> &threads) const;

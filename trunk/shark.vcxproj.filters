@@ -204,6 +204,9 @@
     <ClInclude Include="src\Base\Engine.h">
       <Filter>Headers\Base</Filter>
     </ClInclude>
+    <ClInclude Include="src\Misc\Heap.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">

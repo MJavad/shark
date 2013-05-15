@@ -64,15 +64,6 @@ __declspec(allocate(".text")) const byte MLDE32[] = {
 INIT_SINGLETON(Utils::SharkMemory);
 
 namespace Utils {
-	void SharkMemory::Initialize() {
-		m_trampolineHeap = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 0, 0);
-	}
-
-	SharkMemory::~SharkMemory() {
-		RemoveAllDetours();
-		HeapDestroy(m_trampolineHeap);
-	}
-
 	inline DWORD_PTR SharkMemory::Allocate(uint32 uSize, DWORD dwProtection) {
 		return reinterpret_cast<DWORD_PTR>(VirtualAlloc(nullptr, uSize, MEM_COMMIT | MEM_RESERVE, dwProtection));
 	}
@@ -128,11 +119,11 @@ namespace Utils {
 			while (uSize < 5)
 				uSize += GetInstructionSize(dwAddress + uSize);
 
-			byte *pTrampoline = reinterpret_cast<byte*>(HeapAlloc(m_trampolineHeap, 0, uSize + 5));
+			// allocate a trampoline...
+			byte *pTrampoline = reinterpret_cast<byte*>(m_trampolineHeap.allocate(uSize + 5));
 			DWORD_PTR dwTrampoline = reinterpret_cast<DWORD_PTR>(pTrampoline);
-			bSuccess = (pTrampoline != nullptr);
 
-			if (bSuccess) {
+			if (bSuccess = (pTrampoline != nullptr)) {
 				memcpy(pTrampoline, pFunction, uSize);
 				pTrampoline[uSize] = 0xE9;
 				GetMemory<DWORD_PTR>(dwTrampoline + uSize + 1) = dwAddress - (dwTrampoline + 5);
@@ -159,7 +150,7 @@ namespace Utils {
 					for (const auto& thread: lstCriticalThreads) {
 						if (thread->open(thread->access() | THREAD_SUSPEND_RESUME)) {
 							thread->resume();
-							Sleep(rand() % 10); // give him some time to move along... :D
+							Sleep(rand() % 2); // give him some time to move along... :D
 							thread->suspend();
 						}
 					}
@@ -197,7 +188,7 @@ namespace Utils {
 
 		if (bSuccess) {
 			*ppDelegate = reinterpret_cast<void*>(hookInfo.function);
-			HeapFree(m_trampolineHeap, 0, hookInfo.trampoline);
+			m_trampolineHeap.free(hookInfo.trampoline);
 			m_hooks.erase(itr);
 		}
 
