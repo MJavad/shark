@@ -62,7 +62,6 @@ typedef signed char int8;
 #include <boost/lexical_cast.hpp>
 #include <codecvt>
 #include <atlbase.h>
-#include "Exception.h"
 #include "Mutex.h"
 #include "Color.h"
 #include "Vector.h"
@@ -85,7 +84,6 @@ typedef signed char int8;
 #define ROUND(number) (floor(number+0.5f))
 #define MIN_LIMIT(var,limit) if(var<limit) var=limit
 #define MAX_LIMIT(var,limit) if(var>limit) var=limit
-#define THROW_EXCEPTION(msg, ...) throw 
 
 struct float2 {
 	float _1, _2;

@@ -20,6 +20,8 @@ namespace Utils
 		}
 
 	public:
+		void Initialize() {}
+
 		static std::shared_ptr<T> Instance() {
 			if (s_instance == nullptr)
 				s_instance = std::make_shared<T>();

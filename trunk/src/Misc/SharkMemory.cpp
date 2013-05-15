@@ -64,6 +64,10 @@ __declspec(allocate(".text")) const byte MLDE32[] = {
 INIT_SINGLETON(Utils::SharkMemory);
 
 namespace Utils {
+	void SharkMemory::Initialize() {
+
+	}
+
 	inline DWORD_PTR SharkMemory::Allocate(uint32 uSize, DWORD dwProtection) {
 		return reinterpret_cast<DWORD_PTR>(VirtualAlloc(nullptr, uSize, MEM_COMMIT | MEM_RESERVE, dwProtection));
 	}

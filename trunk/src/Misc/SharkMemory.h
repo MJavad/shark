@@ -12,6 +12,7 @@ namespace Utils {
 	class SharkMemory : public Singleton<SharkMemory>
 	{
 	public:
+		void Initialize();
 		SharkMemory() : m_trampolineHeap(HEAP_CREATE_ENABLE_EXECUTE) {}
 
 		~SharkMemory() {
