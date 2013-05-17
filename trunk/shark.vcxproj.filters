@@ -207,6 +207,10 @@
     <ClInclude Include="src\Misc\Heap.h">
       <Filter>Headers\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="src\Misc\StackWalker.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -326,8 +330,17 @@
     <ClCompile Include="src\Base\Engine.cpp">
       <Filter>Sources\Base</Filter>
     </ClCompile>
+    <ClCompile Include="src\Misc\StackWalker.cpp">
+      <Filter>Sources\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shark.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="shark.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="shark.manifest" />
   </ItemGroup>
 </Project>

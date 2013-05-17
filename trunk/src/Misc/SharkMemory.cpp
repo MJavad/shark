@@ -126,8 +126,9 @@ namespace Utils {
 			// allocate a trampoline...
 			byte *pTrampoline = reinterpret_cast<byte*>(m_trampolineHeap.allocate(uSize + 5));
 			DWORD_PTR dwTrampoline = reinterpret_cast<DWORD_PTR>(pTrampoline);
+			bSuccess = (pTrampoline != nullptr);
 
-			if (bSuccess = (pTrampoline != nullptr)) {
+			if (bSuccess) {
 				memcpy(pTrampoline, pFunction, uSize);
 				pTrampoline[uSize] = 0xE9;
 				GetMemory<DWORD_PTR>(dwTrampoline + uSize + 1) = dwAddress - (dwTrampoline + 5);

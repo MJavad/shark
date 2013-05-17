@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\Base\Engine.h" />
     <ClInclude Include="src\Base\Log.h" />
     <ClInclude Include="src\Base\RenderTarget11.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="src\Misc\SharkMemory.h" />
     <ClInclude Include="src\Misc\ByteBuffer.h" />
     <ClInclude Include="src\Misc\Signal.h" />
+    <ClInclude Include="src\Misc\StackWalker.h" />
     <ClInclude Include="src\Misc\ThreadGrabber.h" />
     <ClInclude Include="src\Misc\Mutex.h" />
     <ClInclude Include="src\Misc\Singleton.h" />
@@ -82,6 +84,7 @@
     <ClCompile Include="src\Base\WndProc.cpp" />
     <ClCompile Include="src\Misc\ByteBuffer.cpp" />
     <ClCompile Include="src\Misc\SharkMemory.cpp" />
+    <ClCompile Include="src\Misc\StackWalker.cpp" />
     <ClCompile Include="src\Misc\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -115,6 +118,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shark.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="shark.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="shark.manifest" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath11)</VCTargetsPath>
