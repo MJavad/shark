@@ -90,10 +90,20 @@ BOOL CALLBACK ExceptionDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 #define SEH_CASE(code) case code: msgStrm << L#code << L" (0x" << std::hex << std::uppercase << code << L")\r\n\r\n"; break;
 
 LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
+	Utils::ThreadGrabber threadGrabber;
+	threadGrabber.update(GetCurrentProcessId());
+	uint32 currentThreadId = GetCurrentThreadId();
+	
+	for (auto &thread: threadGrabber.threads()) {
+		if (thread->id() != currentThreadId &&
+			thread->open(thread->access() | THREAD_SUSPEND_RESUME))
+			thread->suspend();
+	}
+
 	std::wostringstream msgStrm;
 	msgStrm << L"An unhandled exception occured at 0x" << std::hex << std::uppercase
 			<< pInfo->ExceptionRecord->ExceptionAddress << L".\r\n";
-	msgStrm << L"Thread: " << std::dec << GetCurrentThreadId() << L"\r\n";
+	msgStrm << L"Thread: " << std::dec << currentThreadId << L"\r\n";
 	msgStrm << L"Type: ";
 
 	switch (pInfo->ExceptionRecord->ExceptionCode) {

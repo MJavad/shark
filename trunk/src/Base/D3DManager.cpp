@@ -181,8 +181,8 @@ void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
-	uint32 uHeight, uint32 uWidth, uint32 uWeight, bool bItalic) {
-
+	uint32 uHeight, uint32 uWidth, uint32 uWeight, bool bItalic)
+{
 	size_t dwFontFace = std::hash<std::wstring>()(swFontName);
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
 		if (itr->expired()) {
@@ -222,8 +222,8 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
 }
 
 std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
-	std::wstring swFileName, uint32 uWidth, uint32 uHeight) {
-
+	std::wstring swFileName, uint32 uWidth, uint32 uHeight)
+{
 	size_t dwFileName = std::hash<std::wstring>()(swFileName);
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
 		if (itr->expired()) {
@@ -263,9 +263,9 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	return pTexture;
 }
 
-std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(std::wstring swResourceName,
-	HMODULE hModule, uint32 uWidth, uint32 uHeight) {
-
+std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
+	std::wstring swResourceName, HMODULE hModule, uint32 uWidth, uint32 uHeight)
+{
 	size_t dwResourceName = std::hash<std::wstring>()(swResourceName);
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
 		auto pTexture = itr->lock();

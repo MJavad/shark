@@ -6,14 +6,29 @@ namespace Utils
 	DebugHelper::DebugHelper() {
 		m_dbgHelp = LoadLibraryW(L"dbghelp.dll");
 		if (m_dbgHelp != nullptr) {
-			m_stackWalk = reinterpret_cast<tStackWalk64>(GetProcAddress(m_dbgHelp, "StackWalk64"));
-			m_symInitialize = reinterpret_cast<tSymInitializeW>(GetProcAddress(m_dbgHelp, "SymInitializeW"));
-			m_symSetOptions = reinterpret_cast<tSymSetOptions>(GetProcAddress(m_dbgHelp, "SymSetOptions"));
-			m_symFromAddr = reinterpret_cast<tSymFromAddrW>(GetProcAddress(m_dbgHelp, "SymFromAddrW"));
-			m_symFunctionTableAccess = reinterpret_cast<tSymFunctionTableAccess64>(GetProcAddress(m_dbgHelp, "SymFunctionTableAccess64"));
-			m_symGetModuleBase = reinterpret_cast<tSymGetModuleBase64>(GetProcAddress(m_dbgHelp, "SymGetModuleBase64"));
-			m_undecorateSymbolName = reinterpret_cast<tUnDecorateSymbolNameW>(GetProcAddress(m_dbgHelp, "UnDecorateSymbolNameW"));
-			m_symCleanup = reinterpret_cast<tSymCleanup>(GetProcAddress(m_dbgHelp, "SymCleanup"));
+			m_stackWalk = reinterpret_cast<tStackWalk64>
+				(GetProcAddress(m_dbgHelp, "StackWalk64"));
+
+			m_symInitialize = reinterpret_cast<tSymInitializeW>
+				(GetProcAddress(m_dbgHelp, "SymInitializeW"));
+
+			m_symSetOptions = reinterpret_cast<tSymSetOptions>
+				(GetProcAddress(m_dbgHelp, "SymSetOptions"));
+
+			m_symFromAddr = reinterpret_cast<tSymFromAddrW>
+				(GetProcAddress(m_dbgHelp, "SymFromAddrW"));
+
+			m_symFunctionTableAccess = reinterpret_cast<tSymFunctionTableAccess64>
+				(GetProcAddress(m_dbgHelp, "SymFunctionTableAccess64"));
+
+			m_symGetModuleBase = reinterpret_cast<tSymGetModuleBase64>
+				(GetProcAddress(m_dbgHelp, "SymGetModuleBase64"));
+
+			m_undecorateSymbolName = reinterpret_cast<tUnDecorateSymbolNameW>
+				(GetProcAddress(m_dbgHelp, "UnDecorateSymbolNameW"));
+
+			m_symCleanup = reinterpret_cast<tSymCleanup>
+				(GetProcAddress(m_dbgHelp, "SymCleanup"));
 
 			if (m_stackWalk != nullptr &&
 				m_symInitialize != nullptr &&
@@ -79,7 +94,9 @@ namespace Utils
 			if (result != TRUE)
 				break;
 
-			callStack << L"   0x" << std::hex << std::uppercase << stackFrame64.AddrPC.Offset << L" - ";
+			callStack << L"   0x" << std::hex << std::uppercase
+					  << reinterpret_cast<void*>(stackFrame64.AddrPC.Offset) << L" - ";
+
 			ByteBuffer buffer(sizeof(SYMBOL_INFOW) + MAX_SYM_NAME * sizeof(wchar_t));
 			PSYMBOL_INFOW pSymbol = reinterpret_cast<PSYMBOL_INFOW>(buffer.data());
 			pSymbol->SizeOfStruct = sizeof(SYMBOL_INFOW);
