@@ -7,10 +7,9 @@
 #include "D3DManager.h"
 #include "UI/GUIManager.h"
 #include "Engine.h"
-#include "Misc/StackWalker.h"
+#include "Misc/DebugHelper.h"
 #include "../resource.h"
 #include <Commctrl.h>
-#include <comdef.h>
 
 __declspec(naked) LPTOP_LEVEL_EXCEPTION_FILTER WINAPI
 	_SetUnhandledExceptionFilter(_In_ LPTOP_LEVEL_EXCEPTION_FILTER) {
@@ -234,7 +233,8 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 	HANDLE hActCtx = CreateActCtxW(&actCtx);
 
 	ULONG_PTR actCookie = 0;
-	ActivateActCtx(hActCtx, &actCookie);
+	if (hActCtx != INVALID_HANDLE_VALUE)
+		ActivateActCtx(hActCtx, &actCookie);
 
 	HMODULE hComctl32 = LoadLibraryW(L"Comctl32.dll");
 	typedef BOOL (WINAPI *tInitCommonControlsEx) (const INITCOMMONCONTROLSEX *picce);
@@ -252,9 +252,11 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 
 	HWND hShutdown = GetDlgItem(hDlg, IDC_SHUTDOWN);
 	HFONT hFont = CreateFontW(18, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
-		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+		DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 		FF_DONTCARE, L"Segoe UI");
-	SendMessageW(hShutdown, WM_SETFONT, (WPARAM) hFont, FALSE);
+
+	if (hFont != nullptr)
+		SendMessageW(hShutdown, WM_SETFONT, (WPARAM) hFont, FALSE);
 
 	HWND hReason = GetDlgItem(hDlg, IDC_REASON);
 	SetWindowTextW(hReason, msgStrm.str().c_str());
@@ -274,8 +276,8 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 					   << L"\r\n\r\nStack Trace:\r\n";
 
 	try {
-		Utils::StackWalker stackWalker;
-		strmAdditionalInfo << stackWalker.getCallstack(GetCurrentThread(), pInfo->ContextRecord);
+		Utils::DebugHelper dbgHelper;
+		strmAdditionalInfo << dbgHelper.DumpCallStack(GetCurrentThread(), pInfo->ContextRecord);
 	}
 	catch (std::exception &e) {
 		strmAdditionalInfo << L"   " << e.what() << L"\r\n";
@@ -286,7 +288,8 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 
 	HICON errIcon = LoadIconW(nullptr, IDI_ERROR);
 	HWND hIconStatic = GetDlgItem(hDlg, IDC_ERRPICBOX);
-	SendMessageW(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM)errIcon);
+	if (errIcon != nullptr)
+		SendMessageW(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM)errIcon);
 
 	ShowWindow(hDlg, SW_SHOW);
 

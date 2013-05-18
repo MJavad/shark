@@ -1,9 +1,9 @@
 #include "Misc/stdafx.h"
-#include "StackWalker.h"
+#include "DebugHelper.h"
 
 namespace Utils
 {
-	StackWalker::StackWalker() {
+	DebugHelper::DebugHelper() {
 		m_dbgHelp = LoadLibraryW(L"dbghelp.dll");
 		if (m_dbgHelp != nullptr) {
 			m_stackWalk = reinterpret_cast<tStackWalk64>(GetProcAddress(m_dbgHelp, "StackWalk64"));
@@ -25,7 +25,7 @@ namespace Utils
 				m_symCleanup != nullptr)
 			{
 				m_symSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS);
-				if (m_symInitialize(GetCurrentProcess(), nullptr, TRUE) != FALSE)
+				if (m_symInitialize(GetCurrentProcess(), nullptr, FALSE) != FALSE)
 					return;
 			}
 
@@ -33,17 +33,17 @@ namespace Utils
 			m_dbgHelp = nullptr;
 		}
 
-		throw std::exception("Could not create StackWalker instance!");
+		throw std::exception("Could not create DebugHelper instance!");
 	}
 
-	StackWalker::~StackWalker() {
+	DebugHelper::~DebugHelper() {
 		if (m_dbgHelp != nullptr) {
 			m_symCleanup(GetCurrentProcess());
 			FreeLibrary(m_dbgHelp);
 		}
 	}
 
-	std::wstring StackWalker::getCallstack(HANDLE hThread, PCONTEXT pContext) const {
+	std::wstring DebugHelper::DumpCallStack(HANDLE hThread, PCONTEXT pContext) const {
 		DWORD64 dwDisplacement = 0;
 		HANDLE hProcess = GetCurrentProcess();
 

@@ -9,6 +9,16 @@ namespace UI {
 
 		void SetDevice(IDirect3DDevice9 *pDevice);
 
+		void OnLostDevice() const {
+			if (m_fontObject != nullptr)
+				m_fontObject->OnLostDevice();
+		}
+
+		void OnResetDevice() const {
+			if (m_fontObject != nullptr)
+				m_fontObject->OnResetDevice();
+		}
+
 		const SFontDesc& GetDescription() const { return m_fontDesc; }
 		std::shared_ptr<ID3DFontObject> GetObject() const { return m_fontObject; }
 		virtual bool IsCreated() const { return m_fontObject != nullptr; }

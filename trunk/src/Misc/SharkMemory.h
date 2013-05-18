@@ -33,6 +33,9 @@ namespace Utils {
 			return *reinterpret_cast<T*>(dwAddress);
 		}
 
+		static DWORD_PTR FindMemoryPattern(DWORD_PTR dwStartAddress,
+			DWORD dwLength, const byte *pbMask, const char *pszMask);
+
 		static uint32 GetInstructionSize(DWORD_PTR dwAddress);
 		bool DetourFunction(void **ppDelegate, const void *pRedirect);
 		bool RemoveDetour(void **ppDelegate);
@@ -42,6 +45,7 @@ namespace Utils {
 		Heap m_trampolineHeap;
 		std::map<DWORD_PTR, SHookInformation> m_hooks;
 
+		static bool _dataCompare(const byte *pbData, const byte *pbMask, const char *pszMask);
 		void _detourSuspendThreads(const std::list<std::shared_ptr<Thread>> &threads) const;
 		void _detourResumeThreads(const std::list<std::shared_ptr<Thread>> &threads) const;
 		

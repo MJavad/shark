@@ -1,6 +1,7 @@
 #include "Misc/stdafx.h"
 #include "Offsets.h"
 #include "Engine.h"
+#include "Misc/DebugHelper.h"
 
 INIT_SINGLETON(Offsets);
 
@@ -75,6 +76,28 @@ void Offsets::SDirectX::Initialize() {
 					IDirect3DDevice9__Reset = (*ppDevice9VMT) [16];
 					pDevice9->Release();
 				}
+				else {
+					DWORD_PTR dwModuleBase = reinterpret_cast<DWORD_PTR>(GetModuleHandleW(L"d3d9.dll"));
+					if (dwModuleBase != 0) {
+						PIMAGE_DOS_HEADER pDosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(dwModuleBase);
+						PIMAGE_NT_HEADERS pNtHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(dwModuleBase + pDosHeader->e_lfanew);
+					
+						const byte devicePattern[] = {0xC7, 0x06, 0x00, 0x00, 0x00, 0x00, 0x89, 0x86, 0x00, 0x00, 0x00, 0x00, 0x89, 0x86};
+						DWORD_PTR dwVtblAddr = sMemory->FindMemoryPattern(dwModuleBase,
+							pNtHeaders->OptionalHeader.SizeOfCode, devicePattern, "xx????xx????xx");
+
+						if (dwVtblAddr != 0) {
+							DWORD_PTR **ppDevice9VMT = reinterpret_cast<DWORD_PTR**>(dwVtblAddr + 2);
+							IDirect3DDevice9__EndScene = (*ppDevice9VMT) [42];
+							IDirect3DDevice9__Reset = (*ppDevice9VMT) [16];
+						}
+						else
+							LOG_DEBUG("Could not find CD3DBase VTable.");
+					}
+					else
+						LOG_DEBUG("Could not find d3d9.dll");
+				}
+
 				pD3D9->Release();
 			}
 

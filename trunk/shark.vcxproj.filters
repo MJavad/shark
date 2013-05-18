@@ -207,10 +207,10 @@
     <ClInclude Include="src\Misc\Heap.h">
       <Filter>Headers\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="src\Misc\StackWalker.h">
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\Misc\DebugHelper.h">
       <Filter>Headers\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -330,7 +330,7 @@
     <ClCompile Include="src\Base\Engine.cpp">
       <Filter>Sources\Base</Filter>
     </ClCompile>
-    <ClCompile Include="src\Misc\StackWalker.cpp">
+    <ClCompile Include="src\Misc\DebugHelper.cpp">
       <Filter>Sources\Misc</Filter>
     </ClCompile>
   </ItemGroup>

@@ -37,13 +37,13 @@ typedef BOOL (WINAPI *tSymCleanup) (_In_ HANDLE hProcess);
 
 namespace Utils
 {
-	class StackWalker
+	class DebugHelper
 	{
 	public:
-		StackWalker();
-		~StackWalker();
+		DebugHelper();
+		~DebugHelper();
 
-		std::wstring getCallstack(HANDLE hThread = 0,
+		std::wstring DumpCallStack(HANDLE hThread = 0,
 								  PCONTEXT pContext = nullptr) const;
 
 	protected:

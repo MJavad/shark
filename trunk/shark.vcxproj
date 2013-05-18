@@ -31,7 +31,7 @@
     <ClInclude Include="src\Misc\SharkMemory.h" />
     <ClInclude Include="src\Misc\ByteBuffer.h" />
     <ClInclude Include="src\Misc\Signal.h" />
-    <ClInclude Include="src\Misc\StackWalker.h" />
+    <ClInclude Include="src\Misc\DebugHelper.h" />
     <ClInclude Include="src\Misc\ThreadGrabber.h" />
     <ClInclude Include="src\Misc\Mutex.h" />
     <ClInclude Include="src\Misc\Singleton.h" />
@@ -84,7 +84,7 @@
     <ClCompile Include="src\Base\WndProc.cpp" />
     <ClCompile Include="src\Misc\ByteBuffer.cpp" />
     <ClCompile Include="src\Misc\SharkMemory.cpp" />
-    <ClCompile Include="src\Misc\StackWalker.cpp" />
+    <ClCompile Include="src\Misc\DebugHelper.cpp" />
     <ClCompile Include="src\Misc\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

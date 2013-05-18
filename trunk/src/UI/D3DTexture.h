@@ -15,6 +15,13 @@ namespace UI {
 
 		void SetDevice(IDirect3DDevice9 *pDevice);
 
+		void OnLostDevice() {
+			if (m_textureDesc.Pool == D3DPOOL_DEFAULT)
+				m_textureObject = nullptr;
+		}
+
+		void OnResetDevice();
+
 		const STextureDesc& GetDescription() const { return m_textureDesc; }
 		std::shared_ptr<ID3DTextureObject> GetObject() const { return m_textureObject; }
 		bool IsCreated() const { return m_textureObject != nullptr; }

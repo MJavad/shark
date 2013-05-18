@@ -137,8 +137,8 @@ void RenderTarget9::SetClippingArea(const RECT *pRect) const {
 
 std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 uWidth, uint32 uHeight) const {
 	CComPtr<IDirect3DTexture9> pTexture = nullptr;
-	HRESULT hResult = m_device9->CreateTexture(uWidth, uHeight, 1, D3DUSAGE_RENDERTARGET,
-		D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pTexture, nullptr);
+	HRESULT hResult = D3DXCreateTexture(m_device9, uWidth, uHeight, 1,
+		D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pTexture);
 	if (hResult != D3D_OK)
 		return nullptr;
 

@@ -79,7 +79,7 @@ namespace Components {
 
 		m_fontCache = pRenderTarget->CreateRenderTargetTexture(uWidth, uHeight);
 		if (m_fontCache == nullptr) {
-			LOG_DEBUG("Could not create font cache!");
+			//LOG_DEBUG("Could not create font cache!");
 			return;
 		}
 

@@ -123,11 +123,16 @@ void D3DManager::OnLostDevice() {
 			continue;
 		}
 
-		const auto pFont = itr->lock();
-		if (pFont->IsCreated())
-			pFont->GetObject()->OnLostDevice();
+		(itr++)->lock()->OnLostDevice();
+	}
 
-		++itr;
+	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
+		if (itr->expired()) {
+			itr = m_textures.erase(itr);
+			continue;
+		}
+
+		(itr++)->lock()->OnLostDevice();
 	}
 
 	return OnDeviceLostEvent();
@@ -144,11 +149,16 @@ void D3DManager::OnResetDevice() {
 			continue;
 		}
 
-		const auto pFont = itr->lock();
-		if (pFont->IsCreated())
-			pFont->GetObject()->OnResetDevice();
+		(itr++)->lock()->OnResetDevice();
+	}
 
-		++itr;
+	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
+		if (itr->expired()) {
+			itr = m_textures.erase(itr);
+			continue;
+		}
+
+		(itr++)->lock()->OnResetDevice();
 	}
 
 	return OnDeviceResetEvent();
@@ -240,10 +250,9 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	texDesc.Height = uHeight;
 	texDesc.MipLevels = 1;
 	texDesc.Format = D3DFMT_A8R8G8B8;
-	texDesc.Pool = D3DPOOL_MANAGED;
+	texDesc.Pool = D3DPOOL_DEFAULT;
 	texDesc.Filter = D3DX_DEFAULT;
 	texDesc.MipFilter = D3DX_DEFAULT;
-	texDesc.ColorKey = 0xFFFFFFFF;
 
 	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);
@@ -285,10 +294,9 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(std::wstring 
 	texDesc.Height = uHeight;
 	texDesc.MipLevels = 1;
 	texDesc.Format = D3DFMT_A8R8G8B8;
-	texDesc.Pool = D3DPOOL_MANAGED;
+	texDesc.Pool = D3DPOOL_DEFAULT;
 	texDesc.Filter = D3DX_DEFAULT;
 	texDesc.MipFilter = D3DX_DEFAULT;
-	texDesc.ColorKey = 0xFFFFFFFF;
 
 	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);

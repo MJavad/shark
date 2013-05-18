@@ -106,6 +106,24 @@ namespace Utils {
 		return reinterpret_cast<uint32 (__cdecl*) (DWORD_PTR)>(&MLDE32[0]) (dwAddress);
 	}
 
+	bool SharkMemory::_dataCompare(const byte *pbData, const byte *pbMask, const char *pszMask) {
+		for (; *pszMask != 0; ++pszMask, ++pbData, ++pbMask) {
+			if (*pszMask == 'x' && *pbData != *pbMask)
+				return false;
+		}
+		return true;
+	}
+
+	DWORD_PTR SharkMemory::FindMemoryPattern(DWORD_PTR dwStartAddress,
+			DWORD dwLength, const byte *pbMask, const char *pszMask) {
+		for (dwLength += dwStartAddress; dwStartAddress < dwLength; ++dwStartAddress) {
+			if (_dataCompare(reinterpret_cast<const byte*>(dwStartAddress), pbMask, pszMask))
+				return dwStartAddress;
+		}
+
+		return 0;
+	}
+
 	bool SharkMemory::DetourFunction(void **ppDelegate, const void *pRedirect) {
 		ThreadGrabber threadGrabber;
 		if (!threadGrabber.update(GetCurrentProcessId())) {
