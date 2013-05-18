@@ -119,7 +119,7 @@ namespace UI {
 		};
 
 		editBox->OnFocusStartEvent += [] {
-			throw std::invalid_argument("Testing exceptions!");
+			//throw std::invalid_argument("Testing exceptions!");
 			return false;
 		};
 

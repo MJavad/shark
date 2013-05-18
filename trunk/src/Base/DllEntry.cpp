@@ -94,7 +94,7 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 	std::wostringstream msgStrm;
 	msgStrm << L"An unhandled exception occured at 0x" << std::hex << std::uppercase
 			<< pInfo->ExceptionRecord->ExceptionAddress << L".\r\n";
-	msgStrm << L"Thread: " << GetCurrentThreadId() << L"\r\n";
+	msgStrm << L"Thread: " << std::dec << GetCurrentThreadId() << L"\r\n";
 	msgStrm << L"Type: ";
 
 	switch (pInfo->ExceptionRecord->ExceptionCode) {

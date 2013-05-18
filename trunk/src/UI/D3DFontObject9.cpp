@@ -38,7 +38,7 @@ namespace UI {
 			c = 0xA0;
 
 		RECT glyphRect = {0};
-		m_d3dxFont->DrawTextW(nullptr, &c, 1, &glyphRect, DT_SINGLELINE | DT_CALCRECT, 0);
+		m_d3dxFont->DrawTextW(nullptr, &c, 1, &glyphRect, DT_CALCRECT | DT_LEFT | DT_TOP | DT_SINGLELINE, 0);
 		cellInc.x = glyphRect.right - glyphRect.left;
 		cellInc.y = glyphRect.bottom - glyphRect.top;
 		return cellInc;
@@ -49,7 +49,7 @@ namespace UI {
 			return rect;
 		
 		uint32 length = swText.length();
-		if (begin >= length || end >= length)
+		if (begin >= length || end >= length || begin == end)
 			return rect;
 
 		// Replace whitespaces with a non-breaking space to fix calculation issues.
@@ -58,11 +58,11 @@ namespace UI {
 		});
 
 		m_d3dxFont->DrawTextW(nullptr, swText.data(), max(begin, end),
-			&rect, DT_SINGLELINE | DT_CALCRECT, 0);
+			&rect, DT_CALCRECT | DT_LEFT | DT_TOP | DT_SINGLELINE, 0);
 
 		RECT tempRect = rect;
 		m_d3dxFont->DrawTextW(nullptr, swText.data(), min(begin, end),
-			&tempRect, DT_SINGLELINE | DT_CALCRECT, 0);
+			&tempRect, DT_CALCRECT | DT_LEFT | DT_TOP | DT_SINGLELINE, 0);
 
 		rect.left = tempRect.right;
 		return rect;
