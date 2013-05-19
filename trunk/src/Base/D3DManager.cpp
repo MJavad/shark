@@ -35,9 +35,7 @@ void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 			continue;
 		}
 
-		const auto pFont = itr->lock();
-		pFont->SetDevice(pDevice);
-		++itr;
+		(itr++)->lock()->SetDevice(pDevice);
 	}
 
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
@@ -46,9 +44,7 @@ void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 			continue;
 		}
 
-		const auto pTexture = itr->lock();
-		pTexture->SetDevice(pDevice);
-		++itr;
+		(itr++)->lock()->SetDevice(pDevice);
 	}
 
 	// call events...
