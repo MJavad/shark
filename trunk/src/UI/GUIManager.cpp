@@ -24,11 +24,11 @@ namespace UI {
 		mainInterface->PushControl(testFrame1);
 		mainInterface->PushControl(testFrame5);
 		//backInterface->PushControl(testFrame3);
-		
+
 		std::shared_ptr<Components::Button> innerButton1 =
 			Components::Button::Create(L"Hide me!");
 		innerButton1->SetPosition(Utils::Vector2(20.0f, 50.0f));
-		
+
 		std::shared_ptr<Components::Button> innerButton2 =
 			Components::Button::Create(L"Shutdown!");
 		innerButton2->SetPosition(Utils::Vector2(20.0f, 75.0f));

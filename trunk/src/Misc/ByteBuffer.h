@@ -59,7 +59,11 @@ namespace Utils {
 			return m_storage != other.m_storage;
 		}
 
-		const std::vector<byte>& toVector() const {
+		std::vector<byte>& to_vector() {
+			return m_storage;
+		}
+
+		const std::vector<byte>& to_vector() const {
 			return m_storage;
 		}
 
@@ -123,12 +127,12 @@ namespace Utils {
 		void erase(uint32 uPos, size_t uSize);
 
 		template <size_t _Size>
-		void put_array_s(byte (&bData)[_Size]) {
+		void put_array_s(const byte (&bData)[_Size]) {
 			put_array(bData, _Size);
 		}
 
 		template <size_t _Size>
-		void put_array_s(byte (&bData)[_Size], uint32 uPos) {
+		void put_array_s(const byte (&bData)[_Size], uint32 uPos) {
 			put_array(bData, _Size, uPos);
 		}
 
