@@ -30,21 +30,17 @@ void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 		sWndProc->Attach(creationParams.hFocusWindow);
 
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
-		if (itr->expired()) {
+		if (itr->expired())
 			itr = m_fonts.erase(itr);
-			continue;
-		}
-
-		(itr++)->lock()->SetDevice(pDevice);
+		else
+			(itr++)->lock()->SetDevice(pDevice);
 	}
 
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
-		if (itr->expired()) {
+		if (itr->expired())
 			itr = m_textures.erase(itr);
-			continue;
-		}
-
-		(itr++)->lock()->SetDevice(pDevice);
+		else
+			(itr++)->lock()->SetDevice(pDevice);
 	}
 
 	// call events...
@@ -114,24 +110,20 @@ void D3DManager::OnLostDevice() {
 	m_renderTarget->OnLostDevice();
 
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
-		if (itr->expired()) {
+		if (itr->expired())
 			itr = m_fonts.erase(itr);
-			continue;
-		}
-
-		(itr++)->lock()->OnLostDevice();
+		else
+			(itr++)->lock()->OnLostDevice();
 	}
 
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
-		if (itr->expired()) {
+		if (itr->expired())
 			itr = m_textures.erase(itr);
-			continue;
-		}
-
-		(itr++)->lock()->OnLostDevice();
+		else
+			(itr++)->lock()->OnLostDevice();
 	}
 
-	return OnDeviceLostEvent();
+	OnDeviceLostEvent();
 }
 
 void D3DManager::OnResetDevice() {
@@ -140,24 +132,20 @@ void D3DManager::OnResetDevice() {
 	m_renderTarget->OnResetDevice();
 
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
-		if (itr->expired()) {
+		if (itr->expired())
 			itr = m_fonts.erase(itr);
-			continue;
-		}
-
-		(itr++)->lock()->OnResetDevice();
+		else
+			(itr++)->lock()->OnResetDevice();
 	}
 
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
-		if (itr->expired()) {
+		if (itr->expired())
 			itr = m_textures.erase(itr);
-			continue;
-		}
-
-		(itr++)->lock()->OnResetDevice();
+		else
+			(itr++)->lock()->OnResetDevice();
 	}
 
-	return OnDeviceResetEvent();
+	OnDeviceResetEvent();
 }
 
 void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -186,14 +174,12 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
 			continue;
 		}
 
-		const auto pFont = itr->lock();
+		const auto pFont = (itr++)->lock();
 		const auto &fontDesc = pFont->GetDescription();
 		if (std::hash<std::wstring>()(fontDesc.FaceName) == dwFontFace &&
 			fontDesc.Height == uHeight && fontDesc.Width == uWidth &&
 			fontDesc.Weight == uWeight && fontDesc.Italic == bItalic)
 			return pFont;
-
-		++itr;
 	}
 
 	UI::SFontDesc fontDesc = {0};
@@ -227,15 +213,13 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 			continue;
 		}
 
-		const auto pTexture = itr->lock();
+		const auto pTexture = (itr++)->lock();
 		const auto &texDesc = pTexture->GetDescription();
 		if (texDesc.TextureType == UI::TEXTURE_FROM_FILE &&
 			std::hash<std::wstring>()(texDesc.FilePathOrResource) == dwFileName &&
 			texDesc.Width == uWidth &&
 			texDesc.Height == uHeight)
 			return pTexture;
-
-		++itr;
 	}
 	
 	UI::STextureDesc texDesc;
@@ -264,12 +248,12 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 {
 	size_t dwResourceName = std::hash<std::wstring>()(swResourceName);
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
-		auto pTexture = itr->lock();
-		if (pTexture == nullptr) {
+		if (itr->expired()) {
 			itr = m_textures.erase(itr);
 			continue;
 		}
 
+		const auto pTexture = (itr++)->lock();
 		const auto &texDesc = pTexture->GetDescription();
 		if (texDesc.TextureType == UI::TEXTURE_FROM_RESOURCE &&
 			std::hash<std::wstring>()(texDesc.FilePathOrResource) == dwResourceName &&
@@ -277,8 +261,6 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 			texDesc.Width == uWidth &&
 			texDesc.Height == uHeight)
 			return pTexture;
-
-		++itr;
 	}
 
 	UI::STextureDesc texDesc;
