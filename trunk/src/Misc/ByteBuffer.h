@@ -59,11 +59,11 @@ namespace Utils {
 			return m_storage != other.m_storage;
 		}
 
-		std::vector<byte>& to_vector() {
+		operator std::vector<byte>&() {
 			return m_storage;
 		}
 
-		const std::vector<byte>& to_vector() const {
+		operator const std::vector<byte>&() const {
 			return m_storage;
 		}
 
