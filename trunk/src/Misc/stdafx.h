@@ -62,7 +62,6 @@ typedef signed char int8;
 #include <boost/lexical_cast.hpp>
 #include <codecvt>
 #include <atlbase.h>
-#include "Utility.h"
 #include "Mutex.h"
 #include "Color.h"
 #include "Vector.h"

@@ -211,9 +211,6 @@
     <ClInclude Include="src\Misc\DebugHelper.h">
       <Filter>Headers\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="src\Misc\Utility.h">
-      <Filter>Headers\Misc</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">

@@ -29,15 +29,19 @@ void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 	if (pDevice->GetCreationParameters(&creationParams) == D3D_OK)
 		sWndProc->Attach(creationParams.hFocusWindow);
 
-	Utils::WeakForEach(m_fonts.begin(), m_fonts.end(),
-		[&pDevice] (std::shared_ptr<UI::D3DFont> pFont) {
-		pFont->SetDevice(pDevice);
-	});
+	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_fonts.erase(itr);
+		else
+			(itr++)->lock()->SetDevice(pDevice);
+	}
 
-	Utils::WeakForEach(m_textures.begin(), m_textures.end(),
-		[&pDevice] (std::shared_ptr<UI::D3DTexture> pTexture) {
-		pTexture->SetDevice(pDevice);
-	});
+	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_textures.erase(itr);
+		else
+			(itr++)->lock()->SetDevice(pDevice);
+	}
 
 	// call events...
 	OnDeviceChangedEvent();
@@ -105,15 +109,19 @@ void D3DManager::OnLostDevice() {
 	m_sprite->OnLostDevice();
 	m_renderTarget->OnLostDevice();
 
-	Utils::WeakForEach(m_fonts.begin(), m_fonts.end(),
-		[] (std::shared_ptr<UI::D3DFont> pFont) {
-		pFont->OnLostDevice();
-	});
+	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_fonts.erase(itr);
+		else
+			(itr++)->lock()->OnLostDevice();
+	}
 
-	Utils::WeakForEach(m_textures.begin(), m_textures.end(),
-		[] (std::shared_ptr<UI::D3DTexture> pTexture) {
-		pTexture->OnLostDevice();
-	});
+	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_textures.erase(itr);
+		else
+			(itr++)->lock()->OnLostDevice();
+	}
 
 	OnDeviceLostEvent();
 }
@@ -123,15 +131,19 @@ void D3DManager::OnResetDevice() {
 	m_sprite->OnResetDevice();
 	m_renderTarget->OnResetDevice();
 
-	Utils::WeakForEach(m_fonts.begin(), m_fonts.end(),
-		[] (std::shared_ptr<UI::D3DFont> pFont) {
-		pFont->OnResetDevice();
-	});
+	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_fonts.erase(itr);
+		else
+			(itr++)->lock()->OnResetDevice();
+	}
 
-	Utils::WeakForEach(m_textures.begin(), m_textures.end(),
-		[] (std::shared_ptr<UI::D3DTexture> pTexture) {
-		pTexture->OnResetDevice();
-	});
+	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_textures.erase(itr);
+		else
+			(itr++)->lock()->OnResetDevice();
+	}
 
 	OnDeviceResetEvent();
 }
