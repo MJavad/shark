@@ -40,7 +40,7 @@ namespace Utils
 				m_symCleanup != nullptr)
 			{
 				m_symSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS);
-				if (m_symInitialize(GetCurrentProcess(), nullptr, FALSE) != FALSE)
+				if (m_symInitialize(GetCurrentProcess(), nullptr, TRUE) != FALSE)
 					return;
 			}
 
