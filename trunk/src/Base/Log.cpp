@@ -26,7 +26,7 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	va_start(vaArgs, pszFormat);
 	size_t length = _vscprintf(pszFormat, vaArgs);
 	sBuffer.resize(length);
-	_vsnprintf(&sBuffer[0], length, pszFormat, vaArgs);
+	vsprintf_s(&sBuffer[0], length, pszFormat, vaArgs);
 	va_end(vaArgs);
 
 	std::wostringstream o;
@@ -47,7 +47,7 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	va_start(vaArgs, pswzFormat);
 	size_t length = _vscwprintf(pswzFormat, vaArgs);
 	swBuffer.resize(length);
-	_vsnwprintf(&swBuffer[0], length, pswzFormat, vaArgs);
+	vswprintf_s(&swBuffer[0], length, pswzFormat, vaArgs);
 	va_end(vaArgs);
 
 	std::wostringstream o;
