@@ -35,6 +35,9 @@ namespace Utils
 
 	private:
 		static std::shared_ptr<T> s_instance;
+
+		Singleton(const Singleton<T>&);
+		Singleton<T>& operator=(const Singleton<T>&);
 	};
 }
 
