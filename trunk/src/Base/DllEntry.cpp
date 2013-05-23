@@ -154,14 +154,14 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 			break;
 		}
 
-		msgStrm << L"Extended information:" << L"\r\n";
+		msgStrm << L"Extended information:\r\n";
 		msgStrm << L"The memory at 0x" << std::hex << std::uppercase
 				<< reinterpret_cast<void*>(pInfo->ExceptionRecord->ExceptionInformation[1])
 				<< L" could not be " << accessType << L".\r\n";
 	}
 
 	else if (pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_MSVC) {
-		msgStrm << L"Extended information:" << L"\r\n";
+		msgStrm << L"Extended information:\r\n";
 
 		static const std::type_info& stdExInfo = typeid(std::exception);
 		static const std::type_info& stdStringInfo = typeid(std::string);
@@ -195,14 +195,14 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 
 			if (*pTypeInfo == stdStringInfo) {
 				std::string *pString = (std::string*) pmDisp;
-				msgStrm << L"Type: class std::string" << L"\r\n";
+				msgStrm << L"Type: class std::string\r\n";
 				msgStrm << L"Message: " << std::wstring(pString->begin(), pString->end()) << L"\r\n";
 				break;
 			}
 
 			if (*pTypeInfo == stdWStringInfo) {
 				std::wstring *pString = (std::wstring*) pmDisp;
-				msgStrm << L"Type: class std::wstring" << L"\r\n";
+				msgStrm << L"Type: class std::wstring\r\n";
 				msgStrm << L"Message: " << *pString << L"\r\n";
 				break;
 			}
@@ -211,7 +211,7 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 				const char **ppMessage = (const char**) pmDisp;
 				std::string sMessage(ppMessage != nullptr ? *ppMessage : "null");
 
-				msgStrm << L"Type: string (char*)" << L"\r\n";
+				msgStrm << L"Type: string (char*)\r\n";
 				msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
 				break;
 			}
@@ -219,7 +219,7 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 			if (*pTypeInfo == wcharInfo) {
 				const wchar_t **ppMessage = (const wchar_t**) pmDisp;
 
-				msgStrm << L"Type: wstring (wchar_t*)" << L"\r\n";
+				msgStrm << L"Type: wstring (wchar_t*)\r\n";
 				msgStrm << L"Message: " << (ppMessage != nullptr ? *ppMessage : L"null") << L"\r\n";
 				break;
 			}
