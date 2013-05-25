@@ -28,11 +28,6 @@ typedef PVOID (WINAPI *tSymFunctionTableAccess64) (_In_ HANDLE hProcess,
 typedef DWORD64 (WINAPI *tSymGetModuleBase64) (_In_ HANDLE hProcess,
 											   _In_ DWORD64 dwAddr);
 
-typedef DWORD (WINAPI *tUnDecorateSymbolNameW) (_In_ PCWSTR DecoratedName,
-												_Out_ PWSTR UnDecoratedName,
-												_In_ DWORD UndecoratedLength,
-												_In_ DWORD Flags);
-
 typedef BOOL (WINAPI *tSymCleanup) (_In_ HANDLE hProcess);
 
 namespace Utils
@@ -54,7 +49,6 @@ namespace Utils
 		tSymFromAddrW m_symFromAddr;
 		tSymFunctionTableAccess64 m_symFunctionTableAccess;
 		tSymGetModuleBase64 m_symGetModuleBase;
-		tUnDecorateSymbolNameW m_undecorateSymbolName;
 		tSymCleanup m_symCleanup;
 	};
 }

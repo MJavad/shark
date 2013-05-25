@@ -46,9 +46,13 @@ bool Engine::InitializeShutdown() const {
 	return !hThread.is_null();
 }
 
+// This is probably an unfixable race condition... Just wait a little.
+// Also possible: WaitForMultipleObjects to wait until each working thread has finished
 BOOL WINAPI Engine::_shutdownThread(LPVOID lpParam) {
 	sEngine->m_shutdownEvent.set();
 	sEngine->m_shutdownComplete.wait();
+
+	Sleep(10);
 	FreeLibraryAndExitThread(sEngine->m_instance, EXIT_SUCCESS);
 	return EXIT_SUCCESS;
 }

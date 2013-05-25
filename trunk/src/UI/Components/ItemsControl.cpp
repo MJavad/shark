@@ -86,8 +86,8 @@ namespace Components {
 
 		for (uint32 i = 0; i < 2; ++i) {
 			for (auto itr = lstChildren.crbegin(),
-				 end = lstChildren.crend(); itr != end; ++itr) {
-
+					  end = lstChildren.crend(); itr != end; ++itr)
+			{
 				const auto &pCurrent = *itr;
 				if (bNext || i > 0) {
 					if (pCurrent == pComponent)
@@ -100,7 +100,8 @@ namespace Components {
 					bNext = true;
 			}
 
-			if (pParent != nullptr &&
+			// only call it after the first loop
+			if (i == 0 && pParent != nullptr &&
 				pParent->OnTabPressed(pThis))
 				return true;
 		}

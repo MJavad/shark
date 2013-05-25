@@ -24,9 +24,6 @@ namespace Utils
 			m_symGetModuleBase = reinterpret_cast<tSymGetModuleBase64>
 				(GetProcAddress(m_dbgHelp, "SymGetModuleBase64"));
 
-			m_undecorateSymbolName = reinterpret_cast<tUnDecorateSymbolNameW>
-				(GetProcAddress(m_dbgHelp, "UnDecorateSymbolNameW"));
-
 			m_symCleanup = reinterpret_cast<tSymCleanup>
 				(GetProcAddress(m_dbgHelp, "SymCleanup"));
 
@@ -36,7 +33,6 @@ namespace Utils
 				m_symFromAddr != nullptr &&
 				m_symFunctionTableAccess != nullptr &&
 				m_symGetModuleBase != nullptr &&
-				m_undecorateSymbolName != nullptr &&
 				m_symCleanup != nullptr)
 			{
 				m_symSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS);
@@ -106,11 +102,11 @@ namespace Utils
 							  stackFrame64.AddrPC.Offset,
 							  &dwDisplacement,
 							  pSymbol) != FALSE)
-				callStack << pSymbol->Name;
+				callStack << pSymbol->Name << L" + 0x" << std::hex << std::uppercase << dwDisplacement;
 			else
 				callStack << L"<Unknown Symbol>";
 
-			callStack << L" + 0x" << std::hex << std::uppercase << dwDisplacement << L"\r\n";
+			callStack << L"\r\n";
 		}
 
 		return callStack.str();

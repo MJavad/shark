@@ -13,10 +13,10 @@ namespace Components {
 
 	ISizable::ISizable() : m_isGripVisible(true), m_isHovered(false), m_isSizeLimited(false) {
 		if (s_resizeTexture == nullptr)
-			s_resizeTexture = sD3DMgr->GetTextureFromFile(L"resizer.png");
+			s_resizeTexture = sD3DMgr->GetTextureFromFile(L"E:\\shark\\resizer.png");
 
 		if (s_resizeTextureHover == nullptr)
-			s_resizeTextureHover = sD3DMgr->GetTextureFromFile(L"resizer_hover.png");
+			s_resizeTextureHover = sD3DMgr->GetTextureFromFile(L"E:\\shark\\resizer_hover.png");
 	}
 
 	void ISizable::OnRender(uint32 uTimePassed) {

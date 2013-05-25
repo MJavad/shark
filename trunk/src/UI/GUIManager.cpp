@@ -105,11 +105,9 @@ namespace UI {
 		page1->GetContent()->PushChild(tabButton1);
 		page2->GetContent()->PushChild(testFrame2);
 
-
 		auto editBox = Components::EditBox::Create();
 		editBox->SetPosition(Utils::Vector2(500, 500));
 		testFrame1->PushChild(editBox);
-
 
 		tabButton1->OnClickEvent += [testFrame2, editBox] (const Utils::Vector2&) {
 			float4 fVisib = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -205,8 +203,8 @@ namespace UI {
 		pBackgroundLineRight->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineRight);
 
-		const auto pCloseButtonTexture = Components::Texture::Create(sD3DMgr->GetTextureFromFile(L"close.png"));
-		const auto pCloseButtonTextureHover = Components::Texture::Create(sD3DMgr->GetTextureFromFile(L"close_hover.png"));
+		const auto pCloseButtonTexture = Components::Texture::Create(sD3DMgr->GetTextureFromFile(L"E:\\shark\\close.png"));
+		const auto pCloseButtonTextureHover = Components::Texture::Create(sD3DMgr->GetTextureFromFile(L"E:\\shark\\close_hover.png"));
 
 		float4 fInvisible = {0.0f, 1.0f, 1.0f, 1.0f};
 		pCloseButtonTextureHover->SetVisibility(false);

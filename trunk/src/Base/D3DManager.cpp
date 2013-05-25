@@ -154,7 +154,8 @@ void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	for( auto itr = lstInterfaces.begin(), end = lstInterfaces.end(); itr != end; ++itr )
 		(*itr)->OnMessageReceived(uMsg, wParam, lParam);
 
-	if (uMsg == WM_KEYDOWN && wParam == VK_TAB) {
+	if (!sWndProc->LastMessageHandled &&
+		uMsg == WM_KEYDOWN && wParam == VK_TAB) {
 		auto pFocus = UI::Components::IFocusable::GetActiveFocus();
 
 		if (pFocus != nullptr) {

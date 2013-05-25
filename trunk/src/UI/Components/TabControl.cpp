@@ -170,8 +170,8 @@ namespace Components {
 
 		for (uint32 i = 0; i < 2; ++i) {
 			for (auto itr = vTabPages.cbegin(),
-				 end = vTabPages.cend(); itr != end; ++itr) {
-
+					  end = vTabPages.cend(); itr != end; ++itr)
+			{
 				const auto &pCurrent = *itr;
 				if (bNext || i > 0) {
 					if (pCurrent == pComponent)
@@ -184,7 +184,8 @@ namespace Components {
 					bNext = true;
 			}
 
-			if (pParent != nullptr &&
+			// only call it after the first loop
+			if (i == 0 && pParent != nullptr &&
 				pParent->OnTabPressed(pThis))
 				return true;
 		}
