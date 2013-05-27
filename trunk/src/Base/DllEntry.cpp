@@ -85,12 +85,14 @@ BOOL CALLBACK ExceptionDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 			if (hFont != nullptr)
 				SendMessageW(hShutdown, WM_SETFONT, (WPARAM) hFont, FALSE);
 
-			HICON errIcon = LoadIconW(nullptr, IDI_ERROR);
+			HICON hErrIcon = LoadIconW(nullptr, IDI_ERROR);
 			HWND hIconStatic = GetDlgItem(hwndDlg, IDC_ERRPICBOX);
-			if (errIcon != nullptr)
-				SendMessageW(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM)errIcon);
+			if (hErrIcon != nullptr)
+				SendMessageW(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM) hErrIcon);
 
-			SendMessageW(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIconW(nullptr, IDI_EXCLAMATION));
+			HICON hExclamation = LoadIconW(nullptr, IDI_EXCLAMATION);
+			if (hExclamation != nullptr)
+				SendMessageW(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM) hExclamation);
 		}
 		return TRUE;
 
