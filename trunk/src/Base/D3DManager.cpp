@@ -8,9 +8,10 @@
 #include "UI/Components/IFocusable.h"
 
 INIT_SINGLETON(D3DManager);
+D3DManager sD3DMgr;
 
 void D3DManager::Initialize() {
-	sWndProc->OnMessageReceivedEvent +=
+	sWndProc.OnMessageReceivedEvent +=
 	[this] (UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		this->OnMessageReceived(uMsg, wParam, lParam);
 	};
@@ -27,7 +28,7 @@ void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 
 	D3DDEVICE_CREATION_PARAMETERS creationParams = {0};
 	if (pDevice->GetCreationParameters(&creationParams) == D3D_OK)
-		sWndProc->Attach(creationParams.hFocusWindow);
+		sWndProc.Attach(creationParams.hFocusWindow);
 
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
 		if (itr->expired())
@@ -154,13 +155,13 @@ void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	for( auto itr = lstInterfaces.begin(), end = lstInterfaces.end(); itr != end; ++itr )
 		(*itr)->OnMessageReceived(uMsg, wParam, lParam);
 
-	if (!sWndProc->LastMessageHandled &&
+	if (!sWndProc.LastMessageHandled &&
 		uMsg == WM_KEYDOWN && wParam == VK_TAB) {
 		auto pFocus = UI::Components::IFocusable::GetActiveFocus();
 
 		if (pFocus != nullptr) {
 			pFocus->OnTabPressed(pFocus);
-			sWndProc->LastMessageHandled = true;
+			sWndProc.LastMessageHandled = true;
 		}
 	}
 }

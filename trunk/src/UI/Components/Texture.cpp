@@ -17,7 +17,7 @@ namespace Components {
 
 		Utils::Vector3 vScreen = GetScreenPosition();
 		RECT screenRect = GetFullRect();
-		const auto pSprite = sD3DMgr->GetSprite();
+		const auto pSprite = sD3DMgr.GetSprite();
 
 		if (pSprite != nullptr && IsRectEmpty(&screenRect) != FALSE) {
 			D3DXMATRIX matTransform = GetTransform();
@@ -30,7 +30,7 @@ namespace Components {
 		else {
 			float fWidth = GetWidth();
 			float fHeight = GetHeight();
-			const auto pRenderTarget = sD3DMgr->GetRenderTarget();
+			const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 			const auto dimensions = pRenderTarget->MakeDimension(fWidth, fHeight);
 			pRenderTarget->DrawSprite(vScreen, pTexture, dimensions, GetModifiedColor(GetColor()));
 		}

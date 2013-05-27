@@ -67,7 +67,7 @@ namespace Components {
 		}
 
 		Utils::Vector2 vScreen = GetScreenPosition();
-		const auto pRenderTarget = sD3DMgr->GetRenderTarget();
+		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 
 		if (s_renderCaret) {
 			Utils::Vector2 vCaret;
@@ -78,7 +78,7 @@ namespace Components {
 	}
 
 	void EditBox::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
-		if (!sWndProc->LastMessageHandled &&
+		if (!sWndProc.LastMessageHandled &&
 			GetVisibility() && IsFocused()) {
 			switch (uMsg)
 			{

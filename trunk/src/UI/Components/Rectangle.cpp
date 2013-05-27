@@ -1,7 +1,6 @@
 #include "Misc/stdafx.h"
 #include "Rectangle.h"
 #include "Base/D3DManager.h"
-#include "Base/Engine.h"
 
 namespace UI {
 namespace Components {
@@ -10,15 +9,13 @@ namespace Components {
 		memset(&m_vertRoundings, 0, sizeof(m_vertRoundings));
 
 		const auto callback = [this] { m_shadowTexture = nullptr; };
-		m_lostDevice = sD3DMgr->OnDeviceLostEvent += callback;
-		m_changeDevice = sD3DMgr->OnDeviceChangedEvent += callback;
+		m_lostDevice = sD3DMgr.OnDeviceLostEvent += callback;
+		m_changeDevice = sD3DMgr.OnDeviceChangedEvent += callback;
 	}
 
 	Rectangle::~Rectangle() {
-		if (Engine::IsInitialized()) {
-			sD3DMgr->OnDeviceLostEvent -= m_lostDevice;
-			sD3DMgr->OnDeviceChangedEvent -= m_changeDevice;
-		}
+		sD3DMgr.OnDeviceLostEvent -= m_lostDevice;
+		sD3DMgr.OnDeviceChangedEvent -= m_changeDevice;
 	}
 
 	std::shared_ptr<Rectangle> Rectangle::Create(float fWidth, float fHeight) {
@@ -41,7 +38,7 @@ namespace Components {
 		float4 fHorizontalRounding = GetHorizontalRoundings();
 		float4 fVerticalRounding = GetVerticalRoundings();
 		const auto gradient = GetModifiedColor(GetGradientColors());
-		const auto pRenderTarget = sD3DMgr->GetRenderTarget();
+		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 
 		bool bDrawRoundings = ((fHorizontalRounding._1 != 0.0f && fVerticalRounding._1 != 0.0f) ||
 							   (fHorizontalRounding._2 != 0.0f && fVerticalRounding._2 != 0.0f) ||
@@ -92,7 +89,7 @@ namespace Components {
 			if (pOldClipRect != nullptr)
 				pRenderTarget->SetClippingArea(pOldClipRect);
 
-			const auto pSprite = sD3DMgr->GetSprite();
+			const auto pSprite = sD3DMgr.GetSprite();
 			if (pSprite != nullptr) {
 				pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 				Utils::Vector3 vPosition3 = vPosition;

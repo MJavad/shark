@@ -35,4 +35,4 @@ public:
 	SDirectX DirectX;
 };
 
-#define sOffsets Utils::Singleton<Offsets>::Instance()
+extern Offsets sOffsets;

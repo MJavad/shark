@@ -29,12 +29,12 @@ BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 		DisableThreadLibraryCalls(hInstance);
 		_SetUnhandledExceptionFilter(InternalExceptionFilter);
 
-		sEngine->Initialize(hInstance);
+		sEngine.Initialize(hInstance);
 		break;
 
 	case DLL_PROCESS_DETACH:
 		_SetUnhandledExceptionFilter(nullptr);
-		sEngine->OnProcessDetach();
+		sEngine.OnProcessDetach();
 		break;
 	}
 
@@ -46,13 +46,13 @@ BOOL WINAPI LoadInternal(LPVOID lpParam) {
 	srand(timeGetTime());
 
 	try {
-		sLog->Initialize();
-		sMemory->Initialize();
-		sOffsets->Initialize();
-		sDelegates->Initialize();
-		sWndProc->Initialize();
-		sD3DMgr->Initialize();
-		sDetours->Initialize();
+		sLog.Initialize();
+		sMemory.Initialize();
+		sOffsets.Initialize();
+		sDelegates.Initialize();
+		sWndProc.Initialize();
+		sD3DMgr.Initialize();
+		sDetours.Initialize();
 	}
 	catch (std::exception &e) {
 		MessageBoxA(nullptr, e.what(), "ERROR", MB_OK);
@@ -64,8 +64,8 @@ BOOL WINAPI LoadInternal(LPVOID lpParam) {
 
 // EXPORTS: Unload
 BOOL WINAPI UnloadInternal(LPVOID lpParam) {
-	if (!sEngine->IsShuttingDown())
-		sEngine->InitializeShutdown();
+	if (!sEngine.IsShuttingDown())
+		sEngine.InitializeShutdown();
 
 	return EXIT_SUCCESS;
 }
@@ -239,7 +239,7 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 	actCtx.dwFlags = ACTCTX_FLAG_RESOURCE_NAME_VALID | ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_LANGID_VALID;
 	actCtx.wLangId = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
 	actCtx.lpResourceName = MAKEINTRESOURCE(IDR_RT_MANIFEST1);
-	actCtx.hModule = sEngine->GetInstance();
+	actCtx.hModule = sEngine.GetInstance();
 	HANDLE hActCtx = CreateActCtxW(&actCtx);
 
 	ULONG_PTR actCookie = 0;
@@ -257,7 +257,7 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 	if (pInitCommonControlsEx != nullptr)
 		pInitCommonControlsEx(&ice);
 
-	HWND hDlg = CreateDialogW(sEngine->GetInstance(), MAKEINTRESOURCE(IDD_DIALOG1), nullptr, (DLGPROC) ExceptionDlgProc);
+	HWND hDlg = CreateDialogW(sEngine.GetInstance(), MAKEINTRESOURCE(IDD_DIALOG1), nullptr, (DLGPROC) ExceptionDlgProc);
 	SendMessageW(hDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIconW(nullptr, IDI_EXCLAMATION));
 
 	HWND hShutdown = GetDlgItem(hDlg, IDC_SHUTDOWN);

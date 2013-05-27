@@ -3,6 +3,9 @@
 class Engine : public Utils::Singleton<Engine>
 {
 public:
+	Engine() : m_instance(nullptr),
+			   m_lastPulse(0) {}
+
 	void Initialize(HINSTANCE hInstance);
 	void InitializeEnvironment();
 	bool InitializeShutdown() const;
@@ -42,4 +45,4 @@ protected:
 	static BOOL WINAPI _shutdownThread(LPVOID lpParam);
 };
 
-#define sEngine Utils::Singleton<Engine>::Instance()
+extern Engine sEngine;

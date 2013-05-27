@@ -5,21 +5,24 @@
 
 namespace UI {
 namespace Components {
-	IComponent::IComponent(): m_isVisible(true), m_fadeActive(false),
-		m_prevFade(false), m_moveActive(false), m_prevMove(false) {
+	IComponent::IComponent(): m_isVisible(true),
+							  m_fadeActive(false),
+							  m_prevFade(false),
+							  m_moveActive(false),
+							  m_prevMove(false)
+	{
 		m_colorMod._1 = 1.0f; m_colorMod._2 = 1.0f;
 		m_colorMod._3 = 1.0f; m_colorMod._4 = 1.0f;
 
 		// register for update...
-		m_updateDelegate = sD3DMgr->OnUpdateEvent +=
+		m_updateDelegate = sD3DMgr.OnUpdateEvent +=
 		[this] (uint32 uTimePassed) {
 			OnUpdate(uTimePassed);
 		};
 	}
 
 	IComponent::~IComponent() {
-		if (Engine::IsInitialized())
-			sD3DMgr->OnUpdateEvent -= m_updateDelegate;
+		sD3DMgr.OnUpdateEvent -= m_updateDelegate;
 	}
 
 	void IComponent::OnUpdate(uint32 uTimePassed) {
@@ -189,7 +192,7 @@ namespace Components {
 			fVisib._3 == fCurrent._3 && fVisib._4 == fCurrent._4) {
 			FadeTo(time, fHighlight);
 
-			sEngine->PulseTimer.AddTimer(time * 2, [=] (const Utils::STimerDispatchEvt&) {
+			sEngine.PulseTimer.AddTimer(time * 2, [=] (const Utils::STimerDispatchEvt&) {
 				this->FadeTo(uint32(time * 1.5f), fVisib);
 				return TIMER_STOP_EXECUTION;
 			});

@@ -4,6 +4,7 @@
 #include "Misc/DebugHelper.h"
 
 INIT_SINGLETON(Offsets);
+Offsets sOffsets;
 
 Offsets::SModule::SModule() {
 	MainModule = nullptr;
@@ -34,7 +35,7 @@ void Offsets::SModule::Initialize() {
 	MainDosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(MainModule);
 	MainNtHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(dwMainModule + MainDosHeader->e_lfanew);
 	
-	CurrentInstance = sEngine->GetInstance();
+	CurrentInstance = sEngine.GetInstance();
 	DWORD_PTR dwCurrentModule = reinterpret_cast<DWORD_PTR>(CurrentInstance);
 	CurrentDosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(CurrentInstance);
 	CurrentNtHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(dwCurrentModule + CurrentDosHeader->e_lfanew);
@@ -43,7 +44,7 @@ void Offsets::SModule::Initialize() {
 void Offsets::SDirectX::Initialize() {
 	WNDCLASSW wndClass = {0};
 	wndClass.lpfnWndProc = DefWindowProcW;
-	wndClass.hInstance = sEngine->GetInstance();
+	wndClass.hInstance = sEngine.GetInstance();
 	wndClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 	wndClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);
 	wndClass.hIcon = LoadIconW(nullptr, IDI_APPLICATION);
@@ -83,7 +84,7 @@ void Offsets::SDirectX::Initialize() {
 						PIMAGE_NT_HEADERS pNtHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(dwModuleBase + pDosHeader->e_lfanew);
 					
 						const byte devicePattern[] = {0xC7, 0x06, 0x00, 0x00, 0x00, 0x00, 0x89, 0x86, 0x00, 0x00, 0x00, 0x00, 0x89, 0x86};
-						DWORD_PTR dwVtblAddr = sMemory->FindMemoryPattern(dwModuleBase,
+						DWORD_PTR dwVtblAddr = sMemory.FindMemoryPattern(dwModuleBase,
 							pNtHeaders->OptionalHeader.SizeOfCode, devicePattern, "xx????xx????xx");
 
 						if (dwVtblAddr != 0) {

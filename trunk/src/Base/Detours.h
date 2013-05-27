@@ -3,7 +3,6 @@
 class Detours : public Utils::Singleton<Detours>
 {
 public:
-	Detours() {}
 	void Initialize();
 
 	Utils::Event<void (IDirect3DDevice9*, D3DPRESENT_PARAMETERS*)> OnLostDeviceEvent;
@@ -26,8 +25,8 @@ private:
 	template <typename T>
 	void ApplyDetour(T &tDelegate, void *pRedirect) const {
 		if (tDelegate != nullptr && pRedirect != nullptr)
-			sMemory->DetourFunction(reinterpret_cast<void**>(&tDelegate), pRedirect);
+			sMemory.DetourFunction(reinterpret_cast<void**>(&tDelegate), pRedirect);
 	}
 };
 
-#define sDetours Utils::Singleton<Detours>::Instance()
+extern Detours sDetours;

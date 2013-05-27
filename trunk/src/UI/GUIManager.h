@@ -17,4 +17,4 @@ namespace UI {
 	};
 }
 
-#define sGUIMgr Utils::Singleton<UI::GUIManager>::Instance()
+extern UI::GUIManager sGUIMgr;

@@ -2,7 +2,7 @@
 
 namespace Utils
 {
-	template<class T>
+	template <class T>
 	class Singleton
 	{
 	protected:
@@ -10,9 +10,11 @@ namespace Utils
 			if (s_instance != nullptr) {
 				std::string sMessage = "Instance of type '";
 				sMessage += typeid(T).name();
-				sMessage += "' is getting allocated the second (or more) time! See stacktrace!";
+				sMessage += "' is getting constructed the second (or more) time!";
 				throw std::exception(sMessage.c_str());
 			}
+
+			s_instance = static_cast<T*>(this);
 		}
 
 		~Singleton() {
@@ -22,11 +24,15 @@ namespace Utils
 	public:
 		void Initialize() {}
 
-		static std::shared_ptr<T> Instance() {
-			if (s_instance == nullptr)
-				s_instance = std::make_shared<T>();
+		static T& Instance() {
+			if (s_instance == nullptr) {
+				std::string sMessage = "Tried to get instance for non initialized singleton '";
+				sMessage += typeid(T).name();
+				sMessage += "'.";
+				throw std::exception(sMessage.c_str());
+			}
 
-			return s_instance;
+			return *s_instance;
 		}
 
 		static bool Created() {
@@ -34,11 +40,11 @@ namespace Utils
 		}
 
 	private:
-		static std::shared_ptr<T> s_instance;
+		static T *s_instance;
 
 		Singleton(const Singleton<T>&);
 		Singleton<T>& operator=(const Singleton<T>&);
 	};
 }
 
-#define INIT_SINGLETON(T) std::shared_ptr<T> Utils::Singleton<T>::s_instance;
+#define INIT_SINGLETON(T) T* Utils::Singleton<T>::s_instance = nullptr;

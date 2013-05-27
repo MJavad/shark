@@ -13,10 +13,10 @@ namespace Components {
 
 	ISizable::ISizable() : m_isGripVisible(true), m_isHovered(false), m_isSizeLimited(false) {
 		if (s_resizeTexture == nullptr)
-			s_resizeTexture = sD3DMgr->GetTextureFromFile(L"E:\\shark\\resizer.png");
+			s_resizeTexture = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer.png");
 
 		if (s_resizeTextureHover == nullptr)
-			s_resizeTextureHover = sD3DMgr->GetTextureFromFile(L"E:\\shark\\resizer_hover.png");
+			s_resizeTextureHover = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer_hover.png");
 	}
 
 	void ISizable::OnRender(uint32 uTimePassed) {
@@ -26,7 +26,7 @@ namespace Components {
 		RECT sizerRect = GetSizerRect();
 		Utils::Vector3 vPosition(float(sizerRect.left), float(sizerRect.top));
 
-		const auto pSprite = sD3DMgr->GetSprite();
+		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 			pSprite->Draw(m_isHovered ? s_resizeTextureHover : s_resizeTexture,
@@ -49,7 +49,7 @@ namespace Components {
 		switch(uMsg)
 		{
 		case WM_LBUTTONDOWN:
-			if (!sWndProc->LastMessageHandled) {
+			if (!sWndProc.LastMessageHandled) {
 				Utils::Vector2 vSize = GetScreenPosition();
 				vSize.x += GetWidth();
 				vSize.y += GetHeight();
@@ -58,7 +58,7 @@ namespace Components {
 					!OnResizeStartRequest(&vPosition))
 					StartSizing(vSize - vPosition);
 
-				sWndProc->LastMessageHandled = IsSizing();
+				sWndProc.LastMessageHandled = IsSizing();
 			}
 			break;
 
@@ -67,7 +67,7 @@ namespace Components {
 				if (!OnResizeEndRequest(&vPosition))
 					ResetActiveSizer();
 
-				sWndProc->LastMessageHandled = true;
+				sWndProc.LastMessageHandled = true;
 			}
 			break;
 
@@ -104,10 +104,10 @@ namespace Components {
 			}
 
 			m_isHovered = IsSizing() ||
-				(!sWndProc->LastMessageHandled &&
+				(!sWndProc.LastMessageHandled &&
 				 PtInSizerRect(vPosition));
 
-			sWndProc->LastMessageHandled |= m_isHovered;
+			sWndProc.LastMessageHandled |= m_isHovered;
 			break;
 		};
 	}

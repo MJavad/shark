@@ -55,24 +55,24 @@ namespace Components {
 			switch (uMsg)
 			{
 			case WM_LBUTTONDOWN:
-				if (sWndProc->LastMessageHandled ||
+				if (sWndProc.LastMessageHandled ||
 					!PtInBoundingRect(Utils::Vector2(lParam)))
 					Unfocus();
 				break;
 
 			case WM_CHAR:
 				if (wParam == VK_SPACE &&
-					!sWndProc->LastMessageHandled) {
+					!sWndProc.LastMessageHandled) {
 					OnClickRequest(Utils::Vector2());
-					sWndProc->LastMessageHandled = true;
+					sWndProc.LastMessageHandled = true;
 				}
 				break;
 
 			case WM_KEYDOWN:
 				if (wParam == VK_ESCAPE &&
-					!sWndProc->LastMessageHandled) {
+					!sWndProc.LastMessageHandled) {
 					Unfocus();
-					sWndProc->LastMessageHandled = true;
+					sWndProc.LastMessageHandled = true;
 				}
 				break;
 			}

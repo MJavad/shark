@@ -2,6 +2,7 @@
 #include "WndProc.h"
 
 INIT_SINGLETON(WndProc);
+WndProc sWndProc;
 
 void WndProc::Initialize() {
 	m_hWnd = nullptr;
@@ -66,14 +67,14 @@ BOOL CALLBACK WndProc::EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 }
 
 LRESULT CALLBACK WndProc::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	sWndProc->LastMessageHandled = false;
+	sWndProc.LastMessageHandled = false;
 	
 	// Disable the handler if the user is currently resizing the window...
 	if (uMsg == WM_SIZING)
-		sWndProc->m_isSizing = true;
+		sWndProc.m_isSizing = true;
 
 	else if (uMsg == WM_LBUTTONUP)
-		sWndProc->m_isSizing = false;
+		sWndProc.m_isSizing = false;
 
 	// Pre mouse fix for games like WoW (turning camera, moving stuff behind the interface...)
 	switch (uMsg) {
@@ -85,13 +86,13 @@ LRESULT CALLBACK WndProc::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	case WM_MOUSEMOVE:
 		// If one of the mouse states is false, the user clicked somewhere behind the interface...
 		// We don't want to handle the following actions in our GUI...
-		sWndProc->LastMessageHandled |= !sWndProc->m_lMouseOk;
-		sWndProc->LastMessageHandled |= !sWndProc->m_rMouseOk;
+		sWndProc.LastMessageHandled |= !sWndProc.m_lMouseOk;
+		sWndProc.LastMessageHandled |= !sWndProc.m_rMouseOk;
 		break;
 	}
 
 	// Call events!
-	sWndProc->OnMessageReceivedEvent(uMsg, wParam, lParam);
+	sWndProc.OnMessageReceivedEvent(uMsg, wParam, lParam);
 
 	// Post mouse fix - should we handle the message?
 	switch (uMsg) {
@@ -102,29 +103,29 @@ LRESULT CALLBACK WndProc::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	case WM_MOUSEWHEEL:
 	case WM_MOUSEMOVE:
 		// Everything is fine if this is true...
-		sWndProc->LastMessageHandled &= sWndProc->m_lMouseOk;
-		sWndProc->LastMessageHandled &= sWndProc->m_rMouseOk;
+		sWndProc.LastMessageHandled &= sWndProc.m_lMouseOk;
+		sWndProc.LastMessageHandled &= sWndProc.m_rMouseOk;
 
 		if (uMsg == WM_LBUTTONDOWN)
-			sWndProc->m_lMouseOk = sWndProc->LastMessageHandled;
+			sWndProc.m_lMouseOk = sWndProc.LastMessageHandled;
 
 		else if (uMsg == WM_LBUTTONUP)
-			sWndProc->m_lMouseOk = true;
+			sWndProc.m_lMouseOk = true;
 
 		else if (uMsg == WM_RBUTTONDOWN)
-			sWndProc->m_rMouseOk = sWndProc->LastMessageHandled;
+			sWndProc.m_rMouseOk = sWndProc.LastMessageHandled;
 
 		else if (uMsg == WM_RBUTTONUP)
-			sWndProc->m_rMouseOk = true;
+			sWndProc.m_rMouseOk = true;
 		break;
 	}
 
 	// Handle it if the handler is not disabled and the message is not WM_DESTROY...
 	if (uMsg != WM_DESTROY &&
-		sWndProc->LastMessageHandled &&
-		!sWndProc->m_isSizing)
+		sWndProc.LastMessageHandled &&
+		!sWndProc.m_isSizing)
 		return 0;
 
 	// Don't handle it...
-	return CallWindowProcW(sWndProc->m_wndProc, hWnd, uMsg, wParam, lParam);
+	return CallWindowProcW(sWndProc.m_wndProc, hWnd, uMsg, wParam, lParam);
 }

@@ -33,7 +33,7 @@ namespace Components {
 				pListBoxEntry->OnRender(uTimePassed);
 		}
 		
-		const auto pSprite = sD3DMgr->GetSprite();
+		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 
@@ -58,7 +58,7 @@ namespace Components {
 		if (pBorder != nullptr)
 			pBorder->OnMessageReceived(uMsg, wParam, lParam);
 		
-		if (uMsg == WM_LBUTTONDOWN && !sWndProc->LastMessageHandled &&
+		if (uMsg == WM_LBUTTONDOWN && !sWndProc.LastMessageHandled &&
 			PtInBoundingRect(vPosition))
 			SetSelecting(true);
 
@@ -72,14 +72,14 @@ namespace Components {
 
 		if (IsSelecting()) {
 			if (uMsg == WM_LBUTTONDOWN)
-				sWndProc->LastMessageHandled = true;
+				sWndProc.LastMessageHandled = true;
 
 			if (uMsg == WM_MOUSEMOVE)
-				sWndProc->LastMessageHandled = true;
+				sWndProc.LastMessageHandled = true;
 
 			if (uMsg == WM_LBUTTONUP) {
 				SetSelecting(false);
-				sWndProc->LastMessageHandled = true;
+				sWndProc.LastMessageHandled = true;
 			}
 		}
 	}

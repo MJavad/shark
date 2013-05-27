@@ -19,11 +19,11 @@ namespace UI {
 
 	void ComponentInterface::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		// Save old handled state
-		bool bHandled = sWndProc->LastMessageHandled;
+		bool bHandled = sWndProc.LastMessageHandled;
 
 		// If we are invisible, pretend that the message was already handled
 		if (!Visible)
-			sWndProc->LastMessageHandled = true;
+			sWndProc.LastMessageHandled = true;
 
 		const auto lstChildren = m_components;
 		for (const auto &pChild: lstChildren)
@@ -31,7 +31,7 @@ namespace UI {
 
 		// If we are invisible, restore the original handled state
 		if (!Visible)
-			sWndProc->LastMessageHandled = bHandled;
+			sWndProc.LastMessageHandled = bHandled;
 	}
 
 	bool ComponentInterface::PushControl(std::shared_ptr<Components::IComponent> pControl) {

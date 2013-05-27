@@ -70,11 +70,11 @@ namespace Components {
 
 	void TabPage::SendMessageToChildren(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		// Save old handled state
-		bool bHandled = sWndProc->LastMessageHandled;
+		bool bHandled = sWndProc.LastMessageHandled;
 
 		// If we are invisible, pretend that the message was already handled
 		if (!GetVisibility())
-			sWndProc->LastMessageHandled = true;
+			sWndProc.LastMessageHandled = true;
 
 		const auto pContent = GetContent();
 		if (pContent != nullptr)
@@ -82,7 +82,7 @@ namespace Components {
 
 		// If we are invisible, restore the original handled state
 		if (!GetVisibility())
-			sWndProc->LastMessageHandled = bHandled;
+			sWndProc.LastMessageHandled = bHandled;
 	}
 
 	bool TabPage::OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {

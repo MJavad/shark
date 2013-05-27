@@ -8,9 +8,11 @@
 class D3DManager : public Utils::Singleton<D3DManager>
 {
 public:
-	D3DManager() : m_device9(nullptr), m_device11(nullptr),
-		m_deviceContext11(nullptr), m_swapChain(nullptr),
-		m_lastFrame(0) {}
+	D3DManager() : m_device9(nullptr),
+				   m_device11(nullptr),
+				   m_deviceContext11(nullptr),
+				   m_swapChain(nullptr),
+				   m_lastFrame(0) {}
 
 	void Initialize();
 	void SetDevice9(IDirect3DDevice9 *pDevice);
@@ -69,4 +71,4 @@ protected:
 	std::list<std::weak_ptr<UI::D3DTexture>> m_textures;
 };
 
-#define sD3DMgr Utils::Singleton<D3DManager>::Instance()
+extern D3DManager sD3DMgr;

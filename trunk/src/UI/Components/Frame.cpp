@@ -38,7 +38,7 @@ namespace Components {
 
 	void Frame::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		// Save old handled state
-		bool bHandled = sWndProc->LastMessageHandled;
+		bool bHandled = sWndProc.LastMessageHandled;
 
 		if (m_sizable)
 			ISizable::OnMessageReceived(uMsg, wParam, lParam);
@@ -60,7 +60,7 @@ namespace Components {
 				if (!bHandled && GetVisibility()) {
 					Utils::Vector2 vPosition = Utils::Vector2(lParam);
 
-					if (sWndProc->LastMessageHandled ||
+					if (sWndProc.LastMessageHandled ||
 						(uMsg != WM_CHAR && PtInBoundingRect(vPosition))) {
 						const auto pParent = GetUIParent();
 						const auto pClientInterface = GetClientInterface();
@@ -78,12 +78,12 @@ namespace Components {
 							OnFocusStartEvent();
 						}
 
-						sWndProc->LastMessageHandled = true;
+						sWndProc.LastMessageHandled = true;
 					}
 				}
 				
 				if (m_activeFocus && uMsg != WM_CHAR &&
-					(bHandled || !sWndProc->LastMessageHandled)) {
+					(bHandled || !sWndProc.LastMessageHandled)) {
 					OnFocusStopEvent();
 					m_activeFocus = false;
 				}
@@ -93,7 +93,7 @@ namespace Components {
 			case WM_MOUSEMOVE: {
 				Utils::Vector2 vPosition = Utils::Vector2(lParam);
 				if (GetVisibility() && PtInBoundingRect(vPosition))
-					sWndProc->LastMessageHandled = true;
+					sWndProc.LastMessageHandled = true;
 			}
 			break;
 		}

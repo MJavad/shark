@@ -21,12 +21,12 @@ namespace Components {
 		switch(uMsg)
 		{
 		case WM_LBUTTONDOWN:
-			if (!sWndProc->LastMessageHandled) {
+			if (!sWndProc.LastMessageHandled) {
 				if (!IsDragged() && PtInBoundingRect(vPosition) &&
 					!OnDragStartRequest(&vPosition))
 					StartDrag(vPosition - GetScreenPosition());
 
-				sWndProc->LastMessageHandled = IsDragged();
+				sWndProc.LastMessageHandled = IsDragged();
 			}
 			break;
 
@@ -35,7 +35,7 @@ namespace Components {
 				if (!OnDragEndRequest(&vPosition))
 					ClearDrag();
 
-				sWndProc->LastMessageHandled = true;
+				sWndProc.LastMessageHandled = true;
 			}
 			break;
 
@@ -50,7 +50,7 @@ namespace Components {
 				SetPosition(vPosition);
 			}
 
-			sWndProc->LastMessageHandled |= IsDragged();
+			sWndProc.LastMessageHandled |= IsDragged();
 			break;
 		};
 	}

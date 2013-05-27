@@ -4,8 +4,8 @@
 
 namespace UI {
 	void ClipStack::apply() const {
-		if (sD3DMgr->IsCreated()) 
-			sD3DMgr->GetRenderTarget()->SetClippingArea(top());
+		if (sD3DMgr.IsCreated()) 
+			sD3DMgr.GetRenderTarget()->SetClippingArea(top());
 	}
 
 	void ClipStack::push(const RECT &rect) {

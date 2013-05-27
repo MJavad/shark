@@ -3,6 +3,7 @@
 #include "UI/GUIManager.h"
 
 INIT_SINGLETON(Engine);
+Engine sEngine;
 
 bool Engine::s_isInitialized = false;
 
@@ -24,16 +25,16 @@ void Engine::InitializeEnvironment() {
 	s_isInitialized = true;
 
 	try {
-		sGUIMgr->Initialize();
+		sGUIMgr.Initialize();
 	}
 	catch (std::exception &e) {
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-		sLog->OutDebug(conv.from_bytes(e.what()));
+		sLog.OutDebug(conv.from_bytes(e.what()));
 	}
 }
 
 void Engine::OnShutDown() {
-	sMemory->RemoveAllDetours();
+	sMemory.RemoveAllDetours();
 	m_shutdownComplete.set();
 }
 
@@ -49,10 +50,9 @@ bool Engine::InitializeShutdown() const {
 // This is probably an unfixable race condition... Just wait a little.
 // Also possible: WaitForMultipleObjects to wait until each working thread has finished
 BOOL WINAPI Engine::_shutdownThread(LPVOID lpParam) {
-	sEngine->m_shutdownEvent.set();
-	sEngine->m_shutdownComplete.wait();
+	sEngine.m_shutdownEvent.set();
+	sEngine.m_shutdownComplete.wait();
 
 	Sleep(10);
-	FreeLibraryAndExitThread(sEngine->m_instance, EXIT_SUCCESS);
-	return EXIT_SUCCESS;
+	FreeLibraryAndExitThread(sEngine.m_instance, EXIT_SUCCESS);
 }

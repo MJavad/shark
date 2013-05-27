@@ -1,21 +1,18 @@
 #include "Misc/stdafx.h"
 #include "Label.h"
-#include "Base/Engine.h"
 
 namespace UI {
 namespace Components {
 	Label::Label() : m_color(0xFFE0E0E0), m_formatFlags(0),
 		m_shouldCache(true), m_dropShadow(true), m_shadowDirection(2.0f, 2.0f) {
 		const auto callback = [this] { m_fontCache = nullptr; };
-		m_lostDevice = sD3DMgr->OnDeviceLostEvent += callback;
-		m_changeDevice = sD3DMgr->OnDeviceChangedEvent += callback;
+		m_lostDevice = sD3DMgr.OnDeviceLostEvent += callback;
+		m_changeDevice = sD3DMgr.OnDeviceChangedEvent += callback;
 	}
 
 	Label::~Label() {
-		if (Engine::IsInitialized()) {
-			sD3DMgr->OnDeviceLostEvent -= m_lostDevice;
-			sD3DMgr->OnDeviceChangedEvent -= m_changeDevice;
-		}
+		sD3DMgr.OnDeviceLostEvent -= m_lostDevice;
+		sD3DMgr.OnDeviceChangedEvent -= m_changeDevice;
 	}
 
 	std::shared_ptr<Label> Label::Create(std::wstring swText,
@@ -25,14 +22,14 @@ namespace Components {
 		pLabel->SetWidth(fWidth);
 		pLabel->SetHeight(fHeight);
 		pLabel->SetFormatFlags(dwFormatFlags);
-		pLabel->SetFont(sD3DMgr->GetFont(L"Segoe UI", 15));
+		pLabel->SetFont(sD3DMgr.GetFont(L"Segoe UI", 15));
 		return pLabel;
 	}
 
 	void Label::OnRender(uint32 uTimePassed) {
 		if (!GetUseCache()) {
 			const auto pFont = GetFont();
-			const auto pSprite = sD3DMgr->GetSprite();
+			const auto pSprite = sD3DMgr.GetSprite();
 
 			if (pFont != nullptr && pFont->GetObject() != nullptr) {
 				RECT screenRect = GetFullRect();
@@ -63,7 +60,7 @@ namespace Components {
 		if (!IsCached())
 			CreateCachedFontBatch();
 
-		const auto pSprite = sD3DMgr->GetSprite();
+		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 			RenderCachedFontBatch(pSprite);
@@ -74,7 +71,7 @@ namespace Components {
 	void Label::CreateCachedFontBatch() {
 		uint32 uWidth = (uint32) GetWidth();
 		uint32 uHeight = (uint32) GetHeight();
-		const auto pRenderTarget = sD3DMgr->GetRenderTarget();
+		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 		const auto pOldSurface = pRenderTarget->GetRenderTargetSurface();
 
 		m_fontCache = pRenderTarget->CreateRenderTargetTexture(uWidth, uHeight);
@@ -91,7 +88,7 @@ namespace Components {
 		fontRect.bottom = uHeight;
 
 		const auto pFont = GetFont();
-		const auto pSprite = sD3DMgr->GetSprite();
+		const auto pSprite = sD3DMgr.GetSprite();
 
 		if (pFont != nullptr && pFont->GetObject() != nullptr) {
 			if (pSprite != nullptr)

@@ -19,11 +19,11 @@ namespace Components {
 		{
 			case WM_MOUSEMOVE: {
 				bool bInRect = PtInBoundingRect(vPosition);
-				if (!m_isHovered && (!sWndProc->LastMessageHandled && bInRect) &&
+				if (!m_isHovered && (!sWndProc.LastMessageHandled && bInRect) &&
 					!OnHoverStartRequest())
 					StartHover();
 
-				else if (m_isHovered && (sWndProc->LastMessageHandled || !bInRect) &&
+				else if (m_isHovered && (sWndProc.LastMessageHandled || !bInRect) &&
 					!OnHoverEndRequest())
 					ClearHover();
 			}

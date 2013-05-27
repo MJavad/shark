@@ -3,8 +3,11 @@
 class WndProc : public Utils::Singleton<WndProc>
 {
 public:
-	WndProc() : m_hWnd(nullptr), m_wndProc(nullptr),
-		m_rMouseOk(true), m_lMouseOk(true) {}
+	WndProc() : m_hWnd(nullptr),
+				m_wndProc(nullptr),
+				m_rMouseOk(true),
+				m_lMouseOk(true),
+				m_isSizing(false) {}
 	~WndProc();
 
 	void Initialize();
@@ -29,4 +32,4 @@ protected:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
-#define sWndProc Utils::Singleton<WndProc>::Instance()
+extern WndProc sWndProc;

@@ -12,13 +12,13 @@ namespace Utils {
 	class SharkMemory : public Singleton<SharkMemory>
 	{
 	public:
-		void Initialize();
 		SharkMemory() : m_trampolineHeap(HEAP_CREATE_ENABLE_EXECUTE) {}
 
 		~SharkMemory() {
 			RemoveAllDetours();
 		}
 
+		void Initialize();
 		static DWORD_PTR Allocate(uint32 uSize, DWORD dwProtection = PAGE_EXECUTE_READWRITE);
 		static bool Free(DWORD_PTR dwAddress);
 
@@ -55,4 +55,4 @@ namespace Utils {
 	};
 }
 
-#define sMemory Utils::Singleton<Utils::SharkMemory>::Instance()
+extern Utils::SharkMemory sMemory;

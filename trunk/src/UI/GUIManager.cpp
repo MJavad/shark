@@ -11,6 +11,7 @@
 #include "Base/Engine.h"
 
 INIT_SINGLETON(UI::GUIManager);
+UI::GUIManager sGUIMgr;
 
 namespace UI {
 	void GUIManager::Initialize() {
@@ -33,7 +34,7 @@ namespace UI {
 			Components::Button::Create(L"Shutdown!");
 		innerButton2->SetPosition(Utils::Vector2(20.0f, 75.0f));
 		innerButton2->OnClickEvent += [] (const Utils::Vector2&) {
-			sEngine->InitializeShutdown();
+			sEngine.InitializeShutdown();
 		};
 		
 		std::shared_ptr<Components::Button> innerButton3 =
@@ -141,8 +142,8 @@ namespace UI {
 		testFrame2->PushChild(innerButton10);
 		testFrame2->PushChild(innerButton11);
 
-		sD3DMgr->PushInterface(backInterface);
-		sD3DMgr->PushInterface(mainInterface);
+		sD3DMgr.PushInterface(backInterface);
+		sD3DMgr.PushInterface(mainInterface);
 	}
 
 	std::shared_ptr<Components::Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float fWidth, float fHeight, const Utils::Color &color) const {
@@ -180,7 +181,7 @@ namespace UI {
 		const auto pWindowTitle = Components::Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER, fWidth);
 		pWindowTitle->SetPosition(Utils::Vector2(0.0f, 5.0f));
 		pWindowTitle->SetColor(0x90FFFFFF);
-		pWindowTitle->SetFont(sD3DMgr->GetFont(L"Corbel", 15, 0, FW_BOLD));
+		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, 0, FW_BOLD));
 		pFrame->PushChild(pWindowTitle);
 
 		const auto pBackgroundLineTop = Components::Rectangle::Create(fWidth, 1.0f);
@@ -203,8 +204,8 @@ namespace UI {
 		pBackgroundLineRight->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineRight);
 
-		const auto pCloseButtonTexture = Components::Texture::Create(sD3DMgr->GetTextureFromFile(L"E:\\shark\\close.png"));
-		const auto pCloseButtonTextureHover = Components::Texture::Create(sD3DMgr->GetTextureFromFile(L"E:\\shark\\close_hover.png"));
+		const auto pCloseButtonTexture = Components::Texture::Create(sD3DMgr.GetTextureFromFile(L"E:\\shark\\close.png"));
+		const auto pCloseButtonTextureHover = Components::Texture::Create(sD3DMgr.GetTextureFromFile(L"E:\\shark\\close_hover.png"));
 
 		float4 fInvisible = {0.0f, 1.0f, 1.0f, 1.0f};
 		pCloseButtonTextureHover->SetVisibility(false);
@@ -255,7 +256,7 @@ namespace UI {
 			pCloseButton->SetPosition(Utils::Vector2(fWidth - 27.0f, 2.0f));
 
 			RECT screenRect = {0};
-			sD3DMgr->GetRenderTarget()->GetSurfaceRect(&screenRect);
+			sD3DMgr.GetRenderTarget()->GetSurfaceRect(&screenRect);
 			Utils::Vector2 vPosition = pBackground->GetScreenPosition();
 
 			Utils::Vector2 vNormalized;
@@ -287,7 +288,7 @@ namespace UI {
 
 		pFrame->OnSetPositionEvent += [pBackground] (const Utils::Vector2&) {
 			RECT screenRect = {0};
-			sD3DMgr->GetRenderTarget()->GetSurfaceRect(&screenRect);
+			sD3DMgr.GetRenderTarget()->GetSurfaceRect(&screenRect);
 			Utils::Vector2 vPosition = pBackground->GetScreenPosition();
 
 			Utils::Vector2 vNormalized;

@@ -69,11 +69,11 @@ namespace Components {
 
 	void TabControl::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		// Save old handled state
-		bool bHandled = sWndProc->LastMessageHandled;
+		bool bHandled = sWndProc.LastMessageHandled;
 
 		// If we are invisible, pretend that the message was already handled
 		if (!GetVisibility())
-			sWndProc->LastMessageHandled = true;
+			sWndProc.LastMessageHandled = true;
 
 		float fCurrentOffset = 0.0f;
 		const auto vTabPages = m_tabPages;
@@ -98,7 +98,7 @@ namespace Components {
 
 		// If we are invisible, restore the original handled state
 		if (!GetVisibility())
-			sWndProc->LastMessageHandled = bHandled;
+			sWndProc.LastMessageHandled = bHandled;
 	}
 
 	void TabControl::AddTabPage(std::shared_ptr<TabPage> pTabPage) {

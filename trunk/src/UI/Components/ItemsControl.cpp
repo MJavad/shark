@@ -60,11 +60,11 @@ namespace Components {
 
 	void ItemsControl::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		// Save old handled state
-		bool bHandled = sWndProc->LastMessageHandled;
+		bool bHandled = sWndProc.LastMessageHandled;
 
 		// If we are invisible, pretend that the message was already handled
 		if (!GetVisibility())
-			sWndProc->LastMessageHandled = true;
+			sWndProc.LastMessageHandled = true;
 
 		const auto lstChildren = m_children;
 		for (const auto &pChild: lstChildren)
@@ -72,7 +72,7 @@ namespace Components {
 
 		// If we are invisible, restore the original handled state
 		if (!GetVisibility())
-			sWndProc->LastMessageHandled = bHandled;
+			sWndProc.LastMessageHandled = bHandled;
 	}
 
 	bool ItemsControl::OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {

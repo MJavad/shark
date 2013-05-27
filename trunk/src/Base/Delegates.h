@@ -3,6 +3,13 @@
 class Delegates : public Utils::Singleton<Delegates>
 {
 public:
+	Delegates() : IDirect3DDevice9__EndScene(nullptr),
+				  IDirect3DDevice9__Reset(nullptr),
+				  IDirect3D9__CreateDevice(nullptr),
+				  IDXGISwapChain__Present(nullptr),
+				  ID3D11DeviceContext__ClearRenderTargetView(nullptr),
+				  D3D11CreateDeviceAndSwapChain(nullptr) {}
+
 	void Initialize();
 
 	typedef HRESULT (CALLBACK *IDirect3DDevice9__EndScene_t) (IDirect3DDevice9 *pDevice);
@@ -28,4 +35,4 @@ public:
 	D3D11CreateDeviceAndSwapChain_t D3D11CreateDeviceAndSwapChain;
 };
 
-#define sDelegates Utils::Singleton<Delegates>::Instance()
+extern Delegates sDelegates;

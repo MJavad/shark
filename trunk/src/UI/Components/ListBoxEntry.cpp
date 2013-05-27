@@ -47,7 +47,7 @@ namespace Components {
 		IHoverable::OnMessageReceived(uMsg, wParam, lParam);
 		
 		const auto pParent = std::dynamic_pointer_cast<ListBox>(GetUIParent());
-		if (sWndProc->LastMessageHandled ||
+		if (sWndProc.LastMessageHandled ||
 			pParent == nullptr || !pParent->IsSelecting())
 			return;
 

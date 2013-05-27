@@ -2,6 +2,7 @@
 #include "Log.h"
 
 INIT_SINGLETON(Log);
+Log sLog;
 
 void Log::Initialize() {
 
