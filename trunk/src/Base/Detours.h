@@ -2,6 +2,9 @@
 
 class Detours : public Utils::Singleton<Detours>
 {
+	SINGLETON_OBJ(Detours);
+	Detours() {}
+
 public:
 	void Initialize();
 
@@ -29,4 +32,4 @@ private:
 	}
 };
 
-extern Detours sDetours;
+#define sDetours ::Utils::Singleton<::Detours>::Instance()

@@ -7,9 +7,6 @@
 #include "UI/D3DSprite9.h"
 #include "UI/Components/IFocusable.h"
 
-INIT_SINGLETON(D3DManager);
-D3DManager sD3DMgr;
-
 void D3DManager::Initialize() {
 	sWndProc.OnMessageReceivedEvent +=
 	[this] (UINT uMsg, WPARAM wParam, LPARAM lParam) {

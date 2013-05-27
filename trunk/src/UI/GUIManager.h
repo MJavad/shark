@@ -5,6 +5,9 @@
 namespace UI {
 	class GUIManager : public Utils::Singleton<GUIManager>
 	{
+		SINGLETON_OBJ(GUIManager);
+		GUIManager() {}
+
 	public:
 		void Initialize();
 		std::shared_ptr<Components::Frame> CreateBasicFrame(std::wstring swTitle,
@@ -17,4 +20,4 @@ namespace UI {
 	};
 }
 
-extern UI::GUIManager sGUIMgr;
+#define sGUIMgr ::Utils::Singleton<::UI::GUIManager>::Instance()

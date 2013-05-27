@@ -3,9 +3,6 @@
 #include "Engine.h"
 #include "Misc/DebugHelper.h"
 
-INIT_SINGLETON(Offsets);
-Offsets sOffsets;
-
 Offsets::SModule::SModule() {
 	MainModule = nullptr;
 	CurrentInstance = nullptr;

@@ -2,12 +2,14 @@
 
 class WndProc : public Utils::Singleton<WndProc>
 {
-public:
+	SINGLETON_OBJ(WndProc);
 	WndProc() : m_hWnd(nullptr),
 				m_wndProc(nullptr),
 				m_rMouseOk(true),
 				m_lMouseOk(true),
 				m_isSizing(false) {}
+
+public:
 	~WndProc();
 
 	void Initialize();
@@ -32,4 +34,4 @@ protected:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
-extern WndProc sWndProc;
+#define sWndProc ::Utils::Singleton<::WndProc>::Instance()

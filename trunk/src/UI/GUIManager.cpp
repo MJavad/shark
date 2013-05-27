@@ -10,9 +10,6 @@
 #include "Components/EditBox.h"
 #include "Base/Engine.h"
 
-INIT_SINGLETON(UI::GUIManager);
-UI::GUIManager sGUIMgr;
-
 namespace UI {
 	void GUIManager::Initialize() {
 		std::shared_ptr<ComponentInterface> mainInterface = std::make_shared<ComponentInterface>();

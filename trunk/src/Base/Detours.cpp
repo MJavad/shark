@@ -5,9 +5,6 @@
 #include "DllEntry.h"
 #include "Engine.h"
 
-INIT_SINGLETON(Detours);
-Detours sDetours;
-
 void Detours::Initialize() {
 	ApplyDetour(sDelegates.IDirect3DDevice9__EndScene, IDirect3DDevice9__EndScene);
 	ApplyDetour(sDelegates.IDirect3DDevice9__Reset, IDirect3DDevice9__Reset);

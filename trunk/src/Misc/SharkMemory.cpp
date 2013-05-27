@@ -61,9 +61,6 @@ __declspec(allocate(".text")) const byte MLDE32[] = {
 	0xFF, 0x0F, 0x85, 0x66, 0xFF, 0xFF, 0xFF
 };
 
-INIT_SINGLETON(Utils::SharkMemory);
-Utils::SharkMemory sMemory;
-
 namespace Utils {
 	void SharkMemory::Initialize() {
 

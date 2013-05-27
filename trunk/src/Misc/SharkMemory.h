@@ -11,9 +11,10 @@ namespace Utils {
 
 	class SharkMemory : public Singleton<SharkMemory>
 	{
-	public:
+		SINGLETON_OBJ(SharkMemory);
 		SharkMemory() : m_trampolineHeap(HEAP_CREATE_ENABLE_EXECUTE) {}
 
+	public:
 		~SharkMemory() {
 			RemoveAllDetours();
 		}
@@ -55,4 +56,4 @@ namespace Utils {
 	};
 }
 
-extern Utils::SharkMemory sMemory;
+#define sMemory ::Utils::Singleton<::Utils::SharkMemory>::Instance()

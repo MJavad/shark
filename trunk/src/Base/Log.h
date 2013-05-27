@@ -2,6 +2,9 @@
 
 class Log : public Utils::Singleton<Log>
 {
+	SINGLETON_OBJ(Log);
+	Log() {}
+
 public:
 	void Initialize();
 	void OutDebug(const std::wstring &swMessage) const;
@@ -14,7 +17,7 @@ public:
 		uint32 uLine, const wchar_t *pswzFormat, ...) const;
 };
 
-extern Log sLog;
+#define sLog ::Utils::Singleton<::Log>::Instance()
 
 #ifdef DEBUG_USE_FUNCTIONNAMES
 #define LOG_DEBUG(fmt, ...) sLog.OutDebugFormatted(__FUNCTIONW__, __FILEW__, __LINE__, fmt, __VA_ARGS__)

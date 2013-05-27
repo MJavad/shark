@@ -2,6 +2,9 @@
 
 class Offsets : public Utils::Singleton<Offsets>
 {
+	SINGLETON_OBJ(Offsets);
+	Offsets() {}
+
 public:
 	void Initialize();
 
@@ -35,4 +38,4 @@ public:
 	SDirectX DirectX;
 };
 
-extern Offsets sOffsets;
+#define sOffsets ::Utils::Singleton<::Offsets>::Instance()

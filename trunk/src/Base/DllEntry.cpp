@@ -47,9 +47,9 @@ BOOL WINAPI LoadInternal(LPVOID lpParam) {
 
 	try {
 		sLog.Initialize();
-		sMemory.Initialize();
 		sOffsets.Initialize();
 		sDelegates.Initialize();
+		sMemory.Initialize();
 		sWndProc.Initialize();
 		sD3DMgr.Initialize();
 		sDetours.Initialize();

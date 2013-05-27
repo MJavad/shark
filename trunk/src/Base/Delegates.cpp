@@ -2,9 +2,6 @@
 #include "Delegates.h"
 #include "Offsets.h"
 
-INIT_SINGLETON(Delegates);
-Delegates sDelegates;
-
 void Delegates::Initialize() {
 	IDirect3DDevice9__EndScene = reinterpret_cast<IDirect3DDevice9__EndScene_t>
 		(sOffsets.DirectX.IDirect3DDevice9__EndScene);

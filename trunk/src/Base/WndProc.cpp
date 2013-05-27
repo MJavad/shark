@@ -1,9 +1,6 @@
 #include "Misc/stdafx.h"
 #include "WndProc.h"
 
-INIT_SINGLETON(WndProc);
-WndProc sWndProc;
-
 void WndProc::Initialize() {
 	m_hWnd = nullptr;
 	m_wndProc = nullptr;

@@ -2,9 +2,6 @@
 #include "Engine.h"
 #include "UI/GUIManager.h"
 
-INIT_SINGLETON(Engine);
-Engine sEngine;
-
 bool Engine::s_isInitialized = false;
 
 void Engine::Initialize(HINSTANCE hInstance) {
