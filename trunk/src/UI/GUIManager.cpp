@@ -118,8 +118,8 @@ namespace UI {
 		};
 
 		editBox->OnFocusStartEvent += [] {
-			//throw std::invalid_argument("Testing exceptions!");
-			return false;
+			throw std::invalid_argument("Testing exceptions!");
+			return true;
 		};
 
 		testFrame1->PushChild(tabControl);

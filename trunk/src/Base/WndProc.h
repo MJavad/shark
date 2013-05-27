@@ -15,9 +15,9 @@ public:
 	bool Detach();
 
 	HWND FindCurrentWindow() const;
-	inline HWND GetHWND() const { return m_hWnd; }
-	inline WNDPROC GetWndProc() const { return m_wndProc; }
-	inline bool IsAttached() const { return m_wndProc != nullptr; }
+	HWND GetHWND() const { return m_hWnd; }
+	WNDPROC GetWndProc() const { return m_wndProc; }
+	bool IsAttached() const { return m_wndProc != nullptr; }
 	
 	bool LastMessageHandled;
 	Utils::Event<void (UINT, WPARAM, LPARAM)> OnMessageReceivedEvent;

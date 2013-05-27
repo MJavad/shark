@@ -63,7 +63,7 @@ namespace Utils
 
 			m_threads.clear();
 			THREADENTRY32 threadEntry = {0};
-			threadEntry.dwSize = sizeof(THREADENTRY32);
+			threadEntry.dwSize = sizeof(threadEntry);
 
 			if (Thread32First(hSnapshot, &threadEntry) != FALSE) {
 				do if (threadEntry.th32OwnerProcessID == pid)

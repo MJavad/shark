@@ -3,7 +3,10 @@
 
 namespace Utils
 {
-	DebugHelper::DebugHelper() {
+	void DebugHelper::LoadDbgHelp() {
+		if (m_dbgHelp != nullptr)
+			return;
+
 		m_dbgHelp = LoadLibraryW(L"dbghelp.dll");
 		if (m_dbgHelp != nullptr) {
 			m_stackWalk = reinterpret_cast<tStackWalk64>
@@ -44,14 +47,29 @@ namespace Utils
 			m_dbgHelp = nullptr;
 		}
 
-		throw std::exception("Could not create DebugHelper instance!");
+		throw std::exception("Could not load dbghelp.dll!");
 	}
 
-	DebugHelper::~DebugHelper() {
-		if (m_dbgHelp != nullptr) {
-			m_symCleanup(GetCurrentProcess());
-			FreeLibrary(m_dbgHelp);
+	std::wstring DebugHelper::DumpModules(uint32 processId) const {
+		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processId);
+		if (hSnapshot == INVALID_HANDLE_VALUE)
+			throw std::exception("Could not create module snapshot!");
+
+		std::wostringstream strmModules;
+		MODULEENTRY32W moduleEntry = {0};
+		moduleEntry.dwSize = sizeof(moduleEntry);
+
+		if (Module32FirstW(hSnapshot, &moduleEntry) != FALSE) {
+			do if (moduleEntry.th32ProcessID == processId)
+				strmModules << L"   0x" << std::hex << std::uppercase
+							<< reinterpret_cast<void*>(moduleEntry.modBaseAddr)
+							<< L" - " << moduleEntry.szModule
+							<< L"\r\n";
+			while (Module32NextW(hSnapshot, &moduleEntry) != FALSE);
 		}
+
+		CloseHandle(hSnapshot);
+		return strmModules.str();
 	}
 
 	std::wstring DebugHelper::DumpCallStack(HANDLE hThread, PCONTEXT pContext) const {

@@ -35,11 +35,25 @@ namespace Utils
 	class DebugHelper
 	{
 	public:
-		DebugHelper();
-		~DebugHelper();
+		DebugHelper() : m_dbgHelp(nullptr),
+						m_stackWalk(nullptr),
+						m_symInitialize(nullptr),
+						m_symSetOptions(nullptr),
+						m_symFromAddr(nullptr),
+						m_symFunctionTableAccess(nullptr),
+						m_symGetModuleBase(nullptr),
+						m_symCleanup(nullptr) {}
 
-		std::wstring DumpCallStack(HANDLE hThread = 0,
-								  PCONTEXT pContext = nullptr) const;
+		~DebugHelper() {
+			if (m_dbgHelp != nullptr) {
+				m_symCleanup(GetCurrentProcess());
+				FreeLibrary(m_dbgHelp);
+			}
+		}
+
+		void LoadDbgHelp();
+		std::wstring DumpModules(uint32 processId) const;
+		std::wstring DumpCallStack(HANDLE hThread = 0, PCONTEXT pContext = nullptr) const;
 
 	protected:
 		HMODULE m_dbgHelp;

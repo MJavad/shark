@@ -76,6 +76,22 @@ BOOL CALLBACK ExceptionDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+		{
+			HWND hShutdown = GetDlgItem(hwndDlg, IDC_SHUTDOWN);
+			HFONT hFont = CreateFontW(18, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
+				DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+				FF_DONTCARE, L"Segoe UI");
+
+			if (hFont != nullptr)
+				SendMessageW(hShutdown, WM_SETFONT, (WPARAM) hFont, FALSE);
+
+			HICON errIcon = LoadIconW(nullptr, IDI_ERROR);
+			HWND hIconStatic = GetDlgItem(hwndDlg, IDC_ERRPICBOX);
+			if (errIcon != nullptr)
+				SendMessageW(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM)errIcon);
+
+			SendMessageW(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIconW(nullptr, IDI_EXCLAMATION));
+		}
 		return TRUE;
 
 	case WM_CLOSE:
@@ -87,13 +103,18 @@ BOOL CALLBACK ExceptionDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 }
 
 #define EXCEPTION_MSVC 0xE06D7363
-#define SEH_CASE(code) case code: msgStrm << L#code << L" (0x" << std::hex << std::uppercase << code << L")\r\n\r\n"; break;
+#define SEH_CASE(code) case code: msgStrm << L#code; break;
 
 LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
+	HWND hGameWindow = sWndProc.FindCurrentWindow();
+	if (hGameWindow != nullptr &&
+		ShowWindow(hGameWindow, SW_FORCEMINIMIZE) != FALSE)
+		Sleep(50);
+
 	Utils::ThreadGrabber threadGrabber;
 	threadGrabber.update(GetCurrentProcessId());
 	uint32 currentThreadId = GetCurrentThreadId();
-	
+
 	for (auto &thread: threadGrabber.threads()) {
 		if (thread->id() != currentThreadId &&
 			thread->open(thread->access() | THREAD_SUSPEND_RESUME))
@@ -102,9 +123,9 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 
 	std::wostringstream msgStrm;
 	msgStrm << L"An unhandled exception occured at 0x" << std::hex << std::uppercase
-			<< pInfo->ExceptionRecord->ExceptionAddress << L".\r\n";
-	msgStrm << L"Thread: " << std::dec << currentThreadId << L"\r\n";
-	msgStrm << L"Type: ";
+			<< pInfo->ExceptionRecord->ExceptionAddress << L".\r\n"
+			<< L"Thread: " << std::dec << currentThreadId << L"\r\n"
+			<< L"Type: ";
 
 	switch (pInfo->ExceptionRecord->ExceptionCode) {
 		SEH_CASE(EXCEPTION_ACCESS_VIOLATION);
@@ -132,9 +153,12 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 		SEH_CASE(EXCEPTION_MSVC);
 
 	default:
-		msgStrm << L"Unknown exception (0x" << std::hex << std::uppercase
-				<< pInfo->ExceptionRecord->ExceptionCode << L")\r\n\r\n";
+		msgStrm << L"Unknown exception";
 	}
+
+	msgStrm << L" (0x" << std::hex << std::uppercase
+			<< pInfo->ExceptionRecord->ExceptionCode
+			<< L")\r\n\r\n";
 
 	if (pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION &&
 		pInfo->ExceptionRecord->NumberParameters >= 2) {
@@ -257,20 +281,13 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 	if (pInitCommonControlsEx != nullptr)
 		pInitCommonControlsEx(&ice);
 
-	HWND hDlg = CreateDialogW(sEngine.GetInstance(), MAKEINTRESOURCE(IDD_DIALOG1), nullptr, (DLGPROC) ExceptionDlgProc);
-	SendMessageW(hDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIconW(nullptr, IDI_EXCLAMATION));
-
-	HWND hShutdown = GetDlgItem(hDlg, IDC_SHUTDOWN);
-	HFONT hFont = CreateFontW(18, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
-		DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
-		FF_DONTCARE, L"Segoe UI");
-
-	if (hFont != nullptr)
-		SendMessageW(hShutdown, WM_SETFONT, (WPARAM) hFont, FALSE);
+	HWND hDlg = CreateDialogW(sEngine.GetInstance(),
+		MAKEINTRESOURCE(IDD_DIALOG1), nullptr, (DLGPROC) ExceptionDlgProc);
 
 	HWND hReason = GetDlgItem(hDlg, IDC_REASON);
 	SetWindowTextW(hReason, msgStrm.str().c_str());
 
+	// Print register dump...
 	std::wostringstream strmAdditionalInfo;
 	strmAdditionalInfo << L"Register Dump (x86):"
 					   << L"\r\n   EAX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eax)
@@ -283,10 +300,28 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 					   << L"\r\n   ESP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Esp)
 					   << L"\r\n   EIP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eip)
 					   << L"\r\n   EFlags: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->EFlags)
-					   << L"\r\n\r\nStack Trace:\r\n";
+					   << L"\r\n\r\n";
+
+	// Print module dump...
+	strmAdditionalInfo << L"Module Dump:\r\n   0x"
+					   << std::hex << std::uppercase << sEngine.GetInstance()
+					   << L" - <Current Module>\r\n";
+
+	// Initialize debug helper
+	Utils::DebugHelper dbgHelper;
 
 	try {
-		Utils::DebugHelper dbgHelper;
+		strmAdditionalInfo << dbgHelper.DumpModules(GetCurrentProcessId());
+	}
+	catch (std::exception &e) {
+		strmAdditionalInfo << L"   " << e.what() << L"\r\n";
+	}
+
+	// Print stack trace...
+	strmAdditionalInfo << L"\r\nStack Trace:\r\n";
+
+	try {
+		dbgHelper.LoadDbgHelp();
 		strmAdditionalInfo << dbgHelper.DumpCallStack(GetCurrentThread(), pInfo->ContextRecord);
 	}
 	catch (std::exception &e) {
@@ -295,22 +330,20 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 
 	HWND hErroutBox = GetDlgItem(hDlg, IDC_ERROUT);
 	SetWindowTextW(hErroutBox, strmAdditionalInfo.str().c_str());
-
-	HICON errIcon = LoadIconW(nullptr, IDI_ERROR);
-	HWND hIconStatic = GetDlgItem(hDlg, IDC_ERRPICBOX);
-	if (errIcon != nullptr)
-		SendMessageW(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM)errIcon);
-
 	ShowWindow(hDlg, SW_SHOW);
+	SetForegroundWindow(hDlg);
 
 	MSG msg = {0};
-	while (GetMessageW(&msg, hDlg, 0, 0) != FALSE) {
-		TranslateMessage(&msg);
-		DispatchMessageW(&msg);
+	BOOL messageResult = FALSE;
+	while ((messageResult = GetMessageW(&msg, nullptr, 0, 0)) != FALSE) {
+		if (messageResult != -1 &&
+			(!IsWindow(hDlg) || !IsDialogMessageW(hDlg, &msg))) {
+			TranslateMessage(&msg);
+			DispatchMessageW(&msg);
+		}
 	}
 
 	EndDialog(hDlg, 0);
-	DeleteFont(hFont);
 	FreeLibrary(hComctl32);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
