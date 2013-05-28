@@ -24,3 +24,12 @@ namespace Utils
 
 #define SINGLETON_OBJECT friend class ::Utils::Singleton;
 #define GET_INSTANCE(T) ::Utils::Singleton::Instance<::T>()
+
+#define SINGLETON_CLASS(T) \
+public:		static T& Instance() { \
+				static T sInstance; \
+				return sInstance; \
+			} \
+private:	T(const T&); \
+			T& operator=(const T&); \
+			T()

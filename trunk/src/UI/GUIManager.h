@@ -3,10 +3,8 @@
 #include "Components/Frame.h"
 
 namespace UI {
-	class GUIManager : public Utils::Singleton
-	{
-		SINGLETON_OBJECT
-		GUIManager() {}
+	class GUIManager {
+		SINGLETON_CLASS(GUIManager) {}
 
 	public:
 		void Initialize();
@@ -20,4 +18,4 @@ namespace UI {
 	};
 }
 
-#define sGUIMgr GET_INSTANCE(UI::GUIManager)
+#define sGUIMgr ::UI::GUIManager::Instance()

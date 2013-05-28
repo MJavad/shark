@@ -1,9 +1,7 @@
 #pragma once
 
-class Offsets : public Utils::Singleton
-{
-	SINGLETON_OBJECT
-	Offsets() {}
+class Offsets {
+	SINGLETON_CLASS(Offsets) {}
 
 public:
 	void Initialize();
@@ -38,4 +36,4 @@ public:
 	SDirectX DirectX;
 };
 
-#define sOffsets GET_INSTANCE(Offsets)
+#define sOffsets ::Offsets::Instance()

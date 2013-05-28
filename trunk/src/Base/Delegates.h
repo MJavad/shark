@@ -1,14 +1,13 @@
 #pragma once
 
-class Delegates : public Utils::Singleton
-{
-	SINGLETON_OBJECT
-	Delegates() : IDirect3DDevice9__EndScene(nullptr),
-				  IDirect3DDevice9__Reset(nullptr),
-				  IDirect3D9__CreateDevice(nullptr),
-				  IDXGISwapChain__Present(nullptr),
-				  ID3D11DeviceContext__ClearRenderTargetView(nullptr),
-				  D3D11CreateDeviceAndSwapChain(nullptr) {}
+class Delegates {
+	SINGLETON_CLASS(Delegates) :
+		IDirect3DDevice9__EndScene(nullptr),
+		IDirect3DDevice9__Reset(nullptr),
+		IDirect3D9__CreateDevice(nullptr),
+		IDXGISwapChain__Present(nullptr),
+		ID3D11DeviceContext__ClearRenderTargetView(nullptr),
+		D3D11CreateDeviceAndSwapChain(nullptr) {}
 
 public:
 	void Initialize();
@@ -36,4 +35,4 @@ public:
 	D3D11CreateDeviceAndSwapChain_t D3D11CreateDeviceAndSwapChain;
 };
 
-#define sDelegates GET_INSTANCE(Delegates)
+#define sDelegates ::Delegates::Instance()

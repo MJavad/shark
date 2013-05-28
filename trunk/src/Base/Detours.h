@@ -1,9 +1,7 @@
 #pragma once
 
-class Detours : public Utils::Singleton
-{
-	SINGLETON_OBJECT
-	Detours() {}
+class Detours {
+	SINGLETON_CLASS(Detours) {}
 
 public:
 	void Initialize();
@@ -32,4 +30,4 @@ private:
 	}
 };
 
-#define sDetours GET_INSTANCE(Detours)
+#define sDetours ::Detours::Instance()

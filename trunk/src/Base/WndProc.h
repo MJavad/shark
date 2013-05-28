@@ -1,13 +1,12 @@
 #pragma once
 
-class WndProc : public Utils::Singleton
-{
-	SINGLETON_OBJECT
-	WndProc() : m_hWnd(nullptr),
-				m_wndProc(nullptr),
-				m_rMouseOk(true),
-				m_lMouseOk(true),
-				m_isSizing(false) {}
+class WndProc {
+	SINGLETON_CLASS(WndProc) :
+		m_hWnd(nullptr),
+		m_wndProc(nullptr),
+		m_rMouseOk(true),
+		m_lMouseOk(true),
+		m_isSizing(false) {}
 
 public:
 	~WndProc();
@@ -34,4 +33,4 @@ protected:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
-#define sWndProc GET_INSTANCE(WndProc)
+#define sWndProc ::WndProc::Instance()

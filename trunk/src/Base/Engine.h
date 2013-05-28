@@ -1,10 +1,9 @@
 #pragma once
 
-class Engine : public Utils::Singleton
-{
-	SINGLETON_OBJECT
-	Engine() : m_instance(nullptr),
-			   m_lastPulse(0) {}
+class Engine {
+	SINGLETON_CLASS(Engine) :
+		m_instance(nullptr),
+		m_lastPulse(0) {}
 
 public:
 	void Initialize(HINSTANCE hInstance);
@@ -46,4 +45,4 @@ protected:
 	static BOOL WINAPI _shutdownThread(LPVOID lpParam);
 };
 
-#define sEngine GET_INSTANCE(Engine)
+#define sEngine ::Engine::Instance()

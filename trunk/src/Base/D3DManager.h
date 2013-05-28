@@ -5,14 +5,13 @@
 #include "ID3DInterface.h"
 #include "IRenderTarget.h"
 
-class D3DManager : public Utils::Singleton
-{
-	SINGLETON_OBJECT
-	D3DManager() : m_device9(nullptr),
-				   m_device11(nullptr),
-				   m_deviceContext11(nullptr),
-				   m_swapChain(nullptr),
-				   m_lastFrame(0) {}
+class D3DManager {
+	SINGLETON_CLASS(D3DManager) :
+		m_device9(nullptr),
+		m_device11(nullptr),
+		m_deviceContext11(nullptr),
+		m_swapChain(nullptr),
+		m_lastFrame(0) {}
 
 public:
 	void Initialize();
@@ -72,4 +71,4 @@ protected:
 	std::list<std::weak_ptr<UI::D3DTexture>> m_textures;
 };
 
-#define sD3DMgr GET_INSTANCE(D3DManager)
+#define sD3DMgr ::D3DManager::Instance()
