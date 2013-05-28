@@ -1,8 +1,8 @@
 #pragma once
 
-class Delegates : public Utils::Singleton<Delegates>
+class Delegates : public Utils::Singleton
 {
-	SINGLETON_OBJ(Delegates);
+	SINGLETON_OBJECT
 	Delegates() : IDirect3DDevice9__EndScene(nullptr),
 				  IDirect3DDevice9__Reset(nullptr),
 				  IDirect3D9__CreateDevice(nullptr),
@@ -36,4 +36,4 @@ public:
 	D3D11CreateDeviceAndSwapChain_t D3D11CreateDeviceAndSwapChain;
 };
 
-#define sDelegates ::Utils::Singleton<::Delegates>::Instance()
+#define sDelegates GET_INSTANCE(Delegates)

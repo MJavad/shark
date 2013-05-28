@@ -3,9 +3,9 @@
 #include "Components/Frame.h"
 
 namespace UI {
-	class GUIManager : public Utils::Singleton<GUIManager>
+	class GUIManager : public Utils::Singleton
 	{
-		SINGLETON_OBJ(GUIManager);
+		SINGLETON_OBJECT
 		GUIManager() {}
 
 	public:
@@ -20,4 +20,4 @@ namespace UI {
 	};
 }
 
-#define sGUIMgr ::Utils::Singleton<::UI::GUIManager>::Instance()
+#define sGUIMgr GET_INSTANCE(UI::GUIManager)

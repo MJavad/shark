@@ -9,9 +9,9 @@ namespace Utils {
 		uint32 size;
 	};
 
-	class SharkMemory : public Singleton<SharkMemory>
+	class SharkMemory : public Singleton
 	{
-		SINGLETON_OBJ(SharkMemory);
+		SINGLETON_OBJECT
 		SharkMemory() : m_trampolineHeap(HEAP_CREATE_ENABLE_EXECUTE) {}
 
 	public:
@@ -56,4 +56,4 @@ namespace Utils {
 	};
 }
 
-#define sMemory ::Utils::Singleton<::Utils::SharkMemory>::Instance()
+#define sMemory GET_INSTANCE(Utils::SharkMemory)

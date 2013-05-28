@@ -1,8 +1,8 @@
 #pragma once
 
-class WndProc : public Utils::Singleton<WndProc>
+class WndProc : public Utils::Singleton
 {
-	SINGLETON_OBJ(WndProc);
+	SINGLETON_OBJECT
 	WndProc() : m_hWnd(nullptr),
 				m_wndProc(nullptr),
 				m_rMouseOk(true),
@@ -34,4 +34,4 @@ protected:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
-#define sWndProc ::Utils::Singleton<::WndProc>::Instance()
+#define sWndProc GET_INSTANCE(WndProc)

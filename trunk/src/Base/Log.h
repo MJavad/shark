@@ -1,8 +1,8 @@
 #pragma once
 
-class Log : public Utils::Singleton<Log>
+class Log : public Utils::Singleton
 {
-	SINGLETON_OBJ(Log);
+	SINGLETON_OBJECT
 	Log() {}
 
 public:
@@ -17,7 +17,7 @@ public:
 		uint32 uLine, const wchar_t *pswzFormat, ...) const;
 };
 
-#define sLog ::Utils::Singleton<::Log>::Instance()
+#define sLog GET_INSTANCE(Log)
 
 #ifdef DEBUG_USE_FUNCTIONNAMES
 #define LOG_DEBUG(fmt, ...) sLog.OutDebugFormatted(__FUNCTIONW__, __FILEW__, __LINE__, fmt, __VA_ARGS__)

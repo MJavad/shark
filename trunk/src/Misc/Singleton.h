@@ -2,11 +2,13 @@
 
 namespace Utils
 {
-	template <class T>
 	class Singleton
 	{
 	public:
-		static T& Instance() {
+		template <class T>
+		static typename std::enable_if<
+			std::is_base_of<Singleton, T>::value, T&>::type
+			Instance() {
 			static T sInstance;
 			return sInstance;
 		}
@@ -15,9 +17,10 @@ namespace Utils
 		Singleton() {}
 
 	private:
-		Singleton(const Singleton<T>&);
-		Singleton<T>& operator=(const Singleton<T>&);
+		Singleton(const Singleton&);
+		Singleton& operator=(const Singleton&);
 	};
 }
 
-#define SINGLETON_OBJ(T) friend class ::Utils::Singleton<T>
+#define SINGLETON_OBJECT friend class ::Utils::Singleton;
+#define GET_INSTANCE(T) ::Utils::Singleton::Instance<::T>()
