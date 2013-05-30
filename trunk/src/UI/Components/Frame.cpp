@@ -52,7 +52,7 @@ namespace Components {
 
 		IDraggable::OnMessageReceived(uMsg, wParam, lParam);
 
-		switch(uMsg)
+		switch (uMsg)
 		{
 			case WM_CHAR:
 			case WM_LBUTTONDOWN:

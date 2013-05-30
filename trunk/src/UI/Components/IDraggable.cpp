@@ -26,7 +26,7 @@ namespace Components {
 					!OnDragStartRequest(&vPosition))
 					StartDrag(vPosition - GetScreenPosition());
 
-				sWndProc.LastMessageHandled = IsDragged();
+				sWndProc.LastMessageHandled |= IsDragged();
 			}
 			break;
 
@@ -40,7 +40,8 @@ namespace Components {
 			break;
 
 		case WM_MOUSEMOVE:
-			if (IsDragged() && GetInterface()->ClipStack.PtInClipArea(vPosition) &&
+			if (!sWndProc.LastMessageHandled &&
+				IsDragged() && GetInterface()->ClipStack.PtInClipArea(vPosition) &&
 				!OnDragMoveRequest(&vPosition)) {
 				vPosition -= s_dragVector;
 				auto pParent = GetUIParent();

@@ -35,12 +35,16 @@ HRESULT CALLBACK Detours::IDirect3DDevice9__EndScene(IDirect3DDevice9 *pDevice) 
 }
 
 HRESULT CALLBACK Detours::IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice, D3DPRESENT_PARAMETERS *pParams) {
-	sD3DMgr.OnLostDevice();
+	if (sD3DMgr.IsCreated())
+		sD3DMgr.OnLostDevice();
+
 	sDetours.OnLostDeviceEvent(pDevice, pParams);
 
 	HRESULT hResult = sDelegates.IDirect3DDevice9__Reset(pDevice, pParams);
 
-	sD3DMgr.OnResetDevice();
+	if (sD3DMgr.IsCreated())
+		sD3DMgr.OnResetDevice();
+
 	sDetours.OnResetDeviceEvent(pDevice, pParams);
 	return hResult;
 }

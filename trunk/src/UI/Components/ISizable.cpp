@@ -58,7 +58,7 @@ namespace Components {
 					!OnResizeStartRequest(&vPosition))
 					StartSizing(vSize - vPosition);
 
-				sWndProc.LastMessageHandled = IsSizing();
+				sWndProc.LastMessageHandled |= IsSizing();
 			}
 			break;
 
@@ -72,12 +72,13 @@ namespace Components {
 			break;
 
 		case WM_MOUSEMOVE:
-			if (IsSizing() && GetInterface()->ClipStack.PtInClipArea(vPosition)) {
+			if (!sWndProc.LastMessageHandled &&
+				IsSizing() && GetInterface()->ClipStack.PtInClipArea(vPosition)) {
 				Utils::Vector2 vSize = vPosition - GetScreenPosition() + s_sizeVector;
 				Utils::Vector2 vMinSize = GetMinSize();
-				Utils::Vector2 vMaxSize = GetMaxSize();
 
 				if (GetSizeLimited()) {
+					Utils::Vector2 vMaxSize = GetMaxSize();
 					if (vSize.x > vMaxSize.x)
 						vSize.x = vMaxSize.x;
 
@@ -103,10 +104,7 @@ namespace Components {
 				}
 			}
 
-			m_isHovered = IsSizing() ||
-				(!sWndProc.LastMessageHandled &&
-				 PtInSizerRect(vPosition));
-
+			m_isHovered = IsSizing() || PtInSizerRect(vPosition);
 			sWndProc.LastMessageHandled |= m_isHovered;
 			break;
 		};

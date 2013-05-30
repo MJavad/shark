@@ -104,8 +104,12 @@ void D3DManager::OnRender() {
 
 void D3DManager::OnLostDevice() {
 	Utils::LockGuard g(m_frameLock);
-	m_sprite->OnLostDevice();
-	m_renderTarget->OnLostDevice();
+
+	if (m_sprite != nullptr)
+		m_sprite->OnLostDevice();
+
+	if (m_renderTarget != nullptr)
+		m_renderTarget->OnLostDevice();
 
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
 		if (itr->expired())
@@ -126,8 +130,12 @@ void D3DManager::OnLostDevice() {
 
 void D3DManager::OnResetDevice() {
 	Utils::LockGuard g(m_frameLock);
-	m_sprite->OnResetDevice();
-	m_renderTarget->OnResetDevice();
+
+	if (m_sprite != nullptr)
+		m_sprite->OnResetDevice();
+
+	if (m_renderTarget != nullptr)
+		m_renderTarget->OnResetDevice();
 
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
 		if (itr->expired())

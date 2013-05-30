@@ -108,14 +108,19 @@ BOOL CALLBACK ExceptionDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 #define SEH_CASE(code) case code: msgStrm << L#code; break;
 
 LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
-	HWND hGameWindow = sWndProc.FindCurrentWindow();
-	if (hGameWindow != nullptr &&
-		ShowWindow(hGameWindow, SW_FORCEMINIMIZE) != FALSE)
-		Sleep(50);
-
 	Utils::ThreadGrabber threadGrabber;
 	threadGrabber.update(GetCurrentProcessId());
 	uint32 currentThreadId = GetCurrentThreadId();
+
+	HWND hGameWindow = sWndProc.FindCurrentWindow();
+	if (hGameWindow != nullptr) {
+		if (sEngine.GetMainThreadId() != currentThreadId)
+			ShowWindowAsync(hGameWindow, SW_HIDE);
+		else
+			ShowWindow(hGameWindow, SW_HIDE);
+
+		Sleep(100);
+	}
 
 	for (auto &thread: threadGrabber.threads()) {
 		if (thread->id() != currentThreadId &&

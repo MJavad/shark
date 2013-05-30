@@ -20,6 +20,7 @@ void Engine::OnPulse() {
 
 void Engine::InitializeEnvironment() {
 	s_isInitialized = true;
+	m_mainThreadId = GetCurrentThreadId();
 
 	try {
 		sGUIMgr.Initialize();
