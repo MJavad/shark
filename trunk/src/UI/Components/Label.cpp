@@ -75,10 +75,8 @@ namespace Components {
 		const auto pOldSurface = pRenderTarget->GetRenderTargetSurface();
 
 		m_fontCache = pRenderTarget->CreateRenderTargetTexture(uWidth, uHeight);
-		if (m_fontCache == nullptr) {
-			//LOG_DEBUG("Could not create font cache!");
-			return;
-		}
+		if (m_fontCache == nullptr)
+			throw std::exception("Could not create font cache!");
 
 		const auto pSurface = m_fontCache->GetObject()->QuerySurface(0);
 		pRenderTarget->SetRenderTargetSurface(pSurface, 0, true);

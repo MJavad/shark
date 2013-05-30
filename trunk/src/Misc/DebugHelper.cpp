@@ -80,6 +80,7 @@ namespace Utils
 	}
 
 	std::wstring DebugHelper::DumpCallStack(HANDLE hThread, PCONTEXT pContext) const {
+		assert(m_dbgHelp != nullptr);
 		DWORD64 dwDisplacement = 0;
 		HANDLE hProcess = GetCurrentProcess();
 

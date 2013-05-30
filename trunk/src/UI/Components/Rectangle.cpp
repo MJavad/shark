@@ -52,10 +52,8 @@ namespace Components {
 			if (m_shadowTexture == nullptr) {
 				m_shadowTexture = pRenderTarget->CreateRenderTargetTexture((uint32) GetWidth(), (uint32) GetHeight());
 
-				if (m_shadowTexture == nullptr) {
-					LOG_DEBUG("Could not create shadow texture!");
-					return;
-				}
+				if (m_shadowTexture == nullptr)
+					throw std::exception("Could not create shadow texture!");
 			}
 
 			const auto pSurface = m_shadowTexture->GetObject()->QuerySurface(0);
