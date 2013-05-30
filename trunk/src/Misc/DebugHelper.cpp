@@ -54,13 +54,13 @@ namespace Utils
 			m_dbgHelp = nullptr;
 		}
 
-		throw std::exception("Could not load dbghelp.dll!");
+		throw std::runtime_error("Could not load dbghelp.dll!");
 	}
 
 	std::wstring DebugHelper::DumpModules(uint32 processId) const {
 		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processId);
 		if (hSnapshot == INVALID_HANDLE_VALUE)
-			throw std::exception("Could not create module snapshot!");
+			throw std::runtime_error("Could not create module snapshot!");
 
 		std::wostringstream strmModules;
 		MODULEENTRY32W moduleEntry = {0};

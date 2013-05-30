@@ -10,7 +10,7 @@ namespace Utils
 			m_manualReset(manualReset) {
 			m_event = CreateEventW(nullptr, manualReset, initState, nullptr);
 			if (m_event.is_null())
-				throw std::exception("Could not create event!");
+				throw std::runtime_error("Could not create event!");
 		}
 
 		Signal(Signal &&other) :

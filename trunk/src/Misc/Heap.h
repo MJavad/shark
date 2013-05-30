@@ -10,7 +10,7 @@ namespace Utils
 			 SIZE_T dwMaximumSize = 0) {
 			m_heap = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
 			if (m_heap == nullptr)
-				throw std::exception("HeapCreate failed!");
+				throw std::runtime_error("HeapCreate failed!");
 		}
 
 		~Heap() {
