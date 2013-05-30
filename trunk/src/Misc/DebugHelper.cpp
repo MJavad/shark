@@ -7,6 +7,9 @@ namespace Utils
 		if (m_dbgHelp != nullptr)
 			return;
 
+		m_dbgHelp = GetModuleHandleW(L"dbghelp.dll");
+		m_alreadyLoaded = m_dbgHelp != nullptr;
+
 		m_dbgHelp = LoadLibraryW(L"dbghelp.dll");
 		if (m_dbgHelp != nullptr) {
 			m_stackWalk = reinterpret_cast<tStackWalk64>
@@ -38,8 +41,12 @@ namespace Utils
 				m_symGetModuleBase != nullptr &&
 				m_symCleanup != nullptr)
 			{
+				HANDLE hProcess = GetCurrentProcess();
+				if (m_alreadyLoaded)
+					m_symCleanup(hProcess);
+
 				m_symSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS);
-				if (m_symInitialize(GetCurrentProcess(), nullptr, TRUE) != FALSE)
+				if (m_symInitialize(hProcess, nullptr, TRUE) == TRUE)
 					return;
 			}
 

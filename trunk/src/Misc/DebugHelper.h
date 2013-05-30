@@ -36,6 +36,7 @@ namespace Utils
 	{
 	public:
 		DebugHelper() : m_dbgHelp(nullptr),
+						m_alreadyLoaded(false),
 						m_stackWalk(nullptr),
 						m_symInitialize(nullptr),
 						m_symSetOptions(nullptr),
@@ -46,7 +47,9 @@ namespace Utils
 
 		~DebugHelper() {
 			if (m_dbgHelp != nullptr) {
-				m_symCleanup(GetCurrentProcess());
+				if (!m_alreadyLoaded && m_symCleanup != nullptr)
+					m_symCleanup(GetCurrentProcess());
+
 				FreeLibrary(m_dbgHelp);
 			}
 		}
@@ -57,6 +60,7 @@ namespace Utils
 
 	protected:
 		HMODULE m_dbgHelp;
+		bool m_alreadyLoaded;
 		tStackWalk64 m_stackWalk;
 		tSymInitializeW m_symInitialize;
 		tSymSetOptions m_symSetOptions;
