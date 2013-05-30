@@ -65,10 +65,6 @@ RenderTarget9::RenderTarget9(IDirect3DDevice9 *pDevice) : m_device9(pDevice) {
 }
 
 void RenderTarget9::BeginUI() {
-	m_oldScissorEnable = FALSE;
-	m_device9->GetScissorRect(&m_oldScissorRect);
-	m_device9->GetRenderState(D3DRS_SCISSORTESTENABLE, &m_oldScissorEnable);
-
 	m_stateBlock->Capture();
 	m_defaultStateBlock->Apply();
 
@@ -85,8 +81,6 @@ void RenderTarget9::BeginUI() {
 
 void RenderTarget9::EndUI() {
 	m_stateBlock->Apply();
-	m_device9->SetScissorRect(&m_oldScissorRect);
-	m_device9->SetRenderState(D3DRS_SCISSORTESTENABLE, m_oldScissorEnable);
 }
 
 void RenderTarget9::OnLostDevice() {

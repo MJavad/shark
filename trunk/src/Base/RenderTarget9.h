@@ -69,8 +69,4 @@ protected:
 	// Blur Shaders
 	CComPtr<IDirect3DVertexShader9> m_blurVertex;
 	CComPtr<IDirect3DPixelShader9> m_blurPixel;
-
-	// Begin UI:
-	RECT m_oldScissorRect;
-	DWORD m_oldScissorEnable;
 };
