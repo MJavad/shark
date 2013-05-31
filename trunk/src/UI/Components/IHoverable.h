@@ -42,16 +42,16 @@ namespace Components {
 		}
 
 		// returning true = no hover
-		Utils::Event<bool ()> OnHoverStartEvent;
-		Utils::Event<bool ()> OnHoverEndEvent;
+		Utils::Event<bool (const std::shared_ptr<IHoverable>&)> OnHoverStartEvent;
+		Utils::Event<bool (const std::shared_ptr<IHoverable>&)> OnHoverEndEvent;
 
 	protected:
 		virtual bool OnHoverStartRequest() {
-			return OnHoverStartEvent();
+			return OnHoverStartEvent(get_this<IHoverable>());
 		}
 
 		virtual bool OnHoverEndRequest() {
-			return OnHoverEndEvent();
+			return OnHoverEndEvent(get_this<IHoverable>());
 		}
 
 		bool m_isHovered;

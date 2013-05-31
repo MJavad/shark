@@ -47,16 +47,16 @@ namespace Components {
 			return IComponent::OnTabPressed(pComponent);
 		}
 
-		Utils::Event<bool ()> OnFocusStartEvent;
-		Utils::Event<void ()> OnFocusEndEvent;
+		Utils::Event<bool (const std::shared_ptr<IFocusable>&)> OnFocusStartEvent;
+		Utils::Event<void (const std::shared_ptr<IFocusable>&)> OnFocusEndEvent;
 
 	protected:
 		virtual bool OnFocusStartRequest() {
-			return OnFocusStartEvent();
+			return OnFocusStartEvent(get_this<IFocusable>());
 		}
 
 		virtual void OnFocusEndRequest() {
-			OnFocusEndEvent();
+			OnFocusEndEvent(get_this<IFocusable>());
 		}
 
 		static std::weak_ptr<IFocusable> s_activeFocus;

@@ -104,7 +104,8 @@ namespace Components {
 				}
 			}
 
-			m_isHovered = IsSizing() || PtInSizerRect(vPosition);
+			m_isHovered = IsSizing() || (!sWndProc.LastMessageHandled &&
+										 PtInSizerRect(vPosition));
 			sWndProc.LastMessageHandled |= m_isHovered;
 			break;
 		};

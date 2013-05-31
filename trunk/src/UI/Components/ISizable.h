@@ -80,9 +80,9 @@ namespace Components {
 		}
 
 		// returning true = no size
-		Utils::Event<bool (Utils::Vector2*)> OnResizeStartEvent;
-		Utils::Event<bool (Utils::Vector2*)> OnResizeEndEvent;
-		Utils::Event<bool (float, float)> OnResizeEvent;
+		Utils::Event<bool (const std::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeStartEvent;
+		Utils::Event<bool (const std::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeEndEvent;
+		Utils::Event<bool (const std::shared_ptr<ISizable>&, float, float)> OnResizeEvent;
 
 	protected:
 		bool m_isGripVisible;
@@ -98,15 +98,15 @@ namespace Components {
 		static std::shared_ptr<D3DTexture> s_resizeTextureHover;
 
 		virtual bool OnResizeStartRequest(Utils::Vector2 *pvPosition) {
-			return OnResizeStartEvent(pvPosition);
+			return OnResizeStartEvent(get_this<ISizable>(), pvPosition);
 		}
 
 		virtual bool OnResizeEndRequest(Utils::Vector2 *pvPosition) {
-			return OnResizeEndEvent(pvPosition);
+			return OnResizeEndEvent(get_this<ISizable>(), pvPosition);
 		}
 
 		virtual bool OnResizeRequest(float fWidth, float fHeight) {
-			return OnResizeEvent(fWidth, fHeight);
+			return OnResizeEvent(get_this<ISizable>(), fWidth, fHeight);
 		}
 	};
 }

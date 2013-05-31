@@ -9,21 +9,25 @@ namespace Components {
 		IPushable() : m_isClicking(false) {}
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		Utils::Event<void (const Utils::Vector2&)> OnClickEvent;
-		Utils::Event<void (const Utils::Vector2&)> OnPushEvent;
-		Utils::Event<void (const Utils::Vector2&)> OnReleaseEvent;
+		bool IsPressed() const {
+			return m_isClicking;
+		}
+
+		Utils::Event<void (const std::shared_ptr<IPushable>&, const Utils::Vector2&)> OnClickEvent;
+		Utils::Event<void (const std::shared_ptr<IPushable>&, const Utils::Vector2&)> OnPushEvent;
+		Utils::Event<void (const std::shared_ptr<IPushable>&, const Utils::Vector2&)> OnReleaseEvent;
 
 	protected:
 		virtual void OnClickRequest(const Utils::Vector2 &vPosition) {
-			OnClickEvent(vPosition);
+			OnClickEvent(get_this<IPushable>(), vPosition);
 		}
 
 		virtual void OnPushRequest(const Utils::Vector2 &vPosition) {
-			OnPushEvent(vPosition);
+			OnPushEvent(get_this<IPushable>(), vPosition);
 		}
 
 		virtual void OnReleaseRequest(const Utils::Vector2 &vPosition) {
-			OnReleaseEvent(vPosition);
+			OnReleaseEvent(get_this<IPushable>(), vPosition);
 		}
 
 		bool m_isClicking;

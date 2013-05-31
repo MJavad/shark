@@ -32,24 +32,24 @@ namespace Components {
 		}
 
 		// returning true = no drag
-		Utils::Event<bool (Utils::Vector2*)> OnDragStartEvent;
-		Utils::Event<bool (Utils::Vector2*)> OnDragEndEvent;
-		Utils::Event<bool (Utils::Vector2*)> OnDragMoveEvent;
+		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragStartEvent;
+		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragEndEvent;
+		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragMoveEvent;
 
 	protected:
 		static std::weak_ptr<IDraggable> s_activeDrag;
 		static Utils::Vector2 s_dragVector;
 
 		virtual bool OnDragStartRequest(Utils::Vector2 *pvPosition) {
-			return OnDragStartEvent(pvPosition);
+			return OnDragStartEvent(get_this<IDraggable>(), pvPosition);
 		}
 
 		virtual bool OnDragEndRequest(Utils::Vector2 *pvPosition) {
-			return OnDragEndEvent(pvPosition);
+			return OnDragEndEvent(get_this<IDraggable>(), pvPosition);
 		}
 
 		virtual bool OnDragMoveRequest(Utils::Vector2 *pvPosition) {
-			return OnDragMoveEvent(pvPosition);
+			return OnDragMoveEvent(get_this<IDraggable>(), pvPosition);
 		}
 	};
 }
