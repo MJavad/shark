@@ -5,7 +5,7 @@ namespace UI {
 namespace Components {
 	Label::Label() : m_color(0xFFE0E0E0), m_formatFlags(0),
 		m_shouldCache(true), m_dropShadow(true), m_shadowDirection(2.0f, 2.0f) {
-		const auto callback = [this] { m_fontCache = nullptr; };
+		const auto callback = std::bind(&Label::FlushFontCache, this);
 		m_lostDevice = sD3DMgr.OnDeviceLostEvent += callback;
 		m_changeDevice = sD3DMgr.OnDeviceChangedEvent += callback;
 	}
@@ -69,8 +69,24 @@ namespace Components {
 	}
 
 	void Label::CreateCachedFontBatch() {
-		uint32 uWidth = (uint32) GetWidth();
-		uint32 uHeight = (uint32) GetHeight();
+		const auto pFont = GetFont();
+		if (pFont == nullptr || pFont->GetObject() == nullptr)
+			return;
+
+		const auto swText = GetText();
+		const auto pFontObject = pFont->GetObject();
+
+		RECT textExtent = {0};
+		textExtent.right = static_cast<uint32>(GetWidth());
+		textExtent.bottom = static_cast<uint32>(GetHeight());
+		textExtent = pFontObject->GetTextExtent(swText, textExtent, GetFormatFlags());
+
+		m_textIndent.x = static_cast<float>(textExtent.left);
+		m_textIndent.y = static_cast<float>(textExtent.top);
+
+		uint32 uWidth = textExtent.right - textExtent.left;
+		uint32 uHeight = textExtent.bottom - textExtent.top;
+
 		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 		const auto pOldSurface = pRenderTarget->GetRenderTargetSurface();
 
@@ -85,18 +101,14 @@ namespace Components {
 		fontRect.right = uWidth;
 		fontRect.bottom = uHeight;
 
-		const auto pFont = GetFont();
 		const auto pSprite = sD3DMgr.GetSprite();
+		if (pSprite != nullptr)
+			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 
-		if (pFont != nullptr && pFont->GetObject() != nullptr) {
-			if (pSprite != nullptr)
-				pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
+		pFontObject->DrawText(pSprite, swText, fontRect, DT_NOCLIP, 0xFFFFFFFF);
 
-			pFont->GetObject()->DrawText(pSprite, GetText(), fontRect, GetFormatFlags(), 0xFFFFFFFF);
-
-			if (pSprite != nullptr)
-				pSprite->End();
-		}
+		if (pSprite != nullptr)
+			pSprite->End();
 
 		pRenderTarget->SetRenderTargetSurface(pOldSurface);
 		GetInterface()->ClipStack.apply();
@@ -104,7 +116,7 @@ namespace Components {
 
 	void Label::RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const {
 		if (m_fontCache != nullptr) {
-			Utils::Vector2 vScreen = GetScreenPosition();
+			Utils::Vector2 vScreen = GetScreenPosition() + m_textIndent;
 			if (GetDropShadow()) {
 				Utils::Vector3 vShadow = vScreen + GetShadowDirection();
 				pSprite->Draw(m_fontCache, nullptr, nullptr, &vShadow, GetModifiedColor(0x70000000));

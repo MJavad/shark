@@ -25,7 +25,7 @@ namespace Components {
 
 		virtual void SetText(std::wstring swText) {
 			m_text = std::move(swText);
-			m_fontCache = nullptr;
+			FlushFontCache();
 		}
 
 		virtual Utils::Color GetColor() const {
@@ -36,13 +36,23 @@ namespace Components {
 			m_color = color;
 		}
 
+		virtual void SetWidth(float fWidth) {
+			IRectComponent::SetWidth(fWidth);
+			FlushFontCache();
+		}
+
+		virtual void SetHeight(float fHeight) {
+			IRectComponent::SetHeight(fHeight);
+			FlushFontCache();
+		}
+
 		virtual uint32 GetFormatFlags() const {
 			return m_formatFlags;
 		}
 
 		virtual void SetFormatFlags(uint32 dwFormatFlags) {
 			m_formatFlags = dwFormatFlags;
-			m_fontCache = nullptr;
+			FlushFontCache();
 		}
 
 		virtual std::shared_ptr<UI::D3DFont> GetFont() const {
@@ -51,17 +61,7 @@ namespace Components {
 
 		virtual void SetFont(std::shared_ptr<UI::D3DFont> pFont) {
 			m_font = std::move(pFont);
-			m_fontCache = nullptr;
-		}
-
-		virtual void SetWidth(float fWidth) {
-			IRectComponent::SetWidth(fWidth);
-			m_fontCache = nullptr;
-		}
-
-		virtual void SetHeight(float fHeight) {
-			IRectComponent::SetHeight(fHeight);
-			m_fontCache = nullptr;
+			FlushFontCache();
 		}
 
 		virtual void SetDropShadow(bool bDropShadow) {
@@ -83,7 +83,7 @@ namespace Components {
 		virtual void SetUseCache(bool bUseCache) {
 			m_shouldCache = bUseCache;
 			if (!bUseCache)
-				m_fontCache = nullptr;
+				FlushFontCache();
 		}
 
 		virtual bool GetUseCache() const {
@@ -92,6 +92,10 @@ namespace Components {
 
 		bool IsCached() const {
 			return m_fontCache != nullptr;
+		}
+
+		void FlushFontCache() {
+			m_fontCache = nullptr;
 		}
 
 		uint32 XToCP(int32 x) const;
@@ -103,6 +107,7 @@ namespace Components {
 		uint32 m_formatFlags;
 		bool m_shouldCache, m_dropShadow;
 		Utils::Vector2 m_shadowDirection;
+		Utils::Vector2 m_textIndent;
 		std::shared_ptr<D3DFont> m_font;
 		std::shared_ptr<D3DTexture> m_fontCache;
 

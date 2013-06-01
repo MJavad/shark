@@ -113,7 +113,7 @@ namespace UI {
 
 		editBox->OnFocusStartEvent += []
 			(const std::shared_ptr<IFocusable>&) {
-				throw std::invalid_argument("Testing exceptions!");
+				//throw std::invalid_argument("Testing exceptions!");
 				return true;
 			};
 
