@@ -16,6 +16,7 @@ namespace UI {
 	void GUIManager::Initialize() {
 		const auto mainInterface = std::make_shared<ComponentInterface>();
 		const auto backInterface = std::make_shared<ComponentInterface>();
+
 		const auto testFrame1 = CreateBasicFrame(L"[shark.dll] :: Test", 600, 600, 0xD0000000);
 		const auto testFrame2 = CreateBasicFrame(L"[shark.dll] :: Test", 140, 110, 0xD0000000);
 		const auto testFrame3 = CreateBasicFrame(L"[shark.dll] :: Test", 300, 300, 0xD0000000);
@@ -213,7 +214,7 @@ namespace UI {
 		float4 fHoverColor = {1.0f, 1.0f, 1.0f, 1.0f};
 		pCloseButton->SetHoverColor(fHoverColor);
 
-		/* Register default events for frames... */
+		// Register default events for frames...
 
 		pCloseButton->OnHoverStartEvent +=
 			[pCloseButtonTexture, pCloseButtonTextureHover]

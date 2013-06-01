@@ -2,6 +2,7 @@
 
 class Engine {
 	SINGLETON_CLASS(Engine) :
+		m_isInitialized(false),
 		m_instance(nullptr),
 		m_lastPulse(0),
 		m_mainThreadId(0) {}
@@ -13,15 +14,10 @@ public:
 
 	void OnShutDown();
 	void OnPulse();
+	void OnProcessDetach() {}
 
-	void OnProcessDetach() {
-		s_isInitialized = false;
-	}
-
-	// Must be static, because of access
-	// from destructors, when the dll unloads
-	static bool IsInitialized() {
-		return s_isInitialized;
+	bool IsInitialized() const {
+		return m_isInitialized;
 	}
 
 	bool IsShuttingDown() const {
@@ -41,8 +37,8 @@ public:
 	Utils::Event<void (uint32, uint32)> OnPulseEvent;
 
 protected:
+	bool m_isInitialized;
 	HINSTANCE m_instance;
-	static bool s_isInitialized;
 	Utils::Signal m_shutdownEvent;
 	Utils::Signal m_shutdownComplete;
 	uint32 m_lastPulse;

@@ -91,11 +91,11 @@ namespace Components {
 		bool m_isSizeLimited;
 		Utils::Vector2 m_minSize, m_maxSize;
 
+		std::shared_ptr<D3DTexture> m_resizeTexture;
+		std::shared_ptr<D3DTexture> m_resizeTextureHover;
+
 		static std::weak_ptr<ISizable> s_activeSizer;
 		static Utils::Vector2 s_sizeVector;
-
-		static std::shared_ptr<D3DTexture> s_resizeTexture;
-		static std::shared_ptr<D3DTexture> s_resizeTextureHover;
 
 		virtual bool OnResizeStartRequest(Utils::Vector2 *pvPosition) {
 			return OnResizeStartEvent(get_this<ISizable>(), pvPosition);

@@ -1,8 +1,7 @@
 #include "Misc/stdafx.h"
 #include "Engine.h"
 #include "UI/GUIManager.h"
-
-bool Engine::s_isInitialized = false;
+#include "D3DManager.h"
 
 void Engine::Initialize(HINSTANCE hInstance) {
 	m_instance = hInstance;
@@ -19,7 +18,7 @@ void Engine::OnPulse() {
 }
 
 void Engine::InitializeEnvironment() {
-	s_isInitialized = true;
+	m_isInitialized = true;
 	m_mainThreadId = GetCurrentThreadId();
 
 	try {
@@ -32,6 +31,7 @@ void Engine::InitializeEnvironment() {
 }
 
 void Engine::OnShutDown() {
+	sD3DMgr.Shutdown();
 	sMemory.RemoveAllDetours();
 	m_shutdownComplete.set();
 }
@@ -52,5 +52,5 @@ BOOL WINAPI Engine::_shutdownThread(LPVOID lpParam) {
 	sEngine.m_shutdownComplete.wait();
 
 	Sleep(10);
-	FreeLibraryAndExitThread(sEngine.m_instance, EXIT_SUCCESS);
+	FreeLibraryAndExitThread(sEngine.GetInstance(), EXIT_SUCCESS);
 }

@@ -14,6 +14,19 @@ void D3DManager::Initialize() {
 	};
 }
 
+void D3DManager::Shutdown() {
+	m_lastFrame = 0;
+	m_sprite.reset();
+	m_renderTarget.reset();
+	m_fonts.clear();
+	m_textures.clear();
+	m_interfaces.clear();
+	m_device9 = nullptr;
+	m_device11 = nullptr;
+	m_deviceContext11 = nullptr;
+	m_swapChain = nullptr;
+}
+
 void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 	m_device9 = pDevice;
 	m_device11 = nullptr;

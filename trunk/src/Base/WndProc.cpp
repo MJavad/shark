@@ -1,5 +1,6 @@
 #include "Misc/stdafx.h"
 #include "WndProc.h"
+#include "Engine.h"
 
 void WndProc::Initialize() {
 	m_hWnd = nullptr;
@@ -127,8 +128,14 @@ LRESULT CALLBACK WndProc::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 		}
 	}
 
-	// Handle it if we are not resizing the window...
-	if (sWndProc.LastMessageHandled && !sWndProc.m_isSizing)
+	// We need to shutdown some stuff or we will get a
+	// corrupted unload order when our application exits.
+	if (uMsg == WM_DESTROY)
+		sEngine.OnShutDown();
+
+	// If we handled the message and we are not resizing the window
+	// then we don't need to pass the message to our application.
+	else if (sWndProc.LastMessageHandled && !sWndProc.m_isSizing)
 		return 0;
 
 	// Don't handle it...

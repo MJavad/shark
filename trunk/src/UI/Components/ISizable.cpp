@@ -8,15 +8,9 @@ namespace Components {
 	std::weak_ptr<ISizable> ISizable::s_activeSizer;
 	Utils::Vector2 ISizable::s_sizeVector;
 
-	std::shared_ptr<D3DTexture> ISizable::s_resizeTexture;
-	std::shared_ptr<D3DTexture> ISizable::s_resizeTextureHover;
-
 	ISizable::ISizable() : m_isGripVisible(true), m_isHovered(false), m_isSizeLimited(false) {
-		if (s_resizeTexture == nullptr)
-			s_resizeTexture = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer.png");
-
-		if (s_resizeTextureHover == nullptr)
-			s_resizeTextureHover = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer_hover.png");
+		m_resizeTexture = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer.png");
+		m_resizeTextureHover = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer_hover.png");
 	}
 
 	void ISizable::OnRender(uint32 uTimePassed) {
@@ -29,7 +23,7 @@ namespace Components {
 		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
-			pSprite->Draw(m_isHovered ? s_resizeTextureHover : s_resizeTexture,
+			pSprite->Draw(m_isHovered ? m_resizeTextureHover : m_resizeTexture,
 				nullptr, nullptr, &vPosition, GetModifiedColor(0xFFFFFFFF));
 			pSprite->End();
 		}
