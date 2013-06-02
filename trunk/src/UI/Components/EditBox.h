@@ -62,9 +62,9 @@ namespace Components {
 		void _onKeyDown(int key);
 		void _onMouseMove(const Utils::Vector2 &vPosition);
 
-		virtual void OnPushEventNotify(const Utils::Vector2 &vPosition);
-		virtual void OnClickEventNotify(const Utils::Vector2 &vPosition);
-		virtual void OnReleaseEventNotify(const Utils::Vector2 &vPosition);
+		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
+		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
+		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition);
 
 		virtual bool OnFocusStartEventNotify();
 		virtual void OnFocusEndEventNotify();

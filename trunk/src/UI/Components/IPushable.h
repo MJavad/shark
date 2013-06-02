@@ -13,21 +13,21 @@ namespace Components {
 			return m_isClicking;
 		}
 
-		Utils::Event<void (const std::shared_ptr<IPushable>&, const Utils::Vector2&)> OnClickEvent;
-		Utils::Event<void (const std::shared_ptr<IPushable>&, const Utils::Vector2&)> OnPushEvent;
-		Utils::Event<void (const std::shared_ptr<IPushable>&, const Utils::Vector2&)> OnReleaseEvent;
+		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnClickEvent;
+		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnPushEvent;
+		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnReleaseEvent;
 
 	protected:
-		virtual void OnClickEventNotify(const Utils::Vector2 &vPosition) {
-			OnClickEvent(get_this<IPushable>(), vPosition);
+		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition) {
+			OnClickEvent(get_this<IPushable>(), pvPosition);
 		}
 
-		virtual void OnPushEventNotify(const Utils::Vector2 &vPosition) {
-			OnPushEvent(get_this<IPushable>(), vPosition);
+		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition) {
+			OnPushEvent(get_this<IPushable>(), pvPosition);
 		}
 
-		virtual void OnReleaseEventNotify(const Utils::Vector2 &vPosition) {
-			OnReleaseEvent(get_this<IPushable>(), vPosition);
+		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition) {
+			OnReleaseEvent(get_this<IPushable>(), pvPosition);
 		}
 
 		bool m_isClicking;

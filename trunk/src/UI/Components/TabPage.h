@@ -28,8 +28,8 @@ namespace Components {
 
 	protected:
 		std::shared_ptr<ItemsControl> m_content;
-		virtual void OnPushEventNotify(const Utils::Vector2 &vPosition);
-		virtual void OnClickEventNotify(const Utils::Vector2 &vPosition);
+		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
+		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
 
 		virtual bool OnFocusStartEventNotify() {
 			FadeTo(200, GetHoverColor());

@@ -33,8 +33,7 @@ namespace UI {
 		innerButton2->SetPosition(Utils::Vector2(20.0f, 75.0f));
 
 		innerButton2->OnClickEvent += []
-			(const std::shared_ptr<IPushable>&,
-			 const Utils::Vector2&) {
+			(const std::shared_ptr<IPushable>&, Utils::Vector2*) {
 				sEngine.InitializeShutdown();
 			};
 		
@@ -77,14 +76,12 @@ namespace UI {
 		innerListBox1->AddItem(ListBoxEntry::Create(L"Item #5"));
 
 		innerButton1->OnClickEvent += []
-			(const std::shared_ptr<IPushable> &pSender,
-			 const Utils::Vector2&) {
+			(const std::shared_ptr<IPushable> &pSender, Utils::Vector2*) {
 				pSender->GetUIParent()->Hide();
 			};
 
 		innerButton4->OnClickEvent += [testFrame1]
-			(const std::shared_ptr<IPushable> &,
-			 const Utils::Vector2&) {
+			(const std::shared_ptr<IPushable> &, Utils::Vector2*) {
 				testFrame1->Show();
 			};
 
@@ -105,7 +102,7 @@ namespace UI {
 		testFrame1->PushChild(editBox);
 
 		tabButton1->OnClickEvent += [testFrame2, editBox]
-			(const std::shared_ptr<IPushable>&, const Utils::Vector2&) {
+			(const std::shared_ptr<IPushable>&, Utils::Vector2*) {
 				float4 fVisib = {1.0f, 1.0f, 1.0f, 1.0f};
 				testFrame2->SetColorMod(fVisib);
 				testFrame2->SetVisibility(true);
@@ -228,8 +225,7 @@ namespace UI {
 			};
 
 		pCloseButton->OnClickEvent += []
-			(const std::shared_ptr<IPushable> &pSender,
-			 const Utils::Vector2&) {
+			(const std::shared_ptr<IPushable> &pSender, Utils::Vector2*) {
 				pSender->GetUIParent()->Hide();
 			};
 

@@ -63,7 +63,7 @@ namespace Components {
 			case WM_CHAR:
 				if (wParam == VK_SPACE &&
 					!sWndProc.LastMessageHandled) {
-					OnClickEventNotify(Utils::Vector2());
+					OnClickEventNotify(nullptr);
 					sWndProc.LastMessageHandled = true;
 				}
 				break;
@@ -107,26 +107,26 @@ namespace Components {
 			pBorder->SetHeight(fHeight + 2);
 	}
 
-	void Button::OnPushEventNotify(const Utils::Vector2 &vPosition) {
+	void Button::OnPushEventNotify(Utils::Vector2 *pvPosition) {
 		float4 fPressed = {1.4f, 0.80f, 0.80f, 0.80f};
 		FadeTo(75, fPressed);
 		Focus();
 
-		IPushable::OnPushEventNotify(vPosition);
+		IPushable::OnPushEventNotify(pvPosition);
 	}
 
-	void Button::OnClickEventNotify(const Utils::Vector2 &vPosition) {
+	void Button::OnClickEventNotify(Utils::Vector2 *pvPosition) {
 		if (IsHovered())
 			FadeTo(100, GetHoverColor());
 
-		IPushable::OnClickEventNotify(vPosition);
+		IPushable::OnClickEventNotify(pvPosition);
 	}
 
-	void Button::OnReleaseEventNotify(const Utils::Vector2 &vPosition) {
+	void Button::OnReleaseEventNotify(Utils::Vector2 *pvPosition) {
 		float4 fOrig = {1.0f, 1.0f, 1.0f, 1.0f};
 		FadeTo(100, fOrig);
 
-		IPushable::OnReleaseEventNotify(vPosition);
+		IPushable::OnReleaseEventNotify(pvPosition);
 	}
 
 	bool Button::OnFocusStartEventNotify() {

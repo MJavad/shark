@@ -46,14 +46,14 @@ namespace Components {
 
 		Rectangle::OnRender(uTimePassed);
 
-		uint32 textHeight = 0;
+		float textHeight = 0;
 		const auto pContent = GetContent();
 		if (pContent != nullptr) {
 			pContent->OnRender(uTimePassed);
 
 			const auto pFont = pContent->GetFont();
 			if (pFont != nullptr)
-				textHeight = pFont->GetDescription().Height;
+				textHeight = static_cast<float>(pFont->GetDescription().Height);
 		}
 
 		// caret specific stuff...
@@ -155,10 +155,10 @@ namespace Components {
 
 	}
 
-	void EditBox::OnPushEventNotify(const Utils::Vector2 &vPosition) {
+	void EditBox::OnPushEventNotify(Utils::Vector2 *pvPosition) {
 		const auto pContent = GetContent();
-		if (pContent != nullptr)
-			s_caretPosition = pContent->XToCP((int32) vPosition.x);
+		if (pContent != nullptr && pvPosition != nullptr)
+			s_caretPosition = pContent->XToCP(static_cast<int32>(pvPosition->x));
 
 		if (IsFocused()) {
 			// handle double click
@@ -166,17 +166,17 @@ namespace Components {
 		else
 			Focus();
 
-		IPushable::OnPushEventNotify(vPosition);
+		IPushable::OnPushEventNotify(pvPosition);
 	}
 
-	void EditBox::OnClickEventNotify(const Utils::Vector2 &vPosition) {
+	void EditBox::OnClickEventNotify(Utils::Vector2 *pvPosition) {
 
-		IPushable::OnClickEventNotify(vPosition);
+		IPushable::OnClickEventNotify(pvPosition);
 	}
 
-	void EditBox::OnReleaseEventNotify(const Utils::Vector2 &vPosition) {
+	void EditBox::OnReleaseEventNotify(Utils::Vector2 *pvPosition) {
 		s_activeSelection = false;
-		IPushable::OnReleaseEventNotify(vPosition);
+		IPushable::OnReleaseEventNotify(pvPosition);
 	}
 
 	bool EditBox::OnFocusStartEventNotify() {
