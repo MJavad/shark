@@ -22,6 +22,10 @@ namespace UI {
 
 		void OnResetDevice();
 
+		void FlushObject() {
+			m_textureObject.reset();
+		}
+
 		const STextureDesc& GetDescription() const { return m_textureDesc; }
 		std::shared_ptr<ID3DTextureObject> GetObject() const { return m_textureObject; }
 		bool IsCreated() const { return m_textureObject != nullptr; }

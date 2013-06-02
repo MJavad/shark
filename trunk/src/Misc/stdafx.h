@@ -96,4 +96,3 @@ struct float3 {
 struct float4 {
 	float _1, _2, _3, _4;
 };
-

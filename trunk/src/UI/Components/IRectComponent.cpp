@@ -18,8 +18,8 @@ namespace Components {
 		RECT dispRect = fullRect;
 
 		std::shared_ptr<ComponentInterface> pInterface = GetInterface();
-		if (pInterface != nullptr && !pInterface->ClipStack.empty())
-			IntersectRect(&dispRect, &fullRect, pInterface->ClipStack.top());
+		if (pInterface != nullptr && !pInterface->ClipStack.IsEmpty())
+			IntersectRect(&dispRect, &fullRect, pInterface->ClipStack.Top());
 
 		return dispRect;
 	}

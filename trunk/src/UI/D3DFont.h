@@ -19,6 +19,10 @@ namespace UI {
 				m_fontObject->OnResetDevice();
 		}
 
+		void FlushObject() {
+			m_fontObject.reset();
+		}
+
 		const SFontDesc& GetDescription() const { return m_fontDesc; }
 		std::shared_ptr<ID3DFontObject> GetObject() const { return m_fontObject; }
 		virtual bool IsCreated() const { return m_fontObject != nullptr; }

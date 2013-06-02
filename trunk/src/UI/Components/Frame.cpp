@@ -45,9 +45,9 @@ namespace Components {
 
 		// Send message to all children and set clip area...
 		auto pInterface = GetInterface();
-		pInterface->ClipStack.push(GetFullRect());
+		pInterface->ClipStack.Push(GetFullRect());
 		ItemsControl::OnMessageReceived(uMsg, wParam, lParam);
-		pInterface->ClipStack.pop();
+		pInterface->ClipStack.Pop();
 		const auto pThis = get_this<Frame>();
 
 		IDraggable::OnMessageReceived(uMsg, wParam, lParam);

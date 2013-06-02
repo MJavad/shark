@@ -15,16 +15,29 @@ void D3DManager::Initialize() {
 }
 
 void D3DManager::Shutdown() {
-	m_lastFrame = 0;
 	m_sprite.reset();
 	m_renderTarget.reset();
-	m_fonts.clear();
-	m_textures.clear();
-	m_interfaces.clear();
 	m_device9 = nullptr;
 	m_device11 = nullptr;
 	m_deviceContext11 = nullptr;
 	m_swapChain = nullptr;
+
+	// tell our controls that our device has changed -> flushes resources
+	OnDeviceChangedEvent();
+
+	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_fonts.erase(itr);
+		else
+			(itr++)->lock()->FlushObject();
+	}
+
+	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
+		if (itr->expired())
+			itr = m_textures.erase(itr);
+		else
+			(itr++)->lock()->FlushObject();
+	}
 }
 
 void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {

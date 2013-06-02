@@ -36,6 +36,10 @@ void Engine::OnShutDown() {
 	m_shutdownComplete.set();
 }
 
+void Engine::OnWindowDestroy() {
+	sD3DMgr.Shutdown();
+}
+
 bool Engine::InitializeShutdown() const {
 	DWORD dwThreadId = 0;
 	Utils::Handle hThread = CreateThread(nullptr, 0,
@@ -51,6 +55,6 @@ BOOL WINAPI Engine::_shutdownThread(LPVOID lpParam) {
 	sEngine.m_shutdownEvent.set();
 	sEngine.m_shutdownComplete.wait();
 
-	Sleep(10);
+	Sleep(100);
 	FreeLibraryAndExitThread(sEngine.GetInstance(), EXIT_SUCCESS);
 }

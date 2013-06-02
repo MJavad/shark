@@ -6,7 +6,8 @@ class WndProc {
 		m_wndProc(nullptr),
 		m_rMouseOk(true),
 		m_lMouseOk(true),
-		m_isSizing(false) {}
+		m_isSizing(false),
+		m_lastMessage(0) {}
 
 public:
 	~WndProc();
@@ -16,9 +17,22 @@ public:
 	bool Detach();
 
 	HWND FindCurrentWindow() const;
-	HWND GetHWND() const { return m_hWnd; }
-	WNDPROC GetWndProc() const { return m_wndProc; }
-	bool IsAttached() const { return m_wndProc != nullptr; }
+
+	UINT GetLastMessage() const {
+		return m_lastMessage;
+	}
+
+	HWND GetHWND() const {
+		return m_hWnd;
+	}
+
+	WNDPROC GetWndProc() const {
+		return m_wndProc;
+	}
+
+	bool IsAttached() const {
+		return m_wndProc != nullptr;
+	}
 	
 	bool LastMessageHandled;
 	Utils::Event<void (UINT, WPARAM, LPARAM)> OnMessageReceivedEvent;
@@ -28,6 +42,7 @@ protected:
 	WNDPROC m_wndProc;
 	bool m_rMouseOk, m_lMouseOk;
 	bool m_isSizing;
+	UINT m_lastMessage;
 
 	static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

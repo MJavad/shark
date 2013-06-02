@@ -4,6 +4,7 @@
 #include "D3DManager.h"
 #include "DllEntry.h"
 #include "Engine.h"
+#include "WndProc.h"
 
 void Detours::Initialize() {
 	ApplyDetour(sDelegates.IDirect3DDevice9__EndScene, IDirect3DDevice9__EndScene);

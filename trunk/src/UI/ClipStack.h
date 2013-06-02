@@ -6,23 +6,23 @@ namespace UI {
 	public:
 		ClipStack() : m_stack() {}
 
-		void apply() const;
-		void push(const RECT &rect);
-		void pop() { m_stack.pop(); }
-		bool empty() const { return m_stack.empty(); }
-		size_t size() const { return m_stack.size(); }
-		const RECT* top() const;
+		void Apply() const;
+		void Push(const RECT &rect);
+		void Pop() { m_stack.pop(); }
+		bool IsEmpty() const { return m_stack.empty(); }
+		size_t Size() const { return m_stack.size(); }
+		const RECT* Top() const;
 
 		bool PtInClipArea(const POINT &pt) const {
 			return m_stack.empty() || (PtInRect(&m_stack.top(), pt) != FALSE);
 		}
 
 		void SetRect(const RECT &rect, const std::function<void ()> &func) {
-			push(rect);
-			apply();
+			Push(rect);
+			Apply();
 			func();
-			pop();
-			apply();
+			Pop();
+			Apply();
 		}
 
 	protected:

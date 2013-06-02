@@ -39,9 +39,8 @@ bool WndProc::Detach() {
 	LONG_PTR nResult = SetWindowLongPtrW(m_hWnd, GWL_WNDPROC,
 		reinterpret_cast<LONG_PTR>(m_wndProc));
 
-	if (nResult == 0) {
+	if (nResult == 0)
 		return false;
-	}
 
 	m_hWnd = nullptr;
 	m_wndProc = nullptr;
@@ -66,6 +65,7 @@ BOOL CALLBACK WndProc::EnumWindowsProc(HWND hWnd, LPARAM lParam) {
 
 LRESULT CALLBACK WndProc::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	bool bInClientRect = true;
+	sWndProc.m_lastMessage = uMsg;
 	sWndProc.LastMessageHandled = false;
 	
 	// Disable the handler if the user is currently resizing the window...
@@ -131,7 +131,7 @@ LRESULT CALLBACK WndProc::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	// We need to shutdown some stuff or we will get a
 	// corrupted unload order when our application exits.
 	if (uMsg == WM_DESTROY)
-		sEngine.OnShutDown();
+		sEngine.OnWindowDestroy();
 
 	// If we handled the message and we are not resizing the window
 	// then we don't need to pass the message to our application.

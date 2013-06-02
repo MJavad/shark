@@ -33,8 +33,8 @@ BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 		break;
 
 	case DLL_PROCESS_DETACH:
-		_SetUnhandledExceptionFilter(nullptr);
 		sEngine.OnProcessDetach();
+		_SetUnhandledExceptionFilter(nullptr);
 		break;
 	}
 

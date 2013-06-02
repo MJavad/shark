@@ -3,12 +3,12 @@
 #include "Base/D3DManager.h"
 
 namespace UI {
-	void ClipStack::apply() const {
+	void ClipStack::Apply() const {
 		if (sD3DMgr.IsCreated()) 
-			sD3DMgr.GetRenderTarget()->SetClippingArea(top());
+			sD3DMgr.GetRenderTarget()->SetClippingArea(Top());
 	}
 
-	void ClipStack::push(const RECT &rect) {
+	void ClipStack::Push(const RECT &rect) {
 		if (m_stack.empty())
 			return m_stack.push(rect);
 
@@ -20,7 +20,7 @@ namespace UI {
 		m_stack.push(newTop);
 	}
 
-	const RECT* ClipStack::top() const {
+	const RECT* ClipStack::Top() const {
 		if (!m_stack.empty())
 			return &m_stack.top();
 		return nullptr;

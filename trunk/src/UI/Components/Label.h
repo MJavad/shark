@@ -95,7 +95,7 @@ namespace Components {
 		}
 
 		void FlushFontCache() {
-			m_fontCache = nullptr;
+			m_fontCache.reset();
 		}
 
 		uint32 XToCP(int32 x) const;

@@ -89,9 +89,9 @@ namespace Components {
 
 		if (IsValidTabIndex(m_activeTab)) {
 			const auto pInterface = GetInterface();
-			pInterface->ClipStack.push(GetFullRect());
+			pInterface->ClipStack.Push(GetFullRect());
 			m_tabPages[m_activeTab]->SendMessageToChildren(uMsg, wParam, lParam);
-			pInterface->ClipStack.pop();
+			pInterface->ClipStack.Pop();
 		}
 
 		SetPosition(vPosition);

@@ -77,15 +77,15 @@ namespace Components {
 		const auto pFontObject = pFont->GetObject();
 
 		RECT textExtent = {0};
-		textExtent.right = static_cast<uint32>(GetWidth());
-		textExtent.bottom = static_cast<uint32>(GetHeight());
+		textExtent.right = static_cast<LONG>(GetWidth());
+		textExtent.bottom = static_cast<LONG>(GetHeight());
 		textExtent = pFontObject->GetTextExtent(swText, textExtent, GetFormatFlags());
 
 		m_textIndent.x = static_cast<float>(textExtent.left);
 		m_textIndent.y = static_cast<float>(textExtent.top);
 
-		uint32 uWidth = textExtent.right - textExtent.left;
-		uint32 uHeight = textExtent.bottom - textExtent.top;
+		LONG uWidth = textExtent.right - textExtent.left;
+		LONG uHeight = textExtent.bottom - textExtent.top;
 
 		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 		const auto pOldSurface = pRenderTarget->GetRenderTargetSurface();
@@ -111,7 +111,7 @@ namespace Components {
 			pSprite->End();
 
 		pRenderTarget->SetRenderTargetSurface(pOldSurface);
-		GetInterface()->ClipStack.apply();
+		GetInterface()->ClipStack.Apply();
 	}
 
 	void Label::RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const {
