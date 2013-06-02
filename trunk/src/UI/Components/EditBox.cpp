@@ -155,7 +155,7 @@ namespace Components {
 
 	}
 
-	void EditBox::OnPushRequest(const Utils::Vector2 &vPosition) {
+	void EditBox::OnPushEventNotify(const Utils::Vector2 &vPosition) {
 		const auto pContent = GetContent();
 		if (pContent != nullptr)
 			s_caretPosition = pContent->XToCP((int32) vPosition.x);
@@ -166,37 +166,37 @@ namespace Components {
 		else
 			Focus();
 
-		IPushable::OnPushRequest(vPosition);
+		IPushable::OnPushEventNotify(vPosition);
 	}
 
-	void EditBox::OnClickRequest(const Utils::Vector2 &vPosition) {
+	void EditBox::OnClickEventNotify(const Utils::Vector2 &vPosition) {
 
-		IPushable::OnClickRequest(vPosition);
+		IPushable::OnClickEventNotify(vPosition);
 	}
 
-	void EditBox::OnReleaseRequest(const Utils::Vector2 &vPosition) {
+	void EditBox::OnReleaseEventNotify(const Utils::Vector2 &vPosition) {
 		s_activeSelection = false;
-		IPushable::OnReleaseRequest(vPosition);
+		IPushable::OnReleaseEventNotify(vPosition);
 	}
 
-	bool EditBox::OnFocusStartRequest() {
+	bool EditBox::OnFocusStartEventNotify() {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr) {
 			float4 fFocused = {1.77f, 0.36f, 1.0f, 1.45f};
 			pBorder->FadeTo(100, fFocused);
 		}
 
-		return IFocusable::OnFocusStartRequest();
+		return IFocusable::OnFocusStartEventNotify();
 	}
 
-	void EditBox::OnFocusEndRequest() {
+	void EditBox::OnFocusEndEventNotify() {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr) {
 			float4 fOrig = {1.0f, 1.0f, 1.0f, 1.0f};
 			pBorder->FadeTo(300, fOrig);
 		}
 
-		return IFocusable::OnFocusEndRequest();
+		return IFocusable::OnFocusEndEventNotify();
 	}
 }
 }

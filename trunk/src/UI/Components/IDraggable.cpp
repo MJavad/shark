@@ -9,7 +9,7 @@ namespace Components {
 
 	void IDraggable::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		if (!IsVisible()) {
-			if (IsDragged() && !OnDragEndRequest(nullptr))
+			if (IsDragged() && !OnDragEndEventNotify(nullptr))
 				ClearDrag();
 
 			return;
@@ -23,7 +23,7 @@ namespace Components {
 		case WM_LBUTTONDOWN:
 			if (!sWndProc.LastMessageHandled) {
 				if (!IsDragged() && PtInBoundingRect(vPosition) &&
-					!OnDragStartRequest(&vPosition))
+					!OnDragStartEventNotify(&vPosition))
 					StartDrag(vPosition - GetScreenPosition());
 
 				sWndProc.LastMessageHandled |= IsDragged();
@@ -32,7 +32,7 @@ namespace Components {
 
 		case WM_LBUTTONUP:
 			if (IsDragged()) {
-				if (!OnDragEndRequest(&vPosition))
+				if (!OnDragEndEventNotify(&vPosition))
 					ClearDrag();
 
 				sWndProc.LastMessageHandled = true;
@@ -42,7 +42,7 @@ namespace Components {
 		case WM_MOUSEMOVE:
 			if (!sWndProc.LastMessageHandled &&
 				IsDragged() && GetInterface()->ClipStack.PtInClipArea(vPosition) &&
-				!OnDragMoveRequest(&vPosition)) {
+				!OnDragMoveEventNotify(&vPosition)) {
 				vPosition -= s_dragVector;
 				auto pParent = GetUIParent();
 				if (pParent != nullptr)

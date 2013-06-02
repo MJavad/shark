@@ -40,15 +40,15 @@ namespace Components {
 		static std::weak_ptr<IDraggable> s_activeDrag;
 		static Utils::Vector2 s_dragVector;
 
-		virtual bool OnDragStartRequest(Utils::Vector2 *pvPosition) {
+		virtual bool OnDragStartEventNotify(Utils::Vector2 *pvPosition) {
 			return OnDragStartEvent(get_this<IDraggable>(), pvPosition);
 		}
 
-		virtual bool OnDragEndRequest(Utils::Vector2 *pvPosition) {
+		virtual bool OnDragEndEventNotify(Utils::Vector2 *pvPosition) {
 			return OnDragEndEvent(get_this<IDraggable>(), pvPosition);
 		}
 
-		virtual bool OnDragMoveRequest(Utils::Vector2 *pvPosition) {
+		virtual bool OnDragMoveEventNotify(Utils::Vector2 *pvPosition) {
 			return OnDragMoveEvent(get_this<IDraggable>(), pvPosition);
 		}
 	};

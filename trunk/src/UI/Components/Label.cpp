@@ -27,9 +27,10 @@ namespace Components {
 	}
 
 	void Label::OnRender(uint32 uTimePassed) {
+		const auto pSprite = sD3DMgr.GetSprite();
+
 		if (!GetUseCache()) {
 			const auto pFont = GetFont();
-			const auto pSprite = sD3DMgr.GetSprite();
 
 			if (pFont != nullptr && pFont->GetObject() != nullptr) {
 				RECT screenRect = GetFullRect();
@@ -60,7 +61,6 @@ namespace Components {
 		if (!IsCached())
 			CreateCachedFontBatch();
 
-		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 			RenderCachedFontBatch(pSprite);

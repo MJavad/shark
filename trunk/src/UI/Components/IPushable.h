@@ -18,15 +18,15 @@ namespace Components {
 		Utils::Event<void (const std::shared_ptr<IPushable>&, const Utils::Vector2&)> OnReleaseEvent;
 
 	protected:
-		virtual void OnClickRequest(const Utils::Vector2 &vPosition) {
+		virtual void OnClickEventNotify(const Utils::Vector2 &vPosition) {
 			OnClickEvent(get_this<IPushable>(), vPosition);
 		}
 
-		virtual void OnPushRequest(const Utils::Vector2 &vPosition) {
+		virtual void OnPushEventNotify(const Utils::Vector2 &vPosition) {
 			OnPushEvent(get_this<IPushable>(), vPosition);
 		}
 
-		virtual void OnReleaseRequest(const Utils::Vector2 &vPosition) {
+		virtual void OnReleaseEventNotify(const Utils::Vector2 &vPosition) {
 			OnReleaseEvent(get_this<IPushable>(), vPosition);
 		}
 

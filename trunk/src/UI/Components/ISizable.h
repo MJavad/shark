@@ -65,6 +65,7 @@ namespace Components {
 
 		void SetMaxSize(const Utils::Vector2 &vMax) {
 			m_maxSize = vMax;
+			SetSizeLimited(true);
 		}
 
 		RECT GetSizerRect() const {
@@ -97,15 +98,15 @@ namespace Components {
 		static std::weak_ptr<ISizable> s_activeSizer;
 		static Utils::Vector2 s_sizeVector;
 
-		virtual bool OnResizeStartRequest(Utils::Vector2 *pvPosition) {
+		virtual bool OnResizeStartEventNotify(Utils::Vector2 *pvPosition) {
 			return OnResizeStartEvent(get_this<ISizable>(), pvPosition);
 		}
 
-		virtual bool OnResizeEndRequest(Utils::Vector2 *pvPosition) {
+		virtual bool OnResizeEndEventNotify(Utils::Vector2 *pvPosition) {
 			return OnResizeEndEvent(get_this<ISizable>(), pvPosition);
 		}
 
-		virtual bool OnResizeRequest(float fWidth, float fHeight) {
+		virtual bool OnResizeEventNotify(float fWidth, float fHeight) {
 			return OnResizeEvent(get_this<ISizable>(), fWidth, fHeight);
 		}
 	};

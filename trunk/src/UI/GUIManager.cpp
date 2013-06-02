@@ -112,12 +112,6 @@ namespace UI {
 				editBox->Focus();
 			};
 
-		editBox->OnFocusStartEvent += []
-			(const std::shared_ptr<IFocusable>&) {
-				//throw std::invalid_argument("Testing exceptions!");
-				return true;
-			};
-
 		testFrame1->PushChild(tabControl);
 		
 		testFrame1->PushChild(innerListBox1);
@@ -145,6 +139,7 @@ namespace UI {
 	std::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float fWidth, float fHeight, const Utils::Color &color) const {
 		const auto pFrame = Frame::Create(fWidth, fHeight);
 		pFrame->SetMinSize(Utils::Vector2(140.0f, 50.0f));
+		pFrame->SetMaxSize(Utils::Vector2(900.0f, 700.0f));
 
 		float4 frameRoundings = {0};
 		frameRoundings._1 = 14.0f;
@@ -299,7 +294,7 @@ namespace UI {
 				pBackgroundLineRight->FadeTo(200, fadeIn);
 			};
 
-		pFrame->OnFrameHighlightStopEvent += [pHeaderBar, pBackgroundLineTop,
+		pFrame->OnFrameHighlightEndEvent += [pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight]
 			(const std::shared_ptr<Frame>&) {
 				float4 fadeOut = {1.0f, 1.0f, 1.0f, 1.0f};

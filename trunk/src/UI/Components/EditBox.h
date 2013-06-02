@@ -62,12 +62,12 @@ namespace Components {
 		void _onKeyDown(int key);
 		void _onMouseMove(const Utils::Vector2 &vPosition);
 
-		virtual void OnPushRequest(const Utils::Vector2 &vPosition);
-		virtual void OnClickRequest(const Utils::Vector2 &vPosition);
-		virtual void OnReleaseRequest(const Utils::Vector2 &vPosition);
+		virtual void OnPushEventNotify(const Utils::Vector2 &vPosition);
+		virtual void OnClickEventNotify(const Utils::Vector2 &vPosition);
+		virtual void OnReleaseEventNotify(const Utils::Vector2 &vPosition);
 
-		virtual bool OnFocusStartRequest();
-		virtual void OnFocusEndRequest();
+		virtual bool OnFocusStartEventNotify();
+		virtual void OnFocusEndEventNotify();
 	};
 }
 }

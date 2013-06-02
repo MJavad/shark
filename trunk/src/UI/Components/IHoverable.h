@@ -46,11 +46,11 @@ namespace Components {
 		Utils::Event<bool (const std::shared_ptr<IHoverable>&)> OnHoverEndEvent;
 
 	protected:
-		virtual bool OnHoverStartRequest() {
+		virtual bool OnHoverStartEventNotify() {
 			return OnHoverStartEvent(get_this<IHoverable>());
 		}
 
-		virtual bool OnHoverEndRequest() {
+		virtual bool OnHoverEndEventNotify() {
 			return OnHoverEndEvent(get_this<IHoverable>());
 		}
 

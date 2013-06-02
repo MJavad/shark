@@ -6,7 +6,7 @@ namespace UI {
 namespace Components {
 	void IHoverable::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		if (!IsVisible()) {
-			if (IsHovered() && !OnHoverEndRequest())
+			if (IsHovered() && !OnHoverEndEventNotify())
 				ClearHover();
 
 			return;
@@ -20,11 +20,11 @@ namespace Components {
 			case WM_MOUSEMOVE: {
 				bool bInRect = PtInBoundingRect(vPosition);
 				if (!m_isHovered && (!sWndProc.LastMessageHandled && bInRect) &&
-					!OnHoverStartRequest())
+					!OnHoverStartEventNotify())
 					StartHover();
 
 				else if (m_isHovered && (sWndProc.LastMessageHandled || !bInRect) &&
-					!OnHoverEndRequest())
+					!OnHoverEndEventNotify())
 					ClearHover();
 			}
 			break;

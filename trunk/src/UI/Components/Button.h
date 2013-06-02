@@ -70,20 +70,20 @@ namespace Components {
 		}
 
 	protected:
-		virtual void OnPushRequest(const Utils::Vector2 &vPosition);
-		virtual void OnClickRequest(const Utils::Vector2 &vPosition);
-		virtual void OnReleaseRequest(const Utils::Vector2 &vPosition);
+		virtual void OnPushEventNotify(const Utils::Vector2 &vPosition);
+		virtual void OnClickEventNotify(const Utils::Vector2 &vPosition);
+		virtual void OnReleaseEventNotify(const Utils::Vector2 &vPosition);
 
-		virtual bool OnHoverStartRequest() {
-			return IHoverable::OnHoverStartRequest() || m_isClicking;
+		virtual bool OnHoverStartEventNotify() {
+			return IHoverable::OnHoverStartEventNotify() || m_isClicking;
 		}
 
-		virtual bool OnHoverEndRequest() {
-			return IHoverable::OnHoverEndRequest() || m_isClicking;
+		virtual bool OnHoverEndEventNotify() {
+			return IHoverable::OnHoverEndEventNotify() || m_isClicking;
 		}
 
-		virtual bool OnFocusStartRequest();
-		virtual void OnFocusEndRequest();
+		virtual bool OnFocusStartEventNotify();
+		virtual void OnFocusEndEventNotify();
 
 		bool m_renderRect;
 		std::shared_ptr<Label> m_caption;

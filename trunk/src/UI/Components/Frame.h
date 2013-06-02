@@ -28,7 +28,7 @@ namespace Components {
 			m_sizable = bSizable;
 
 			if (IsSizing()) {
-				OnResizeEndRequest(nullptr);
+				OnResizeEndEventNotify(nullptr);
 				ResetActiveSizer();
 			}
 		}
@@ -43,7 +43,7 @@ namespace Components {
 
 		// When it handled the most recent event
 		Utils::Event<void (const std::shared_ptr<Frame>&)> OnFrameHighlightStartEvent;
-		Utils::Event<void (const std::shared_ptr<Frame>&)> OnFrameHighlightStopEvent;
+		Utils::Event<void (const std::shared_ptr<Frame>&)> OnFrameHighlightEndEvent;
 		Utils::Event<void (const std::shared_ptr<Frame>&, const Utils::Vector2&)> OnSetPositionEvent;
 
 	protected:

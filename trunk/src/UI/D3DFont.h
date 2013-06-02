@@ -19,7 +19,7 @@ namespace UI {
 				m_fontObject->OnResetDevice();
 		}
 
-		void FlushObject() {
+		void Release() {
 			m_fontObject.reset();
 		}
 

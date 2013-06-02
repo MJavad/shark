@@ -63,7 +63,7 @@ namespace Components {
 			case WM_CHAR:
 				if (wParam == VK_SPACE &&
 					!sWndProc.LastMessageHandled) {
-					OnClickRequest(Utils::Vector2());
+					OnClickEventNotify(Utils::Vector2());
 					sWndProc.LastMessageHandled = true;
 				}
 				break;
@@ -107,46 +107,46 @@ namespace Components {
 			pBorder->SetHeight(fHeight + 2);
 	}
 
-	void Button::OnPushRequest(const Utils::Vector2 &vPosition) {
+	void Button::OnPushEventNotify(const Utils::Vector2 &vPosition) {
 		float4 fPressed = {1.4f, 0.80f, 0.80f, 0.80f};
 		FadeTo(75, fPressed);
 		Focus();
 
-		IPushable::OnPushRequest(vPosition);
+		IPushable::OnPushEventNotify(vPosition);
 	}
 
-	void Button::OnClickRequest(const Utils::Vector2 &vPosition) {
+	void Button::OnClickEventNotify(const Utils::Vector2 &vPosition) {
 		if (IsHovered())
 			FadeTo(100, GetHoverColor());
 
-		IPushable::OnClickRequest(vPosition);
+		IPushable::OnClickEventNotify(vPosition);
 	}
 
-	void Button::OnReleaseRequest(const Utils::Vector2 &vPosition) {
+	void Button::OnReleaseEventNotify(const Utils::Vector2 &vPosition) {
 		float4 fOrig = {1.0f, 1.0f, 1.0f, 1.0f};
 		FadeTo(100, fOrig);
 
-		IPushable::OnReleaseRequest(vPosition);
+		IPushable::OnReleaseEventNotify(vPosition);
 	}
 
-	bool Button::OnFocusStartRequest() {
+	bool Button::OnFocusStartEventNotify() {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr) {
 			float4 fFocused = {1.0f, 1.0f, 1.0f, 1.0f};
 			pBorder->FadeTo(100, fFocused);
 		}
 
-		return IFocusable::OnFocusStartRequest();
+		return IFocusable::OnFocusStartEventNotify();
 	}
 
-	void Button::OnFocusEndRequest() {
+	void Button::OnFocusEndEventNotify() {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr) {
 			float4 fOrig = {0.0f, 0.0f, 0.0f, 0.0f};
 			pBorder->FadeTo(300, fOrig);
 		}
 
-		IFocusable::OnFocusEndRequest();
+		IFocusable::OnFocusEndEventNotify();
 	}
 }
 }

@@ -17,12 +17,12 @@ namespace UI {
 
 		void OnLostDevice() {
 			if (m_textureDesc.Pool == D3DPOOL_DEFAULT)
-				m_textureObject = nullptr;
+				m_textureObject.reset();
 		}
 
 		void OnResetDevice();
 
-		void FlushObject() {
+		void Release() {
 			m_textureObject.reset();
 		}
 

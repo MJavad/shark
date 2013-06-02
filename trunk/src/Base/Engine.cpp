@@ -31,7 +31,6 @@ void Engine::InitializeEnvironment() {
 }
 
 void Engine::OnShutDown() {
-	sD3DMgr.Shutdown();
 	sMemory.RemoveAllDetours();
 	m_shutdownComplete.set();
 }

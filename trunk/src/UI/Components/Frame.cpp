@@ -75,7 +75,7 @@ namespace Components {
 
 						if (!m_activeFocus) {
 							m_activeFocus = true;
-							OnFrameHighlightStartEvent(get_this<Frame>());
+							OnFrameHighlightStartEvent(pThis);
 						}
 
 						sWndProc.LastMessageHandled = true;
@@ -84,7 +84,7 @@ namespace Components {
 				
 				if (m_activeFocus && uMsg != WM_CHAR &&
 					(bHandled || !sWndProc.LastMessageHandled)) {
-					OnFrameHighlightStopEvent(get_this<Frame>());
+					OnFrameHighlightEndEvent(pThis);
 					m_activeFocus = false;
 				}
 			}

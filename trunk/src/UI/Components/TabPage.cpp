@@ -111,24 +111,24 @@ namespace Components {
 		return !IsFocused() && Focus();
 	}
 
-	void TabPage::OnPushRequest(const Utils::Vector2 &vPosition) {
+	void TabPage::OnPushEventNotify(const Utils::Vector2 &vPosition) {
 		const auto pParent = std::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
 			uint32 uIndex = pParent->GetPageIndex(get_this<TabPage>());
 			pParent->SetActiveTab(uIndex);
 		}
 
-		Button::OnPushRequest(vPosition);
+		Button::OnPushEventNotify(vPosition);
 	}
 
-	void TabPage::OnClickRequest(const Utils::Vector2 &vPosition) {
+	void TabPage::OnClickEventNotify(const Utils::Vector2 &vPosition) {
 		const auto pParent = std::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
 			uint32 uIndex = pParent->GetPageIndex(get_this<TabPage>());
 			pParent->SetActiveTab(uIndex);
 		}
 
-		Button::OnClickRequest(vPosition);
+		Button::OnClickEventNotify(vPosition);
 	}
 }
 }
