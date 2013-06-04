@@ -84,6 +84,7 @@ typedef signed char int8;
 #define ROUND(number) (floor(number+0.5f))
 #define MIN_LIMIT(var,limit) if(var<limit) var=limit
 #define MAX_LIMIT(var,limit) if(var>limit) var=limit
+#define STATIC_ASSERT(...) static_assert(__VA_ARGS__, #__VA_ARGS__)
 
 struct float2 {
 	float _1, _2;

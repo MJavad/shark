@@ -36,7 +36,7 @@ void Engine::OnShutDown() {
 }
 
 void Engine::OnWindowDestroy() {
-	sD3DMgr.Shutdown();
+	sD3DMgr.ReleaseDeviceResources();
 }
 
 bool Engine::InitializeShutdown() const {

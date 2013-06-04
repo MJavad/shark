@@ -15,7 +15,7 @@ class D3DManager {
 
 public:
 	void Initialize();
-	void Shutdown();
+	void ReleaseDeviceResources();
 	void SetDevice9(IDirect3DDevice9 *pDevice);
 	void SetDevice11(ID3D11Device *pDevice);
 	void SetDeviceContext11(ID3D11DeviceContext *pDeviceContext);

@@ -14,7 +14,7 @@ void D3DManager::Initialize() {
 	};
 }
 
-void D3DManager::Shutdown() {
+void D3DManager::ReleaseDeviceResources() {
 	m_sprite.reset();
 	m_renderTarget.reset();
 	m_device9 = nullptr;
