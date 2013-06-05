@@ -15,12 +15,14 @@ void D3DManager::Initialize() {
 }
 
 void D3DManager::ReleaseDeviceResources() {
+	Utils::LockGuard g(m_frameLock);
 	m_sprite.reset();
 	m_renderTarget.reset();
 	m_device9 = nullptr;
 	m_device11 = nullptr;
 	m_deviceContext11 = nullptr;
 	m_swapChain = nullptr;
+	m_skipNextFrame = true;
 
 	// Release all font resources...
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
@@ -43,11 +45,16 @@ void D3DManager::ReleaseDeviceResources() {
 }
 
 void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
+	Utils::LockGuard g(m_frameLock);
+	if (m_skipNextFrame) {
+		m_skipNextFrame = false;
+		return;
+	}
+
 	m_device9 = pDevice;
 	m_device11 = nullptr;
 	m_deviceContext11 = nullptr;
 	m_swapChain = nullptr;
-
 	m_sprite = std::make_shared<UI::D3DSprite9>(pDevice);
 	m_renderTarget = std::make_shared<RenderTarget9>(pDevice);
 
@@ -74,6 +81,7 @@ void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 }
 
 void D3DManager::SetDevice11(ID3D11Device *pDevice) {
+	Utils::LockGuard g(m_frameLock);
 	m_device9 = nullptr;
 	m_device11 = pDevice;
 	m_renderTarget.reset();
@@ -87,6 +95,7 @@ void D3DManager::SetDevice11(ID3D11Device *pDevice) {
 }
 
 void D3DManager::SetDeviceContext11(ID3D11DeviceContext *pDeviceContext) {
+	Utils::LockGuard g(m_frameLock);
 	m_deviceContext11 = pDeviceContext;
 	m_renderTarget.reset();
 
@@ -99,6 +108,7 @@ void D3DManager::SetDeviceContext11(ID3D11DeviceContext *pDeviceContext) {
 }
 
 void D3DManager::SetSwapChain(IDXGISwapChain *pSwapChain) {
+	Utils::LockGuard g(m_frameLock);
 	m_swapChain = pSwapChain;
 	m_renderTarget.reset();
 
@@ -117,6 +127,11 @@ void D3DManager::PushInterface(std::shared_ptr<ID3DInterface> pInterface) {
 
 void D3DManager::OnRender() {
 	Utils::LockGuard g(m_frameLock);
+	if (m_skipNextFrame) {
+		m_skipNextFrame = false;
+		return;
+	}
+
 	uint32 time_now = timeGetTime();
 	uint32 time_diff = time_now - m_lastFrame;
 	m_lastFrame = time_now;
@@ -132,6 +147,7 @@ void D3DManager::OnRender() {
 
 void D3DManager::OnLostDevice() {
 	Utils::LockGuard g(m_frameLock);
+	m_skipNextFrame = true;
 
 	if (m_sprite != nullptr)
 		m_sprite->OnLostDevice();
@@ -158,6 +174,7 @@ void D3DManager::OnLostDevice() {
 
 void D3DManager::OnResetDevice() {
 	Utils::LockGuard g(m_frameLock);
+	m_skipNextFrame = true;
 
 	if (m_sprite != nullptr)
 		m_sprite->OnResetDevice();
@@ -184,7 +201,7 @@ void D3DManager::OnResetDevice() {
 
 void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	Utils::LockGuard g(m_frameLock);
-	const std::list<std::shared_ptr<ID3DInterface>> lstInterfaces = m_interfaces;
+	const auto lstInterfaces = m_interfaces;
 	for( auto itr = lstInterfaces.begin(), end = lstInterfaces.end(); itr != end; ++itr )
 		(*itr)->OnMessageReceived(uMsg, wParam, lParam);
 

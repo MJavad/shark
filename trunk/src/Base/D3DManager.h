@@ -11,7 +11,8 @@ class D3DManager {
 		m_device11(nullptr),
 		m_deviceContext11(nullptr),
 		m_swapChain(nullptr),
-		m_lastFrame(0) {}
+		m_lastFrame(0),
+		m_skipNextFrame(false) {}
 
 public:
 	void Initialize();
@@ -58,6 +59,7 @@ public:
 	Utils::Event<void ()> OnDeviceChangedEvent;
 
 protected:
+	bool m_skipNextFrame;
 	uint32 m_lastFrame;
 	Utils::Mutex m_frameLock;
 

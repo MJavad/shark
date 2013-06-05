@@ -72,7 +72,7 @@ LRESULT CALLBACK WndProc::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	if (uMsg == WM_SIZING || uMsg == WM_SIZE)
 		sWndProc.m_isSizing = true;
 
-	else if (uMsg == WM_LBUTTONUP)
+	else if (uMsg == WM_LBUTTONUP || uMsg == WM_LBUTTONDOWN)
 		sWndProc.m_isSizing = false;
 
 	// Pre mouse fix for games like WoW (turning camera, moving stuff behind the interface...)
