@@ -265,6 +265,48 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 		}
 	}
 
+	// Print register dump...
+	std::wostringstream strmAdditionalInfo;
+	strmAdditionalInfo << L"Register Dump (x86):"
+					   << L"\r\n   EAX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eax)
+					   << L"\r\n   EBX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ebx)
+					   << L"\r\n   ECX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ecx)
+					   << L"\r\n   EDX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Edx)
+					   << L"\r\n   ESI: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Esi)
+					   << L"\r\n   EDI: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Edi)
+					   << L"\r\n   EBP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ebp)
+					   << L"\r\n   ESP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Esp)
+					   << L"\r\n   EIP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eip)
+					   << L"\r\n   EFlags: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->EFlags)
+					   << L"\r\n\r\n";
+
+	// Print module dump...
+	strmAdditionalInfo << L"Module Dump:\r\n   0x"
+					   << std::hex << std::uppercase << sEngine.GetInstance()
+					   << L" - <Current Module>\r\n";
+
+	{   // Initialize debug helper
+		Utils::DebugHelper dbgHelper;
+
+		try {
+			strmAdditionalInfo << dbgHelper.DumpModules(GetCurrentProcessId());
+		}
+		catch (std::exception &e) {
+			strmAdditionalInfo << L"   " << e.what() << L"\r\n";
+		}
+
+		// Print stack trace...
+		strmAdditionalInfo << L"\r\nStack Trace:\r\n";
+
+		try {
+			dbgHelper.LoadDbgHelp();
+			strmAdditionalInfo << dbgHelper.DumpCallStack(GetCurrentThread(), pInfo->ContextRecord);
+		}
+		catch (std::exception &e) {
+			strmAdditionalInfo << L"   " << e.what() << L"\r\n";
+		}
+	}
+
 	ACTCTXW actCtx = {0};
 	actCtx.cbSize = sizeof(ACTCTX);
 	actCtx.dwFlags = ACTCTX_FLAG_RESOURCE_NAME_VALID | ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_LANGID_VALID;
@@ -293,47 +335,6 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 
 	HWND hReason = GetDlgItem(hDlg, IDC_REASON);
 	SetWindowTextW(hReason, msgStrm.str().c_str());
-
-	// Print register dump...
-	std::wostringstream strmAdditionalInfo;
-	strmAdditionalInfo << L"Register Dump (x86):"
-					   << L"\r\n   EAX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eax)
-					   << L"\r\n   EBX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ebx)
-					   << L"\r\n   ECX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ecx)
-					   << L"\r\n   EDX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Edx)
-					   << L"\r\n   ESI: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Esi)
-					   << L"\r\n   EDI: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Edi)
-					   << L"\r\n   EBP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ebp)
-					   << L"\r\n   ESP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Esp)
-					   << L"\r\n   EIP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eip)
-					   << L"\r\n   EFlags: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->EFlags)
-					   << L"\r\n\r\n";
-
-	// Print module dump...
-	strmAdditionalInfo << L"Module Dump:\r\n   0x"
-					   << std::hex << std::uppercase << sEngine.GetInstance()
-					   << L" - <Current Module>\r\n";
-
-	// Initialize debug helper
-	Utils::DebugHelper dbgHelper;
-
-	try {
-		strmAdditionalInfo << dbgHelper.DumpModules(GetCurrentProcessId());
-	}
-	catch (std::exception &e) {
-		strmAdditionalInfo << L"   " << e.what() << L"\r\n";
-	}
-
-	// Print stack trace...
-	strmAdditionalInfo << L"\r\nStack Trace:\r\n";
-
-	try {
-		dbgHelper.LoadDbgHelp();
-		strmAdditionalInfo << dbgHelper.DumpCallStack(GetCurrentThread(), pInfo->ContextRecord);
-	}
-	catch (std::exception &e) {
-		strmAdditionalInfo << L"   " << e.what() << L"\r\n";
-	}
 
 	HWND hErroutBox = GetDlgItem(hDlg, IDC_ERROUT);
 	SetWindowTextW(hErroutBox, strmAdditionalInfo.str().c_str());

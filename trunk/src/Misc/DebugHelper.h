@@ -46,11 +46,16 @@ namespace Utils
 						m_symCleanup(nullptr) {}
 
 		~DebugHelper() {
+			Cleanup();
+		}
+
+		void Cleanup() {
 			if (m_dbgHelp != nullptr) {
 				if (!m_alreadyLoaded && m_symCleanup != nullptr)
 					m_symCleanup(GetCurrentProcess());
 
 				FreeLibrary(m_dbgHelp);
+				m_dbgHelp = nullptr;
 			}
 		}
 
