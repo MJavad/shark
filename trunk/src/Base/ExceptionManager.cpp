@@ -122,7 +122,8 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 			<< pInfo->ExceptionRecord->ExceptionCode
 			<< L")\r\n\r\n";
 
-	if (pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION &&
+	if ((pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION ||
+		 pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_IN_PAGE_ERROR) &&
 		pInfo->ExceptionRecord->NumberParameters >= 2) {
 		std::wstring accessType;
 		switch (pInfo->ExceptionRecord->ExceptionInformation[0])
