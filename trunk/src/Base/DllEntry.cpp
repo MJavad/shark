@@ -29,18 +29,13 @@ BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 BOOL WINAPI LoadInternal(LPVOID lpParam) {
 	srand(timeGetTime());
 
-	try {
-		sLog.Initialize();
-		sOffsets.Initialize();
-		sDelegates.Initialize();
-		sMemory.Initialize();
-		sWndProc.Initialize();
-		sD3DMgr.Initialize();
-		sDetours.Initialize();
-	}
-	catch (std::exception &e) {
-		MessageBoxA(nullptr, e.what(), "ERROR", MB_OK);
-	}
+	sLog.Initialize();
+	sOffsets.Initialize();
+	sDelegates.Initialize();
+	sMemory.Initialize();
+	sWndProc.Initialize();
+	sD3DMgr.Initialize();
+	sDetours.Initialize();
 
 	//LOG_DEBUG(L"Initialized!");
 	return EXIT_SUCCESS;

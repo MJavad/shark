@@ -124,7 +124,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 	if ((pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION ||
 		 pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_IN_PAGE_ERROR) &&
-		pInfo->ExceptionRecord->NumberParameters >= 2) {
+		pInfo->ExceptionRecord->NumberParameters > 1) {
 		std::wstring accessType;
 		switch (pInfo->ExceptionRecord->ExceptionInformation[0])
 		{
@@ -147,77 +147,83 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 				<< L" could not be " << accessType << L".\r\n";
 	}
 
-	else if (pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_MSVC) {
-		msgStrm << L"Extended information:\r\n";
-
-		static const std::type_info& stdExInfo = typeid(std::exception);
-		static const std::type_info& stdStringInfo = typeid(std::string);
-		static const std::type_info& stdWStringInfo = typeid(std::wstring);
-		static const std::type_info& charInfo = typeid(char*);
-		static const std::type_info& wcharInfo = typeid(wchar_t*);
-
-		std::type_info *pBaseType = nullptr;
-		std::type_info *pLastType = nullptr;
-
+	else if (pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_MSVC &&
+			 pInfo->ExceptionRecord->NumberParameters > 2) {
 		ULONG_PTR dwBaseObj = pInfo->ExceptionRecord->ExceptionInformation[1];
-		_CatchableTypeArray *pTypeArray = ((_ThrowInfo*) pInfo->ExceptionRecord->ExceptionInformation[2])->pCatchableTypeArray;
+		_ThrowInfo *pThrowInfo = reinterpret_cast<_ThrowInfo*>(pInfo->ExceptionRecord->ExceptionInformation[2]);
 
-		for (uint32 i = 0; i < (uint32) pTypeArray->nCatchableTypes; ++i) {
-			_CatchableType *pCatchableType = pTypeArray->arrayOfCatchableTypes[i];
-			std::type_info *pTypeInfo = (std::type_info*) pCatchableType->pType;
-			void *pmDisp = (void*) (dwBaseObj + pCatchableType->thisDisplacement.mdisp);
+		if (dwBaseObj != 0 && pThrowInfo != nullptr &&
+			pThrowInfo->pCatchableTypeArray != nullptr)
+		{
+			msgStrm << L"Extended information:\r\n";
+			static const std::type_info& stdExInfo = typeid(std::exception);
+			static const std::type_info& stdStringInfo = typeid(std::string);
+			static const std::type_info& stdWStringInfo = typeid(std::wstring);
+			static const std::type_info& charInfo = typeid(char*);
+			static const std::type_info& wcharInfo = typeid(wchar_t*);
 
-			if (i == 0)
-				pBaseType = pTypeInfo;
+			std::type_info *pBaseType = nullptr;
+			std::type_info *pLastType = nullptr;
 
-			if (*pTypeInfo == stdExInfo) {
-				std::exception *pException = (std::exception*) pmDisp;
+			_CatchableTypeArray *pTypeArray = pThrowInfo->pCatchableTypeArray;
+			for (uint32 i = 0; i < static_cast<uint32>(pTypeArray->nCatchableTypes); ++i) {
+				// Get the object for each catchable type inside the catchable type array...
+				_CatchableType *pCatchableType = pTypeArray->arrayOfCatchableTypes[i];
+				std::type_info *pTypeInfo = reinterpret_cast<std::type_info*>(pCatchableType->pType);
+				void *pmDisp = reinterpret_cast<void*>(dwBaseObj + pCatchableType->thisDisplacement.mdisp);
+
+				if (i == 0)
+					pBaseType = pTypeInfo;
+
+				if (*pTypeInfo == stdExInfo) {
+					std::exception *pException = reinterpret_cast<std::exception*>(pmDisp);
+					std::string sTypeName(pBaseType->name());
+					std::string sMessage(pException->what());
+
+					msgStrm << L"Type: " << std::wstring(sTypeName.begin(), sTypeName.end()) << L"\r\n";
+					msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
+					break;
+				}
+
+				if (*pTypeInfo == stdStringInfo) {
+					std::string *pString = reinterpret_cast<std::string*>(pmDisp);
+					msgStrm << L"Type: class std::string\r\n";
+					msgStrm << L"Message: " << std::wstring(pString->begin(), pString->end()) << L"\r\n";
+					break;
+				}
+
+				if (*pTypeInfo == stdWStringInfo) {
+					std::wstring *pString = (std::wstring*) pmDisp;
+					msgStrm << L"Type: class std::wstring\r\n";
+					msgStrm << L"Message: " << *pString << L"\r\n";
+					break;
+				}
+
+				if (*pTypeInfo == charInfo) {
+					const char **ppMessage = reinterpret_cast<const char**>(pmDisp);
+					std::string sMessage(ppMessage != nullptr ? *ppMessage : "null");
+
+					msgStrm << L"Type: string (char*)\r\n";
+					msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
+					break;
+				}
+
+				if (*pTypeInfo == wcharInfo) {
+					const wchar_t **ppMessage = reinterpret_cast<const wchar_t**>(pmDisp);
+
+					msgStrm << L"Type: wstring (wchar_t*)\r\n";
+					msgStrm << L"Message: " << (ppMessage != nullptr ? *ppMessage : L"null") << L"\r\n";
+					break;
+				}
+
+				if (i == static_cast<uint32>(pTypeArray->nCatchableTypes - 1))
+					pLastType = pTypeInfo;
+			}
+
+			if (pLastType != nullptr && pBaseType != nullptr) {
 				std::string sTypeName(pBaseType->name());
-				std::string sMessage(pException->what());
-
 				msgStrm << L"Type: " << std::wstring(sTypeName.begin(), sTypeName.end()) << L"\r\n";
-				msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
-				break;
 			}
-
-			if (*pTypeInfo == stdStringInfo) {
-				std::string *pString = (std::string*) pmDisp;
-				msgStrm << L"Type: class std::string\r\n";
-				msgStrm << L"Message: " << std::wstring(pString->begin(), pString->end()) << L"\r\n";
-				break;
-			}
-
-			if (*pTypeInfo == stdWStringInfo) {
-				std::wstring *pString = (std::wstring*) pmDisp;
-				msgStrm << L"Type: class std::wstring\r\n";
-				msgStrm << L"Message: " << *pString << L"\r\n";
-				break;
-			}
-
-			if (*pTypeInfo == charInfo) {
-				const char **ppMessage = (const char**) pmDisp;
-				std::string sMessage(ppMessage != nullptr ? *ppMessage : "null");
-
-				msgStrm << L"Type: string (char*)\r\n";
-				msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
-				break;
-			}
-
-			if (*pTypeInfo == wcharInfo) {
-				const wchar_t **ppMessage = (const wchar_t**) pmDisp;
-
-				msgStrm << L"Type: wstring (wchar_t*)\r\n";
-				msgStrm << L"Message: " << (ppMessage != nullptr ? *ppMessage : L"null") << L"\r\n";
-				break;
-			}
-
-			if (i == (uint32) (pTypeArray->nCatchableTypes - 1))
-				pLastType = pTypeInfo;
-		}
-
-		if (pLastType != nullptr && pBaseType != nullptr) {
-			std::string sTypeName(pBaseType->name());
-			msgStrm << L"Type: " << std::wstring(sTypeName.begin(), sTypeName.end()) << L"\r\n";
 		}
 	}
 
