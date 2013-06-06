@@ -176,43 +176,52 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 					pBaseType = pTypeInfo;
 
 				if (*pTypeInfo == stdExInfo) {
-					std::exception *pException = reinterpret_cast<std::exception*>(pmDisp);
 					std::string sTypeName(pBaseType->name());
-					std::string sMessage(pException->what());
-
 					msgStrm << L"Type: " << std::wstring(sTypeName.begin(), sTypeName.end()) << L"\r\n";
-					msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
+
+					std::exception *pException = reinterpret_cast<std::exception*>(pmDisp);
+					if (pException != nullptr) {
+						std::string sMessage(pException->what());
+						msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
+					}
 					break;
 				}
 
 				if (*pTypeInfo == stdStringInfo) {
-					std::string *pString = reinterpret_cast<std::string*>(pmDisp);
 					msgStrm << L"Type: class std::string\r\n";
-					msgStrm << L"Message: " << std::wstring(pString->begin(), pString->end()) << L"\r\n";
+
+					std::string *pString = reinterpret_cast<std::string*>(pmDisp);
+					if (pString != nullptr)
+						msgStrm << L"Message: " << std::wstring(pString->begin(), pString->end()) << L"\r\n";
 					break;
 				}
 
 				if (*pTypeInfo == stdWStringInfo) {
-					std::wstring *pString = (std::wstring*) pmDisp;
 					msgStrm << L"Type: class std::wstring\r\n";
-					msgStrm << L"Message: " << *pString << L"\r\n";
+
+					std::wstring *pString = reinterpret_cast<std::wstring*>(pmDisp);
+					if (pString != nullptr)
+						msgStrm << L"Message: " << *pString << L"\r\n";
 					break;
 				}
 
 				if (*pTypeInfo == charInfo) {
-					const char **ppMessage = reinterpret_cast<const char**>(pmDisp);
-					std::string sMessage(ppMessage != nullptr ? *ppMessage : "null");
-
 					msgStrm << L"Type: string (char*)\r\n";
-					msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
+
+					const char **ppMessage = reinterpret_cast<const char**>(pmDisp);
+					if (ppMessage != nullptr) {
+						std::string sMessage(*ppMessage != nullptr ? *ppMessage : "<null>");
+						msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
+					}
 					break;
 				}
 
 				if (*pTypeInfo == wcharInfo) {
-					const wchar_t **ppMessage = reinterpret_cast<const wchar_t**>(pmDisp);
-
 					msgStrm << L"Type: wstring (wchar_t*)\r\n";
-					msgStrm << L"Message: " << (ppMessage != nullptr ? *ppMessage : L"null") << L"\r\n";
+
+					const wchar_t **ppMessage = reinterpret_cast<const wchar_t**>(pmDisp);
+					if (ppMessage != nullptr)
+						msgStrm << L"Message: " << (*ppMessage != nullptr ? *ppMessage : L"<null>") << L"\r\n";
 					break;
 				}
 
