@@ -211,6 +211,9 @@
     <ClInclude Include="src\Misc\DebugHelper.h">
       <Filter>Headers\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="src\Base\ExceptionManager.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -332,6 +335,9 @@
     </ClCompile>
     <ClCompile Include="src\Misc\DebugHelper.cpp">
       <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\ExceptionManager.cpp">
+      <Filter>Sources\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
