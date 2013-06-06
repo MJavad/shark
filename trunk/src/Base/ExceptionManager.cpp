@@ -181,7 +181,8 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 					std::exception *pException = reinterpret_cast<std::exception*>(pmDisp);
 					if (pException != nullptr) {
-						std::string sMessage(pException->what());
+						const char *pszMessage = pException->what();
+						std::string sMessage(pszMessage != nullptr ? pszMessage : "<null>");
 						msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
 					}
 					break;
@@ -208,9 +209,9 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 				if (*pTypeInfo == charInfo) {
 					msgStrm << L"Type: string (char*)\r\n";
 
-					const char **ppMessage = reinterpret_cast<const char**>(pmDisp);
-					if (ppMessage != nullptr) {
-						std::string sMessage(*ppMessage != nullptr ? *ppMessage : "<null>");
+					const char **ppszMessage = reinterpret_cast<const char**>(pmDisp);
+					if (ppszMessage != nullptr) {
+						std::string sMessage(*ppszMessage != nullptr ? *ppszMessage : "<null>");
 						msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
 					}
 					break;
@@ -219,9 +220,9 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 				if (*pTypeInfo == wcharInfo) {
 					msgStrm << L"Type: wstring (wchar_t*)\r\n";
 
-					const wchar_t **ppMessage = reinterpret_cast<const wchar_t**>(pmDisp);
-					if (ppMessage != nullptr)
-						msgStrm << L"Message: " << (*ppMessage != nullptr ? *ppMessage : L"<null>") << L"\r\n";
+					const wchar_t **ppswzMessage = reinterpret_cast<const wchar_t**>(pmDisp);
+					if (ppswzMessage != nullptr)
+						msgStrm << L"Message: " << (*ppswzMessage != nullptr ? *ppswzMessage : L"<null>") << L"\r\n";
 					break;
 				}
 
