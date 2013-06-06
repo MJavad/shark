@@ -308,7 +308,7 @@ LONG WINAPI InternalExceptionFilter(PEXCEPTION_POINTERS pInfo) {
 	}
 
 	ACTCTXW actCtx = {0};
-	actCtx.cbSize = sizeof(ACTCTX);
+	actCtx.cbSize = sizeof(actCtx);
 	actCtx.dwFlags = ACTCTX_FLAG_RESOURCE_NAME_VALID | ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_LANGID_VALID;
 	actCtx.wLangId = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
 	actCtx.lpResourceName = MAKEINTRESOURCE(IDR_RT_MANIFEST1);
