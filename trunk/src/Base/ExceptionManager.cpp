@@ -291,7 +291,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 	if (hActCtx != INVALID_HANDLE_VALUE)
 		ActivateActCtx(hActCtx, &actCookie);
 
-	HMODULE hComctl32 = LoadLibraryW(L"Comctl32.dll");
+	HMODULE hComctl32 = LoadLibraryW(L"COMCTL32.dll");
 	if (hComctl32 != nullptr) {
 		typedef BOOL (WINAPI *tInitCommonControlsEx) (_In_ const LPINITCOMMONCONTROLSEX lpInitCtrls);
 		tInitCommonControlsEx pInitCommonControlsEx = reinterpret_cast<tInitCommonControlsEx>

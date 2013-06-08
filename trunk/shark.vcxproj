@@ -48,6 +48,7 @@
     <ClInclude Include="src\UI\Components\IDraggable.h" />
     <ClInclude Include="src\UI\Components\IFocusable.h" />
     <ClInclude Include="src\UI\Components\IHoverable.h" />
+    <ClInclude Include="src\UI\Components\IMovable.h" />
     <ClInclude Include="src\UI\Components\IPushable.h" />
     <ClInclude Include="src\UI\Components\IRectComponent.h" />
     <ClInclude Include="src\UI\Components\ISizable.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="src\UI\Components\Frame.cpp" />
     <ClCompile Include="src\UI\Components\IFocusable.cpp" />
     <ClCompile Include="src\UI\Components\IHoverable.cpp" />
+    <ClCompile Include="src\UI\Components\IMovable.cpp" />
     <ClCompile Include="src\UI\Components\IPushable.cpp" />
     <ClCompile Include="src\UI\Components\ISizable.cpp" />
     <ClCompile Include="src\UI\Components\Label.cpp" />

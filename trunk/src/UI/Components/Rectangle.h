@@ -106,7 +106,7 @@ namespace Components {
 			m_shadowTexture.reset();
 		}
 
-	protected:
+	private:
 		bool m_dropShadow;
 		Utils::Vector2 m_shadowDirection;
 		std::shared_ptr<D3DTexture> m_shadowTexture;

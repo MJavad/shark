@@ -27,7 +27,6 @@ namespace Components {
 		}
 
 	protected:
-		std::shared_ptr<ItemsControl> m_content;
 		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
 		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
 
@@ -41,6 +40,9 @@ namespace Components {
 			FadeTo(200, fDefault);
 			return IFocusable::OnFocusEndEventNotify();
 		}
+
+	private:
+		std::shared_ptr<ItemsControl> m_content;
 	};
 }
 }

@@ -33,7 +33,7 @@ namespace Components {
 		uint32 GetPageIndex(const std::shared_ptr<const TabPage> &pTabPage) const;
 		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent);
 
-	protected:
+	private:
 		uint32 m_activeTab;
 		std::vector<std::shared_ptr<TabPage>> m_tabPages;
 

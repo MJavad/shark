@@ -9,7 +9,7 @@ namespace Components {
 	{
 	public:
 		virtual ~IComponent();
-		virtual void OnUpdate(uint32 uTimePassed);
+
 		virtual void OnRender(uint32 uTimePassed) = 0;
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {}
 
@@ -26,10 +26,6 @@ namespace Components {
 		void StopFade() { m_fadeActive = false; }
 		void FadeTo(uint32 uFadeTime, const float4 &fadeColor);
 		void UndoFade();
-		
-		void StopMove() { m_moveActive = false; }
-		void MoveTo(uint32 uMoveTime, const Utils::Vector2 &vPosition);
-		void UndoMove();
 
 		virtual void Hide(uint32 time = 200);
 		virtual void Show(uint32 time = 200);
@@ -97,26 +93,8 @@ namespace Components {
 		virtual void OnParentSizeChanged(float fWidth, float fHeight) {}
 
 	protected:
-		// ctor
 		IComponent();
-
-		bool m_isVisible;
-		float4 m_colorMod;
-
-		bool m_fadeActive, m_prevFade;
-		uint32 m_fadeTime, m_fadeTimePassed;
-		float4 m_fadeTo, m_fadeSrc;
-
-		bool m_moveActive, m_prevMove;
-		uint32 m_moveTime, m_moveTimePassed;
-		Utils::Vector2 m_moveTo, m_moveSrc;
-
-		Utils::Vector2 m_position, m_childOffset;
-
-		std::weak_ptr<IComponent> m_parent;
-		std::weak_ptr<ComponentInterface> m_interface;
-
-		Utils::SEventDelegate<void (uint32)> m_updateDelegate;
+		virtual void OnUpdate(uint32 uTimePassed);
 
 		template <typename T>
 		std::shared_ptr<T> get_this() {
@@ -127,6 +105,21 @@ namespace Components {
 		std::shared_ptr<const T> get_this() const {
 			return std::dynamic_pointer_cast<const T>(shared_from_this());
 		}
+
+	private:
+		bool m_isVisible;
+		float4 m_colorMod;
+
+		bool m_fadeActive, m_prevFade;
+		uint32 m_fadeTime, m_fadeTimePassed;
+		float4 m_fadeTo, m_fadeSrc;
+
+		Utils::Vector2 m_position, m_childOffset;
+
+		std::weak_ptr<IComponent> m_parent;
+		std::weak_ptr<ComponentInterface> m_interface;
+
+		Utils::SEventDelegate<void (uint32)> m_updateDelegate;
 	};
 }
 }

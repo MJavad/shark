@@ -181,12 +181,14 @@ namespace Components {
 
 	bool EditBox::OnFocusStartEventNotify() {
 		const auto pBorder = GetBorder();
-		if (pBorder != nullptr) {
+		bool result = IFocusable::OnFocusStartEventNotify();
+
+		if (!result && pBorder != nullptr) {
 			float4 fFocused = {1.77f, 0.36f, 1.0f, 1.45f};
 			pBorder->FadeTo(100, fFocused);
 		}
 
-		return IFocusable::OnFocusStartEventNotify();
+		return result;
 	}
 
 	void EditBox::OnFocusEndEventNotify() {

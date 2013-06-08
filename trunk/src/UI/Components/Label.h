@@ -101,7 +101,7 @@ namespace Components {
 		uint32 XToCP(int32 x) const;
 		int32 CPToX(uint32 cp) const;
 		
-	protected:
+	private:
 		std::wstring m_text;
 		Utils::Color m_color;
 		uint32 m_formatFlags;

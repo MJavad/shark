@@ -6,8 +6,6 @@ namespace Components {
 	class IRectComponent abstract : public virtual IComponent
 	{
 	public:
-		IRectComponent() : m_width(0), m_height(0) {}
-
 		virtual float GetWidth() const {
 			return m_width;
 		}
@@ -33,6 +31,9 @@ namespace Components {
 		RECT GetDisplayRect() const;
 
 	protected:
+		IRectComponent() : m_width(0), m_height(0) {}
+
+	private:
 		float m_width, m_height;
 	};
 }

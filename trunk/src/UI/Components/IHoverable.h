@@ -7,11 +7,6 @@ namespace Components {
 	class IHoverable abstract : public virtual IRectComponent
 	{
 	public:
-		IHoverable() : m_isHovered(false) {
-			m_hoverColor._1 = 1.4f; m_hoverColor._2 = 1.5f;
-			m_hoverColor._3 = 1.5f; m_hoverColor._4 = 1.5f;
-		}
-
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
 		bool IsHovered() const {
@@ -46,6 +41,11 @@ namespace Components {
 		Utils::Event<bool (const std::shared_ptr<IHoverable>&)> OnHoverEndEvent;
 
 	protected:
+		IHoverable() : m_isHovered(false) {
+			m_hoverColor._1 = 1.4f; m_hoverColor._2 = 1.5f;
+			m_hoverColor._3 = 1.5f; m_hoverColor._4 = 1.5f;
+		}
+
 		virtual bool OnHoverStartEventNotify() {
 			return OnHoverStartEvent(get_this<IHoverable>());
 		}
@@ -54,6 +54,7 @@ namespace Components {
 			return OnHoverEndEvent(get_this<IHoverable>());
 		}
 
+	private:
 		bool m_isHovered;
 		float4 m_hoverColor;
 	};

@@ -124,10 +124,11 @@ namespace Utils
 			pSymbol->SizeOfStruct = sizeof(SYMBOL_INFOW);
 			pSymbol->MaxNameLen = MAX_SYM_NAME;
 
-			if (m_symFromAddr(hProcess,
+			if ((m_symFromAddr(hProcess,
 							  stackFrame64.AddrPC.Offset,
 							  &dwDisplacement,
-							  pSymbol) != FALSE)
+							  pSymbol) == TRUE)
+				 && pSymbol->Name != nullptr)
 				callStack << pSymbol->Name << L" + 0x" << std::hex << std::uppercase << dwDisplacement;
 			else
 				callStack << L"<Unknown Symbol>";

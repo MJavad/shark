@@ -6,7 +6,6 @@ namespace Components {
 	class IPushable abstract : public virtual IRectComponent
 	{
 	public:
-		IPushable() : m_isClicking(false) {}
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		bool IsPressed() const {
@@ -18,6 +17,8 @@ namespace Components {
 		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnReleaseEvent;
 
 	protected:
+		IPushable() : m_isClicking(false) {}
+
 		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition) {
 			OnClickEvent(get_this<IPushable>(), pvPosition);
 		}
@@ -30,6 +31,7 @@ namespace Components {
 			OnReleaseEvent(get_this<IPushable>(), pvPosition);
 		}
 
+	private:
 		bool m_isClicking;
 	};
 }

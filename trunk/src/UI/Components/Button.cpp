@@ -131,12 +131,14 @@ namespace Components {
 
 	bool Button::OnFocusStartEventNotify() {
 		const auto pBorder = GetBorder();
-		if (pBorder != nullptr) {
+		bool result = IFocusable::OnFocusStartEventNotify();
+
+		if (!result && pBorder != nullptr) {
 			float4 fFocused = {1.0f, 1.0f, 1.0f, 1.0f};
 			pBorder->FadeTo(100, fFocused);
 		}
 
-		return IFocusable::OnFocusStartEventNotify();
+		return result;
 	}
 
 	void Button::OnFocusEndEventNotify() {

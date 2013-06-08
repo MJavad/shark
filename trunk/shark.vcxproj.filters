@@ -214,6 +214,9 @@
     <ClInclude Include="src\Base\ExceptionManager.h">
       <Filter>Headers\Base</Filter>
     </ClInclude>
+    <ClInclude Include="src\UI\Components\IMovable.h">
+      <Filter>Headers\UI\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -338,6 +341,9 @@
     </ClCompile>
     <ClCompile Include="src\Base\ExceptionManager.cpp">
       <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\Components\IMovable.cpp">
+      <Filter>Sources\UI\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,7 @@ namespace Components {
 
 		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent);
 
-	protected:
+	private:
 		std::list<std::shared_ptr<IComponent>> m_children;
 	};
 }

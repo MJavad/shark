@@ -48,6 +48,14 @@ namespace Components {
 		void EraseText(uint32 numChars);
 
 	protected:
+		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
+		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
+		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition);
+
+		virtual bool OnFocusStartEventNotify();
+		virtual void OnFocusEndEventNotify();
+
+	private:
 		static bool s_renderCaret;
 		static uint32 s_caretPosition;
 		static uint32 s_caretTimer;
@@ -61,13 +69,6 @@ namespace Components {
 		void _onChar(wchar_t c);
 		void _onKeyDown(int key);
 		void _onMouseMove(const Utils::Vector2 &vPosition);
-
-		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
-		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
-		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition);
-
-		virtual bool OnFocusStartEventNotify();
-		virtual void OnFocusEndEventNotify();
 	};
 }
 }

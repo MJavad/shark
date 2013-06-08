@@ -88,7 +88,7 @@ namespace Components {
 			}
 		}
 
-	protected:
+	private:
 		bool m_isSelected;
 		std::shared_ptr<Label> m_caption;
 		std::shared_ptr<Rectangle> m_border;

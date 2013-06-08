@@ -59,6 +59,7 @@ namespace Components {
 			OnFocusEndEvent(get_this<IFocusable>());
 		}
 
+	private:
 		static std::weak_ptr<IFocusable> s_activeFocus;
 	};
 }

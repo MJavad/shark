@@ -68,7 +68,7 @@ namespace Components {
 			}
 		}
 
-	protected:
+	private:
 		bool m_isSelecting, m_isMultiSelect;
 		std::shared_ptr<Rectangle> m_border;
 		std::list<std::shared_ptr<ListBoxEntry>> m_entries;

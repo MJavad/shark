@@ -41,7 +41,7 @@ namespace Components {
 			m_color = color;
 		}
 
-	protected:
+	private:
 		D3DXMATRIX m_transform;
 		std::shared_ptr<D3DTexture> m_texture;
 		Utils::Color m_color;

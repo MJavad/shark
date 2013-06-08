@@ -8,8 +8,6 @@ namespace Components {
 	class ISizable abstract : public virtual IRectComponent
 	{
 	public:
-		ISizable();
-
 		virtual ~ISizable() {
 			if (IsSizing())
 				s_activeSizer.reset();
@@ -86,17 +84,7 @@ namespace Components {
 		Utils::Event<bool (const std::shared_ptr<ISizable>&, float, float)> OnResizeEvent;
 
 	protected:
-		bool m_isGripVisible;
-		bool m_isHovered;
-
-		bool m_isSizeLimited;
-		Utils::Vector2 m_minSize, m_maxSize;
-
-		std::shared_ptr<D3DTexture> m_resizeTexture;
-		std::shared_ptr<D3DTexture> m_resizeTextureHover;
-
-		static std::weak_ptr<ISizable> s_activeSizer;
-		static Utils::Vector2 s_sizeVector;
+		ISizable();
 
 		virtual bool OnResizeStartEventNotify(Utils::Vector2 *pvPosition) {
 			return OnResizeStartEvent(get_this<ISizable>(), pvPosition);
@@ -109,6 +97,19 @@ namespace Components {
 		virtual bool OnResizeEventNotify(float fWidth, float fHeight) {
 			return OnResizeEvent(get_this<ISizable>(), fWidth, fHeight);
 		}
+
+	private:
+		bool m_isGripVisible;
+		bool m_isHovered;
+
+		bool m_isSizeLimited;
+		Utils::Vector2 m_minSize, m_maxSize;
+
+		std::shared_ptr<D3DTexture> m_resizeTexture;
+		std::shared_ptr<D3DTexture> m_resizeTextureHover;
+
+		static std::weak_ptr<ISizable> s_activeSizer;
+		static Utils::Vector2 s_sizeVector;
 	};
 }
 }

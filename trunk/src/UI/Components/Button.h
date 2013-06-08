@@ -75,16 +75,17 @@ namespace Components {
 		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition);
 
 		virtual bool OnHoverStartEventNotify() {
-			return IHoverable::OnHoverStartEventNotify() || m_isClicking;
+			return IHoverable::OnHoverStartEventNotify() || IsPressed();
 		}
 
 		virtual bool OnHoverEndEventNotify() {
-			return IHoverable::OnHoverEndEventNotify() || m_isClicking;
+			return IHoverable::OnHoverEndEventNotify() || IsPressed();
 		}
 
 		virtual bool OnFocusStartEventNotify();
 		virtual void OnFocusEndEventNotify();
 
+	private:
 		bool m_renderRect;
 		std::shared_ptr<Label> m_caption;
 		std::shared_ptr<Rectangle> m_border;

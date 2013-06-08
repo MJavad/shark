@@ -46,7 +46,7 @@ namespace Components {
 		Utils::Event<void (const std::shared_ptr<Frame>&)> OnFrameHighlightEndEvent;
 		Utils::Event<void (const std::shared_ptr<Frame>&, const Utils::Vector2&)> OnSetPositionEvent;
 
-	protected:
+	private:
 		bool m_sizable;
 		bool m_activeFocus;
 	};

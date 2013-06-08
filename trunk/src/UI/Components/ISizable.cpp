@@ -58,8 +58,10 @@ namespace Components {
 
 		case WM_LBUTTONUP:
 			if (IsSizing()) {
-				if (!OnResizeEndEventNotify(&vPosition))
+				if (!OnResizeEndEventNotify(&vPosition)) {
 					ResetActiveSizer();
+					m_isHovered = PtInSizerRect(vPosition);
+				}
 
 				sWndProc.LastMessageHandled = true;
 			}

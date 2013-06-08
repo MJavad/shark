@@ -37,9 +37,6 @@ namespace Components {
 		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragMoveEvent;
 
 	protected:
-		static std::weak_ptr<IDraggable> s_activeDrag;
-		static Utils::Vector2 s_dragVector;
-
 		virtual bool OnDragStartEventNotify(Utils::Vector2 *pvPosition) {
 			return OnDragStartEvent(get_this<IDraggable>(), pvPosition);
 		}
@@ -51,6 +48,10 @@ namespace Components {
 		virtual bool OnDragMoveEventNotify(Utils::Vector2 *pvPosition) {
 			return OnDragMoveEvent(get_this<IDraggable>(), pvPosition);
 		}
+
+	private:
+		static std::weak_ptr<IDraggable> s_activeDrag;
+		static Utils::Vector2 s_dragVector;
 	};
 }
 }
