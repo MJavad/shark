@@ -1,5 +1,6 @@
 #include "Misc/stdafx.h"
 #include "DebugHelper.h"
+#pragma comment(lib, "Version.lib")
 
 namespace Utils
 {
@@ -57,6 +58,43 @@ namespace Utils
 		throw std::runtime_error("Could not load dbghelp.dll!");
 	}
 
+	std::wstring DebugHelper::DumpMemory(void *pMemory, uint32 dwSize) const {
+		Utils::ByteBuffer memoryDump(dwSize);
+		SIZE_T dwNumberOfBytesRead = 0;
+
+		if (ReadProcessMemory(GetCurrentProcess(), pMemory,
+				memoryDump.data(), dwSize, &dwNumberOfBytesRead) == FALSE)
+			throw std::runtime_error("Invalid memory location for dump!");
+
+		memoryDump.resize(dwNumberOfBytesRead);
+		DWORD_PTR dwStartAddress = reinterpret_cast<DWORD_PTR>(pMemory);
+
+		std::wostringstream strmMemory;
+		for (DWORD_PTR j = 0; j < dwNumberOfBytesRead; j += 0x10) {
+			strmMemory << std::hex << std::uppercase
+					   << L"  0x" << reinterpret_cast<void*>(dwStartAddress + j)
+					   << L':';
+
+			for (DWORD_PTR i = 0; i < 0x10 && (i + j < dwNumberOfBytesRead); ++i) {
+				if ((i % 4) == 0)
+					strmMemory << L' ';
+
+				strmMemory << std::setfill(L'0') << std::setw(2) << memoryDump[j + i] << L' ';
+			}
+
+			strmMemory << L' ';
+
+			for (DWORD_PTR i = 0; i < 0x10 && (i + j < dwNumberOfBytesRead); ++i) {
+				char c = static_cast<char>(memoryDump[j + i]);
+				strmMemory << (isprint(c) ? wchar_t(c) : L'.');
+			}
+
+			strmMemory << L"\r\n";
+		}
+
+		return strmMemory.str();
+	}
+
 	std::wstring DebugHelper::DumpModules(uint32 processId) const {
 		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processId);
 		if (hSnapshot == INVALID_HANDLE_VALUE)
@@ -67,11 +105,40 @@ namespace Utils
 		moduleEntry.dwSize = sizeof(moduleEntry);
 
 		if (Module32FirstW(hSnapshot, &moduleEntry) != FALSE) {
-			do if (moduleEntry.th32ProcessID == processId)
-				strmModules << L"   0x" << std::hex << std::uppercase
-							<< reinterpret_cast<void*>(moduleEntry.modBaseAddr)
-							<< L" - " << moduleEntry.szModule
-							<< L"\r\n";
+			do if (moduleEntry.th32ProcessID == processId) {
+				strmModules << L"  0x" << std::hex << std::uppercase
+							<< reinterpret_cast<void*>(moduleEntry.modBaseAddr) << L" - "
+							<< (moduleEntry.szModule != nullptr ? moduleEntry.szModule : L"<null>");
+
+				if (moduleEntry.szExePath != nullptr) {
+					DWORD dwVersionInfoHandle = 0;
+					DWORD dwVersionInfoSize = GetFileVersionInfoSizeW(moduleEntry.szExePath, &dwVersionInfoHandle);
+
+					UINT fileInfoSize = 0;
+					VS_FIXEDFILEINFO *pFileInfo = nullptr;
+					Utils::ByteBuffer versionInfoBuffer(dwVersionInfoSize);
+
+					if (dwVersionInfoSize != 0 &&
+
+						GetFileVersionInfoW(moduleEntry.szExePath, dwVersionInfoHandle,
+							dwVersionInfoSize, versionInfoBuffer.data()) != FALSE &&
+
+						VerQueryValueW(versionInfoBuffer.data(), L"\\",
+							reinterpret_cast<LPVOID*>(&pFileInfo), &fileInfoSize) != FALSE &&
+
+						fileInfoSize >= sizeof(VS_FIXEDFILEINFO))
+					{
+						// Output file version string...
+						strmModules << L" (" << std::dec
+									<< HIWORD(pFileInfo->dwFileVersionMS) << L'.'
+									<< LOWORD(pFileInfo->dwFileVersionMS) << L'.'
+									<< HIWORD(pFileInfo->dwFileVersionLS) << L'.'
+									<< LOWORD(pFileInfo->dwFileVersionLS) << L')';
+					}
+				}
+
+				strmModules << L"\r\n";
+			}
 			while (Module32NextW(hSnapshot, &moduleEntry) != FALSE);
 		}
 
@@ -88,17 +155,17 @@ namespace Utils
 			hThread = GetCurrentThread();
 
 		CONTEXT threadContext = {0};
-		if (pContext == nullptr) {
-			pContext = &threadContext;
-			RtlCaptureContext(pContext);
-		}
+		if (pContext != nullptr)
+			threadContext = *pContext;
+		else
+			RtlCaptureContext(&threadContext);
 
 		STACKFRAME64 stackFrame64 = {0};
-		stackFrame64.AddrPC.Offset = pContext->Eip;
+		stackFrame64.AddrPC.Offset = threadContext.Eip;
 		stackFrame64.AddrPC.Mode = AddrModeFlat;
-		stackFrame64.AddrStack.Offset = pContext->Esp;
+		stackFrame64.AddrStack.Offset = threadContext.Esp;
 		stackFrame64.AddrStack.Mode = AddrModeFlat;
-		stackFrame64.AddrFrame.Offset = pContext->Ebp;
+		stackFrame64.AddrFrame.Offset = threadContext.Ebp;
 		stackFrame64.AddrFrame.Mode = AddrModeFlat;
 
 		std::wostringstream callStack;
@@ -107,7 +174,7 @@ namespace Utils
 									  hProcess,
 									  hThread,
 									  &stackFrame64,
-									  pContext,
+									  &threadContext,
 									  nullptr,
 									  m_symFunctionTableAccess,
 									  m_symGetModuleBase,
@@ -116,7 +183,7 @@ namespace Utils
 			if (result != TRUE)
 				break;
 
-			callStack << L"   0x" << std::hex << std::uppercase
+			callStack << L"  0x" << std::hex << std::uppercase
 					  << reinterpret_cast<void*>(stackFrame64.AddrPC.Offset) << L" - ";
 
 			ByteBuffer buffer(sizeof(SYMBOL_INFOW) + MAX_SYM_NAME * sizeof(wchar_t));

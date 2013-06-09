@@ -32,12 +32,24 @@ BOOL CALLBACK ExceptionManager::_dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam,
 	case WM_INITDIALOG:
 		{
 			HWND hShutdown = GetDlgItem(hwndDlg, IDC_SHUTDOWN);
-			HFONT hFont = CreateFontW(18, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
+			HWND hReason = GetDlgItem(hwndDlg, IDC_LBL_REASON);
+			HWND hErrout = GetDlgItem(hwndDlg, IDC_LBL_ERROUT);
+
+			HFONT hFont8 = CreateFontW(13, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
 				DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 				FF_DONTCARE, L"Segoe UI");
 
-			if (hFont != nullptr)
-				SendMessageW(hShutdown, WM_SETFONT, (WPARAM) hFont, FALSE);
+			if (hFont8 != nullptr) {
+				SendMessageW(hReason, WM_SETFONT, reinterpret_cast<WPARAM>(hFont8), FALSE);
+				SendMessageW(hErrout, WM_SETFONT, reinterpret_cast<WPARAM>(hFont8), FALSE);
+			}
+
+			HFONT hFont18 = CreateFontW(18, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
+				DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+				FF_DONTCARE, L"Segoe UI");
+
+			if (hFont18 != nullptr)
+				SendMessageW(hShutdown, WM_SETFONT, reinterpret_cast<WPARAM>(hFont18), FALSE);
 
 			HICON hErrIcon = LoadIconW(nullptr, IDI_ERROR);
 			HWND hIconStatic = GetDlgItem(hwndDlg, IDC_ERRPICBOX);
@@ -237,25 +249,44 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 		}
 	}
 
-	// Print register dump...
 	std::wostringstream strmAdditionalInfo;
-	strmAdditionalInfo << L"Register Dump (x86):"
-						<< L"\r\n   EAX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eax)
-						<< L"\r\n   EBX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ebx)
-						<< L"\r\n   ECX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ecx)
-						<< L"\r\n   EDX: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Edx)
-						<< L"\r\n   ESI: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Esi)
-						<< L"\r\n   EDI: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Edi)
-						<< L"\r\n   EBP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Ebp)
-						<< L"\r\n   ESP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Esp)
-						<< L"\r\n   EIP: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->Eip)
-						<< L"\r\n   EFlags: 0x" << std::hex << std::uppercase << reinterpret_cast<void*>(pInfo->ContextRecord->EFlags)
-						<< L"\r\n\r\n";
+
+	OSVERSIONINFOW versionInfo = {0};
+	versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);
+
+	// Print OS version...
+	if (GetVersionExW(&versionInfo) != FALSE)
+		strmAdditionalInfo << L"Windows Build: " << std::dec
+						   << versionInfo.dwMajorVersion << L'.'
+						   << versionInfo.dwMinorVersion << L'.'
+						   << versionInfo.dwBuildNumber
+						   << L"\r\n";
+
+	MEMORYSTATUSEX memoryStatus = {0};
+	memoryStatus.dwLength = sizeof(memoryStatus);
+	if (GlobalMemoryStatusEx(&memoryStatus) != FALSE)
+		strmAdditionalInfo << L"Memory Load: "
+						   << memoryStatus.dwMemoryLoad
+						   << L"%\r\n\r\n";
+
+	// Print register dump...
+	strmAdditionalInfo << L"Register Dump (x86):" << std::hex << std::uppercase
+					   << L"\r\n  EAX: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Eax)
+					   << L"\r\n  EBX: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Ebx)
+					   << L"\r\n  ECX: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Ecx)
+					   << L"\r\n  EDX: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Edx)
+					   << L"\r\n  ESI: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Esi)
+					   << L"\r\n  EDI: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Edi)
+					   << L"\r\n  EBP: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Ebp)
+					   << L"\r\n  ESP: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Esp)
+					   << L"\r\n  EIP: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Eip)
+					   << L"\r\n  EFlags: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->EFlags)
+					   << L"\r\n\r\n";
 
 	// Print module dump...
-	strmAdditionalInfo << L"Module Dump:\r\n   0x"
-						<< std::hex << std::uppercase << sEngine.GetInstance()
-						<< L" - <Current Module>\r\n";
+	strmAdditionalInfo << L"Module Dump:\r\n  0x"
+					   << sEngine.GetInstance()
+					   << L" - <Current Module>\r\n";
 
 	{   // Initialize debug helper
 		Utils::DebugHelper dbgHelper;
@@ -264,7 +295,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 			strmAdditionalInfo << dbgHelper.DumpModules(GetCurrentProcessId());
 		}
 		catch (std::exception &e) {
-			strmAdditionalInfo << L"   " << e.what() << L"\r\n";
+			strmAdditionalInfo << L"  " << e.what() << L"\r\n";
 		}
 
 		// Print stack trace...
@@ -275,7 +306,29 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 			strmAdditionalInfo << dbgHelper.DumpCallStack(GetCurrentThread(), pInfo->ContextRecord);
 		}
 		catch (std::exception &e) {
-			strmAdditionalInfo << L"   " << e.what() << L"\r\n";
+			strmAdditionalInfo << L"  " << e.what() << L"\r\n";
+		}
+
+		// Print code dump...
+		strmAdditionalInfo << L"\r\nCode Dump (EIP, 64 Bytes):\r\n";
+
+		try {
+			void *pCodeAddr = reinterpret_cast<void*>(pInfo->ContextRecord->Eip & ~0xF);
+			strmAdditionalInfo << dbgHelper.DumpMemory(pCodeAddr, 64);
+		}
+		catch (std::exception &e) {
+			strmAdditionalInfo << L"  " << e.what() << L"\r\n";
+		}
+
+		// Print stack dump...
+		strmAdditionalInfo << L"\r\nStack Dump (ESP, 1024 Bytes):\r\n";
+
+		try {
+			void *pStackTop = reinterpret_cast<void*>(pInfo->ContextRecord->Esp & ~0xF);
+			strmAdditionalInfo << dbgHelper.DumpMemory(pStackTop, 1024);
+		}
+		catch (std::exception &e) {
+			strmAdditionalInfo << L"  " << e.what() << L"\r\n";
 		}
 	}
 

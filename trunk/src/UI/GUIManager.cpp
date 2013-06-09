@@ -107,6 +107,7 @@ namespace UI {
 				testFrame2->SetColorMod(fVisib);
 				testFrame2->SetVisibility(true);
 				editBox->Focus();
+				throw std::runtime_error("Testing...");
 			};
 
 		testFrame1->PushChild(tabControl);

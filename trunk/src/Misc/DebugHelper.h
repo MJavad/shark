@@ -61,6 +61,7 @@ namespace Utils
 
 		void LoadDbgHelp();
 		std::wstring DumpModules(uint32 processId) const;
+		std::wstring DumpMemory(void *pMemory, uint32 dwSize) const;
 		std::wstring DumpCallStack(HANDLE hThread = 0, PCONTEXT pContext = nullptr) const;
 
 	protected:

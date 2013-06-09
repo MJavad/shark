@@ -50,6 +50,7 @@ typedef signed char int8;
 #include <array>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 #include <algorithm>
 #include <cctype>
 #include <stack>
