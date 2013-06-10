@@ -311,6 +311,14 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 					   << L"\r\n  ESP: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Esp)
 					   << L"\r\n  EIP: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->Eip)
 					   << L"\r\n  EFlags: 0x" << reinterpret_cast<void*>(pInfo->ContextRecord->EFlags)
+
+					   << L"\r\n\r\nSegment Registers:"
+						  L"\r\n  CS: 0x" << std::setfill(L'0') << std::setw(4) << pInfo->ContextRecord->SegCs
+					   << L"\r\n  DS: 0x" << std::setfill(L'0') << std::setw(4) << pInfo->ContextRecord->SegDs
+					   << L"\r\n  ES: 0x" << std::setfill(L'0') << std::setw(4) << pInfo->ContextRecord->SegEs
+					   << L"\r\n  SS: 0x" << std::setfill(L'0') << std::setw(4) << pInfo->ContextRecord->SegSs
+					   << L"\r\n  FS: 0x" << std::setfill(L'0') << std::setw(4) << pInfo->ContextRecord->SegFs
+					   << L"\r\n  GS: 0x" << std::setfill(L'0') << std::setw(4) << pInfo->ContextRecord->SegGs
 					   << L"\r\n\r\n";
 
 	// Print module dump...
