@@ -61,6 +61,7 @@ typedef signed char int8;
 #include <boost/format.hpp>
 #include <boost/cast.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 #include <codecvt>
 #include <atlbase.h>
 #include "Mutex.h"

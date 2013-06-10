@@ -7,14 +7,16 @@
 #include "D3DManager.h"
 #include "Engine.h"
 #include "ExceptionManager.h"
+#include "FileManager.h"
 
 BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 	switch (dwReason)
 	{
 	case DLL_PROCESS_ATTACH:
 		DisableThreadLibraryCalls(hInstance);
-		sExceptionMgr.Initialize();
 		sEngine.Initialize(hInstance);
+		sFileMgr.Initialize();
+		sExceptionMgr.Initialize();
 		break;
 
 	case DLL_PROCESS_DETACH:

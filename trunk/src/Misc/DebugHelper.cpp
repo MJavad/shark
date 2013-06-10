@@ -79,7 +79,8 @@ namespace Utils
 				if ((i % 4) == 0)
 					strmMemory << L' ';
 
-				strmMemory << std::setfill(L'0') << std::setw(2) << memoryDump[j + i] << L' ';
+				strmMemory << std::hex << std::setfill(L'0') << std::setw(2)
+						   << memoryDump[j + i] << L' ';
 			}
 
 			strmMemory << L' ';
@@ -107,7 +108,7 @@ namespace Utils
 		if (Module32FirstW(hSnapshot, &moduleEntry) != FALSE) {
 			do if (moduleEntry.th32ProcessID == processId) {
 				strmModules << L"  0x" << std::hex << std::uppercase
-							<< reinterpret_cast<void*>(moduleEntry.modBaseAddr) << L" - "
+							<< reinterpret_cast<void*>(moduleEntry.modBaseAddr) << L": "
 							<< (moduleEntry.szModule != nullptr ? moduleEntry.szModule : L"<null>");
 
 				if (moduleEntry.szExePath != nullptr) {
@@ -184,7 +185,7 @@ namespace Utils
 				break;
 
 			callStack << L"  0x" << std::hex << std::uppercase
-					  << reinterpret_cast<void*>(stackFrame64.AddrPC.Offset) << L" - ";
+					  << reinterpret_cast<void*>(stackFrame64.AddrPC.Offset) << L": ";
 
 			ByteBuffer buffer(sizeof(SYMBOL_INFOW) + MAX_SYM_NAME * sizeof(wchar_t));
 			PSYMBOL_INFOW pSymbol = reinterpret_cast<PSYMBOL_INFOW>(buffer.data());
@@ -204,5 +205,26 @@ namespace Utils
 		}
 
 		return callStack.str();
+	}
+
+	std::wstring DebugHelper::FormatSystemCode(DWORD dwCode, DWORD dwLanguageId) const {
+		LPWSTR lpBuffer = nullptr;
+		std::wstring swMessage(L"Unknown system code!");
+		DWORD dwLength = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+										nullptr,
+										dwCode,
+										dwLanguageId,
+										reinterpret_cast<LPWSTR>(&lpBuffer),
+										0,
+										nullptr);
+
+		if (lpBuffer != nullptr) {
+			if (dwLength != 0)
+				swMessage = lpBuffer;
+
+			LocalFree(lpBuffer);
+		}
+
+		return swMessage;
 	}
 }

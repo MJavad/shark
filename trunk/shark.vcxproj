@@ -14,6 +14,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\Base\Engine.h" />
     <ClInclude Include="src\Base\ExceptionManager.h" />
+    <ClInclude Include="src\Base\FileManager.h" />
     <ClInclude Include="src\Base\Log.h" />
     <ClInclude Include="src\Base\RenderTarget11.h" />
     <ClInclude Include="src\Base\RenderTarget9.h" />
@@ -76,6 +77,7 @@
   <ItemGroup>
     <ClCompile Include="src\Base\Engine.cpp" />
     <ClCompile Include="src\Base\ExceptionManager.cpp" />
+    <ClCompile Include="src\Base\FileManager.cpp" />
     <ClCompile Include="src\Base\Log.cpp" />
     <ClCompile Include="src\Base\RenderTarget11.cpp" />
     <ClCompile Include="src\Base\RenderTarget9.cpp" />
@@ -201,7 +203,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>shark.def</ModuleDefinitionFile>

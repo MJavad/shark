@@ -63,6 +63,8 @@ namespace Utils
 		std::wstring DumpModules(uint32 processId) const;
 		std::wstring DumpMemory(void *pMemory, uint32 dwSize) const;
 		std::wstring DumpCallStack(HANDLE hThread = 0, PCONTEXT pContext = nullptr) const;
+		std::wstring FormatSystemCode(DWORD dwCode,
+			DWORD dwLanguageId = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US)) const;
 
 	protected:
 		HMODULE m_dbgHelp;

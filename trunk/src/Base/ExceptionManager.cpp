@@ -2,6 +2,7 @@
 #include "ExceptionManager.h"
 #include "Engine.h"
 #include "WndProc.h"
+#include "FileManager.h"
 #include "Misc/DebugHelper.h"
 #include "../resource.h"
 #include <Commctrl.h>
@@ -251,23 +252,52 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 	std::wostringstream strmAdditionalInfo;
 
-	OSVERSIONINFOW versionInfo = {0};
+	OSVERSIONINFOEXW versionInfo = {0};
 	versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);
 
 	// Print OS version...
-	if (GetVersionExW(&versionInfo) != FALSE)
+	if (GetVersionExW(reinterpret_cast<LPOSVERSIONINFOW>(&versionInfo)) != FALSE) {
 		strmAdditionalInfo << L"Windows Build: " << std::dec
 						   << versionInfo.dwMajorVersion << L'.'
 						   << versionInfo.dwMinorVersion << L'.'
-						   << versionInfo.dwBuildNumber
-						   << L"\r\n";
+						   << versionInfo.dwBuildNumber;
+
+		if (versionInfo.wServicePackMajor != 0 ||
+			versionInfo.wServicePackMinor != 0)
+			strmAdditionalInfo << L" (SP "
+							   << versionInfo.wServicePackMajor << L'.'
+							   << versionInfo.wServicePackMinor
+							   << L')';
+
+		strmAdditionalInfo << L"\r\n";
+	}
 
 	MEMORYSTATUSEX memoryStatus = {0};
 	memoryStatus.dwLength = sizeof(memoryStatus);
 	if (GlobalMemoryStatusEx(&memoryStatus) != FALSE)
 		strmAdditionalInfo << L"Memory Load: "
 						   << memoryStatus.dwMemoryLoad
-						   << L"%\r\n\r\n";
+						   << L"%\r\n";
+
+	DWORD dwLastError = GetLastError();
+	if (dwLastError != NO_ERROR)
+		strmAdditionalInfo << L"Last Error: "
+						   << std::dec << dwLastError
+						   << L"\r\n";
+
+	strmAdditionalInfo << L"\r\n";
+
+	// Print exception info array...
+	if (pInfo->ExceptionRecord->NumberParameters > 0) {
+		strmAdditionalInfo << L"Exception Information:\r\n";
+		for (uint32 i = 0; i < pInfo->ExceptionRecord->NumberParameters; ++i) {
+			strmAdditionalInfo << L"  [" << std::dec << i << L"]: 0x" << std::hex << std::uppercase
+							   << reinterpret_cast<void*>(pInfo->ExceptionRecord->ExceptionInformation[i])
+							   << L"\r\n";
+		}
+
+		strmAdditionalInfo << L"\r\n";
+	}
 
 	// Print register dump...
 	strmAdditionalInfo << L"Register Dump (x86):" << std::hex << std::uppercase
@@ -286,7 +316,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 	// Print module dump...
 	strmAdditionalInfo << L"Module Dump:\r\n  0x"
 					   << sEngine.GetInstance()
-					   << L" - <Current Module>\r\n";
+					   << L": <Current Module>\r\n";
 
 	{   // Initialize debug helper
 		Utils::DebugHelper dbgHelper;
@@ -331,6 +361,43 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 			strmAdditionalInfo << L"  " << e.what() << L"\r\n";
 		}
 	}
+
+	// Generate timestamp for crash log file...
+	time_t t = time(nullptr);
+	tm *now = localtime(&t);
+	std::wostringstream timestamp;
+	timestamp << std::setfill(L'0') << std::setw(4)
+			  << now->tm_year + 1900 << L'-'
+			  << std::setfill(L'0') << std::setw(2)
+			  << now->tm_mon + 1 << L'-'
+			  << std::setfill(L'0') << std::setw(2)
+			  << now->tm_mday << '_'
+			  << std::setfill(L'0') << std::setw(2)
+			  << now->tm_hour
+			  << std::setfill(L'0') << std::setw(2)
+			  << now->tm_min
+			  << std::setfill(L'0') << std::setw(2)
+			  << now->tm_sec;
+
+	// Write dump to our log...
+	std::wstring logsDir = sFileMgr.GetLogsDirectory() + L'\\';
+	std::wofstream crashDumpFile(logsDir + timestamp.str() + L".log",
+		std::fstream::out | std::fstream::trunc | std::fstream::binary);
+
+	crashDumpFile << L"-------------------------------------\r\n"
+				     L"--           Crash Reason          --\r\n"
+				     L"-------------------------------------\r\n"
+					 L"\r\n"
+				  << msgStrm.str()
+				  << L"\r\n"
+					 L"-------------------------------------\r\n"
+				     L"--      Additional Information     --\r\n"
+				     L"-------------------------------------\r\n"
+					 L"\r\n"
+				  << strmAdditionalInfo.str()
+				  << L"\r\n";
+
+	crashDumpFile.close();
 
 	ACTCTXW actCtx = {0};
 	actCtx.cbSize = sizeof(actCtx);

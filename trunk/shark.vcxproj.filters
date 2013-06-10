@@ -217,6 +217,9 @@
     <ClInclude Include="src\UI\Components\IMovable.h">
       <Filter>Headers\UI\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Base\FileManager.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -344,6 +347,9 @@
     </ClCompile>
     <ClCompile Include="src\UI\Components\IMovable.cpp">
       <Filter>Sources\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\FileManager.cpp">
+      <Filter>Sources\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
