@@ -32,7 +32,7 @@ BOOL CALLBACK ExceptionManager::_dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam,
 	{
 	case WM_INITDIALOG:
 		{
-			HWND hShutdown = GetDlgItem(hwndDlg, IDC_SHUTDOWN);
+			HWND hShutdown = GetDlgItem(hwndDlg, IDC_LBL_SHUTDOWN);
 			HWND hReason = GetDlgItem(hwndDlg, IDC_LBL_REASON);
 			HWND hErrout = GetDlgItem(hwndDlg, IDC_LBL_ERROUT);
 
@@ -55,11 +55,11 @@ BOOL CALLBACK ExceptionManager::_dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam,
 			HICON hErrIcon = LoadIcon(nullptr, IDI_ERROR);
 			HWND hIconStatic = GetDlgItem(hwndDlg, IDC_ERRPICBOX);
 			if (hErrIcon != nullptr)
-				SendMessage(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM) hErrIcon);
+				SendMessage(hIconStatic, STM_SETIMAGE, IMAGE_ICON, reinterpret_cast<LPARAM>(hErrIcon));
 
 			HICON hExclamation = LoadIcon(nullptr, IDI_EXCLAMATION);
 			if (hExclamation != nullptr)
-				SendMessage(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM) hExclamation);
+				SendMessage(hwndDlg, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(hExclamation));
 		}
 		return TRUE;
 
@@ -438,12 +438,13 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 	}
 
 	HWND hDlg = CreateDialog(sEngine.GetInstance(),
-		MAKEINTRESOURCE(IDD_DIALOG1), nullptr, (DLGPROC) _dlgProc);
+		MAKEINTRESOURCE(IDD_DIALOG1), nullptr,
+		reinterpret_cast<DLGPROC>(_dlgProc));
 
-	HWND hReason = GetDlgItem(hDlg, IDC_REASON);
+	HWND hReason = GetDlgItem(hDlg, IDC_EB_REASON);
 	SetWindowTextW(hReason, msgStrm.str().c_str());
 
-	HWND hErroutBox = GetDlgItem(hDlg, IDC_ERROUT);
+	HWND hErroutBox = GetDlgItem(hDlg, IDC_EB_ERROUT);
 	SetWindowTextW(hErroutBox, strmAdditionalInfo.str().c_str());
 	ShowWindow(hDlg, SW_SHOW);
 	SetForegroundWindow(hDlg);
