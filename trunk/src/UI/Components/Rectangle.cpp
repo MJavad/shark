@@ -9,8 +9,8 @@ namespace Components {
 		memset(&m_vertRoundings, 0, sizeof(m_vertRoundings));
 
 		const auto callback = std::bind(&Rectangle::FlushShadowTexture, this);
-		m_lostDevice = sD3DMgr.OnDeviceLostEvent += callback;
-		m_changeDevice = sD3DMgr.OnDeviceChangedEvent += callback;
+		m_lostDevice = sD3DMgr.OnDeviceLostEvent.connect(callback);
+		m_changeDevice = sD3DMgr.OnDeviceChangedEvent.connect(callback);
 	}
 
 	Rectangle::~Rectangle() {

@@ -6,8 +6,8 @@ namespace Components {
 	Label::Label() : m_color(0xFFE0E0E0), m_formatFlags(0),
 		m_shouldCache(true), m_dropShadow(true), m_shadowDirection(2.0f, 2.0f) {
 		const auto callback = std::bind(&Label::FlushFontCache, this);
-		m_lostDevice = sD3DMgr.OnDeviceLostEvent += callback;
-		m_changeDevice = sD3DMgr.OnDeviceChangedEvent += callback;
+		m_lostDevice = sD3DMgr.OnDeviceLostEvent.connect(callback);
+		m_changeDevice = sD3DMgr.OnDeviceChangedEvent.connect(callback);
 	}
 
 	Label::~Label() {
