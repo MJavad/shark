@@ -36,34 +36,38 @@ BOOL CALLBACK ExceptionManager::_dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam,
 			HWND hReason = GetDlgItem(hwndDlg, IDC_LBL_REASON);
 			HWND hErrout = GetDlgItem(hwndDlg, IDC_LBL_ERROUT);
 
-			HFONT hFont8 = CreateFontW(13, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
+			HFONT hFont8 = CreateFont(13, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
 				DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
-				FF_DONTCARE, L"Segoe UI");
+				FF_DONTCARE, TEXT("Segoe UI"));
 
 			if (hFont8 != nullptr) {
-				SendMessageW(hReason, WM_SETFONT, reinterpret_cast<WPARAM>(hFont8), FALSE);
-				SendMessageW(hErrout, WM_SETFONT, reinterpret_cast<WPARAM>(hFont8), FALSE);
+				SendMessage(hReason, WM_SETFONT, reinterpret_cast<WPARAM>(hFont8), FALSE);
+				SendMessage(hErrout, WM_SETFONT, reinterpret_cast<WPARAM>(hFont8), FALSE);
 			}
 
-			HFONT hFont18 = CreateFontW(18, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
+			HFONT hFont18 = CreateFont(18, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE,
 				DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
-				FF_DONTCARE, L"Segoe UI");
+				FF_DONTCARE, TEXT("Segoe UI"));
 
 			if (hFont18 != nullptr)
-				SendMessageW(hShutdown, WM_SETFONT, reinterpret_cast<WPARAM>(hFont18), FALSE);
+				SendMessage(hShutdown, WM_SETFONT, reinterpret_cast<WPARAM>(hFont18), FALSE);
 
-			HICON hErrIcon = LoadIconW(nullptr, IDI_ERROR);
+			HICON hErrIcon = LoadIcon(nullptr, IDI_ERROR);
 			HWND hIconStatic = GetDlgItem(hwndDlg, IDC_ERRPICBOX);
 			if (hErrIcon != nullptr)
-				SendMessageW(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM) hErrIcon);
+				SendMessage(hIconStatic, STM_SETIMAGE, IMAGE_ICON, (LPARAM) hErrIcon);
 
-			HICON hExclamation = LoadIconW(nullptr, IDI_EXCLAMATION);
+			HICON hExclamation = LoadIcon(nullptr, IDI_EXCLAMATION);
 			if (hExclamation != nullptr)
-				SendMessageW(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM) hExclamation);
+				SendMessage(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM) hExclamation);
 		}
 		return TRUE;
 
 	case WM_CLOSE:
+		DestroyWindow(hwndDlg);
+		return TRUE;
+
+	case WM_DESTROY:
 		PostQuitMessage(0);
 		return TRUE;
 	}
@@ -407,13 +411,13 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 	crashDumpFile.close();
 
-	ACTCTXW actCtx = {0};
+	ACTCTX actCtx = {0};
 	actCtx.cbSize = sizeof(actCtx);
 	actCtx.dwFlags = ACTCTX_FLAG_RESOURCE_NAME_VALID | ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_LANGID_VALID;
 	actCtx.wLangId = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
 	actCtx.lpResourceName = MAKEINTRESOURCE(IDR_RT_MANIFEST1);
 	actCtx.hModule = sEngine.GetInstance();
-	HANDLE hActCtx = CreateActCtxW(&actCtx);
+	HANDLE hActCtx = CreateActCtx(&actCtx);
 
 	ULONG_PTR actCookie = 0;
 	if (hActCtx != INVALID_HANDLE_VALUE)
@@ -433,7 +437,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 		}
 	}
 
-	HWND hDlg = CreateDialogW(sEngine.GetInstance(),
+	HWND hDlg = CreateDialog(sEngine.GetInstance(),
 		MAKEINTRESOURCE(IDD_DIALOG1), nullptr, (DLGPROC) _dlgProc);
 
 	HWND hReason = GetDlgItem(hDlg, IDC_REASON);
@@ -446,15 +450,14 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 	MSG msg = {0};
 	BOOL messageResult = FALSE;
-	while ((messageResult = GetMessageW(&msg, nullptr, 0, 0)) != FALSE) {
+	while ((messageResult = GetMessage(&msg, nullptr, 0, 0)) != FALSE) {
 		if (messageResult != -1 &&
-			(!IsWindow(hDlg) || !IsDialogMessageW(hDlg, &msg))) {
+			(!IsWindow(hDlg) || !IsDialogMessage(hDlg, &msg))) {
 			TranslateMessage(&msg);
-			DispatchMessageW(&msg);
+			DispatchMessage(&msg);
 		}
 	}
 
-	EndDialog(hDlg, 0);
 	if (hComctl32 != nullptr)
 		FreeLibrary(hComctl32);
 

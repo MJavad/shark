@@ -43,13 +43,13 @@ void Offsets::SDirectX::Initialize() {
 	wndClass.lpfnWndProc = DefWindowProcW;
 	wndClass.hInstance = sEngine.GetInstance();
 	wndClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-	wndClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);
-	wndClass.hIcon = LoadIconW(nullptr, IDI_APPLICATION);
+	wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wndClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 	wndClass.lpszClassName = L"D3DShark_D3DInit";
 
 	ATOM hAtom = RegisterClassW(&wndClass);
 	if (hAtom != FALSE) {
-		HWND hWindow = CreateWindowW(MAKEINTATOM(hAtom), nullptr, 0, 0, 0,
+		HWND hWindow = CreateWindow(MAKEINTATOM(hAtom), nullptr, 0, 0, 0,
 			0, 0, nullptr, nullptr, wndClass.hInstance, nullptr);
 
 		if (hWindow != nullptr) {
@@ -146,6 +146,6 @@ void Offsets::SDirectX::Initialize() {
 
 			DestroyWindow(hWindow);
 		}
-		UnregisterClassW(MAKEINTATOM(hAtom), wndClass.hInstance);
+		UnregisterClass(MAKEINTATOM(hAtom), wndClass.hInstance);
 	}
 }
