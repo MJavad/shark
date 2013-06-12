@@ -55,9 +55,9 @@ namespace Utils
 		typedef R fnconv_t(Args...);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(const std::function<fnconv_t> &func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
-			connect(func);
+			connect(std::move(func));
 		}
 
 		Event(Event<fnconv_t> &&other) :
@@ -98,8 +98,8 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(const std::function<fnconv_t> &func) {
-			return connect(func);
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
+			return connect(std::move(func));
 		}
 
 		Event<fnconv_t>& operator-=(const SEventDelegate<fnconv_t> &deleg) {
@@ -107,9 +107,9 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(const std::function<fnconv_t> &func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), func };
+			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
 			m_delegates[deleg.token] = deleg;
 			return deleg;
 		}
@@ -174,9 +174,9 @@ namespace Utils
 		typedef R fnconv_t(void);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(const std::function<fnconv_t> &func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
-			connect(func);
+			connect(std::move(func));
 		}
 
 		Event(Event<fnconv_t> &&other) :
@@ -217,8 +217,8 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(const std::function<fnconv_t> &func) {
-			return connect(func);
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
+			return connect(std::move(func));
 		}
 
 		Event<fnconv_t>& operator-=(const SEventDelegate<fnconv_t> &deleg) {
@@ -226,9 +226,9 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(const std::function<fnconv_t> &func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), func };
+			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
 			m_delegates[deleg.token] = deleg;
 			return deleg;
 		}
@@ -292,9 +292,9 @@ namespace Utils
 		typedef R fnconv_t(A0);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(const std::function<fnconv_t> &func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
-			connect(func);
+			connect(std::move(func));
 		}
 
 		Event(Event<fnconv_t> &&other) :
@@ -335,8 +335,8 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(const std::function<fnconv_t> &func) {
-			return connect(func);
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
+			return connect(std::move(func));
 		}
 
 		Event<fnconv_t>& operator-=(const SEventDelegate<fnconv_t> &deleg) {
@@ -344,9 +344,9 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(const std::function<fnconv_t> &func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), func };
+			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
 			m_delegates[deleg.token] = deleg;
 			return deleg;
 		}
@@ -410,9 +410,9 @@ namespace Utils
 		typedef R fnconv_t(A0, A1);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(const std::function<fnconv_t> &func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
-			connect(func);
+			connect(std::move(func));
 		}
 
 		Event(Event<fnconv_t> &&other) :
@@ -453,8 +453,8 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(const std::function<fnconv_t> &func) {
-			return connect(func);
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
+			return connect(std::move(func));
 		}
 
 		Event<fnconv_t>& operator-=(const SEventDelegate<fnconv_t> &deleg) {
@@ -462,9 +462,9 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(const std::function<fnconv_t> &func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), func };
+			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
 			m_delegates[deleg.token] = deleg;
 			return deleg;
 		}
@@ -528,9 +528,9 @@ namespace Utils
 		typedef R fnconv_t(A0, A1, A2);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(const std::function<fnconv_t> &func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
-			connect(func);
+			connect(std::move(func));
 		}
 
 		Event(Event<fnconv_t> &&other) :
@@ -571,8 +571,8 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(const std::function<fnconv_t> &func) {
-			return connect(func);
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
+			return connect(std::move(func));
 		}
 
 		Event<fnconv_t>& operator-=(const SEventDelegate<fnconv_t> &deleg) {
@@ -580,9 +580,9 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(const std::function<fnconv_t> &func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), func };
+			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
 			m_delegates[deleg.token] = deleg;
 			return deleg;
 		}
@@ -646,9 +646,9 @@ namespace Utils
 		typedef R fnconv_t(A0, A1, A2, A3);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(const std::function<fnconv_t> &func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
-			connect(func);
+			connect(std::move(func));
 		}
 
 		Event(Event<fnconv_t> &&other) :
@@ -689,8 +689,8 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(const std::function<fnconv_t> &func) {
-			return connect(func);
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
+			return connect(std::move(func));
 		}
 
 		Event<fnconv_t>& operator-=(const SEventDelegate<fnconv_t> &deleg) {
@@ -698,9 +698,9 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(const std::function<fnconv_t> &func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), func };
+			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
 			m_delegates[deleg.token] = deleg;
 			return deleg;
 		}

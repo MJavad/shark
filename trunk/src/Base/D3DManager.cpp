@@ -8,10 +8,9 @@
 #include "UI/Components/IFocusable.h"
 
 void D3DManager::Initialize() {
-	sWndProc.OnMessageReceivedEvent +=
-	[this] (UINT uMsg, WPARAM wParam, LPARAM lParam) {
-		this->OnMessageReceived(uMsg, wParam, lParam);
-	};
+	using namespace std::placeholders;
+	sWndProc.OnMessageReceivedEvent.connect(std::bind(
+		&D3DManager::OnMessageReceived, this, _1, _2, _3));
 }
 
 void D3DManager::ReleaseDeviceResources() {

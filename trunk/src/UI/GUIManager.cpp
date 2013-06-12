@@ -150,14 +150,14 @@ namespace UI {
 		pBackground->SetHorizontalRoundings(frameRoundings);
 		pFrame->PushChild(pBackground);
 
-		const auto pHeaderBar = Rectangle::Create(fWidth, 25.0f);
 		std::array<Utils::Color, 4> gradient;
 		gradient[0] = 0xFF505050;
 		gradient[1] = 0xFF505050;
 		gradient[2] = 0x50101010;
 		gradient[3] = 0x50101010;
 
-		pHeaderBar->SetGradientColors(gradient);
+		const auto pHeaderBar = Rectangle::Create(fWidth, 25.0f);
+		pHeaderBar->SetGradientColors(std::move(gradient));
 		pHeaderBar->SetVerticalRoundings(frameRoundings);
 		pHeaderBar->SetHorizontalRoundings(frameRoundings);
 		pFrame->PushChild(pHeaderBar);
