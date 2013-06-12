@@ -39,14 +39,11 @@ HRESULT CALLBACK Detours::IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice, D3D
 	if (sD3DMgr.IsCreated())
 		sD3DMgr.OnLostDevice();
 
-	sDetours.OnLostDeviceEvent(pDevice, pParams);
-
 	HRESULT hResult = sDelegates.IDirect3DDevice9__Reset(pDevice, pParams);
 
 	if (sD3DMgr.IsCreated())
 		sD3DMgr.OnResetDevice();
 
-	sDetours.OnResetDeviceEvent(pDevice, pParams);
 	return hResult;
 }
 

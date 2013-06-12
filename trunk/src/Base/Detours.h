@@ -6,9 +6,6 @@ class Detours {
 public:
 	void Initialize();
 
-	Utils::Event<void (IDirect3DDevice9*, D3DPRESENT_PARAMETERS*)> OnLostDeviceEvent;
-	Utils::Event<void (IDirect3DDevice9*, D3DPRESENT_PARAMETERS*)> OnResetDeviceEvent;
-
 private:
 	static HRESULT CALLBACK IDirect3DDevice9__EndScene(IDirect3DDevice9 *pDevice);
 	static HRESULT CALLBACK IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice, D3DPRESENT_PARAMETERS *pParams);
