@@ -11,15 +11,15 @@ namespace Components {
 		const auto pCaption = Label::Create(std::move(swText), DT_VCENTER);
 
 		float4 fInvisible = {0.0f, 0.0f, 0.0f, 0.0f};
-		pBorder->SetColor(0xFF40B0FF);
+		pBorder->SetColor(Utils::Color(0xFF, 0x40, 0xB0, 0xFF));
 		pBorder->SetColorMod(fInvisible);
 		pBorder->SetVisibility(false);
 
 		pCaption->SetPosition(Utils::Vector2(8.0f, 0.0f));
 
 		pListBoxEntry->SetHeight(20);
-		pListBoxEntry->SetSelectedColor(0x902060A0);
-		pListBoxEntry->SetDeselectedColor(0x90202020);
+		pListBoxEntry->SetSelectedColor(Utils::Color(0x90, 0x20, 0x60, 0xA0));
+		pListBoxEntry->SetDeselectedColor(Utils::Color(0x90, 0x20, 0x20, 0x20));
 		pListBoxEntry->SetBorder(std::move(pBorder));
 		pListBoxEntry->SetCaption(std::move(pCaption));
 		return pListBoxEntry;

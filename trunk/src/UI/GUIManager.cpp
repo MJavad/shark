@@ -151,10 +151,10 @@ namespace UI {
 		pFrame->PushChild(pBackground);
 
 		std::array<Utils::Color, 4> gradient;
-		gradient[0] = 0xFF505050;
-		gradient[1] = 0xFF505050;
-		gradient[2] = 0x50101010;
-		gradient[3] = 0x50101010;
+		gradient[0] = Utils::Color(0xFF, 0x50, 0x50, 0x50);
+		gradient[1] = Utils::Color(0xFF, 0x50, 0x50, 0x50);
+		gradient[2] = Utils::Color(0x50, 0x10, 0x10, 0x10);
+		gradient[3] = Utils::Color(0x50, 0x10, 0x10, 0x10);
 
 		const auto pHeaderBar = Rectangle::Create(fWidth, 25.0f);
 		pHeaderBar->SetGradientColors(std::move(gradient));
@@ -164,28 +164,28 @@ namespace UI {
 
 		const auto pWindowTitle = Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER, fWidth);
 		pWindowTitle->SetPosition(Utils::Vector2(0.0f, 5.0f));
-		pWindowTitle->SetColor(0x90FFFFFF);
+		pWindowTitle->SetColor(Utils::Color(0x90, 0xFF, 0xFF, 0xFF));
 		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, 0, FW_BOLD));
 		pFrame->PushChild(pWindowTitle);
 
 		const auto pBackgroundLineTop = Rectangle::Create(fWidth, 1.0f);
 		pBackgroundLineTop->SetPosition(Utils::Vector2(0.0f, 29.0f));
-		pBackgroundLineTop->SetColor(0x90303030);
+		pBackgroundLineTop->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
 		pFrame->PushChild(pBackgroundLineTop);
 
 		const auto pBackgroundLineLeft = Rectangle::Create(1.0f, fHeight - 31.0f);
 		pBackgroundLineLeft->SetPosition(Utils::Vector2(0.0f, 30.0f));
-		pBackgroundLineLeft->SetColor(0x90303030);
+		pBackgroundLineLeft->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
 		pFrame->PushChild(pBackgroundLineLeft);
 
 		const auto pBackgroundLineBottom = Rectangle::Create(fWidth - 1.0f, 1.0f);
 		pBackgroundLineBottom->SetPosition(Utils::Vector2(0.0f, fHeight - 1.0f));
-		pBackgroundLineBottom->SetColor(0x90303030);
+		pBackgroundLineBottom->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
 		pFrame->PushChild(pBackgroundLineBottom);
 
 		const auto pBackgroundLineRight = Rectangle::Create(1.0f, fHeight - 31.0f);
 		pBackgroundLineRight->SetPosition(Utils::Vector2(fWidth - 1.0f, 30.0f));
-		pBackgroundLineRight->SetColor(0x90303030);
+		pBackgroundLineRight->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
 		pFrame->PushChild(pBackgroundLineRight);
 
 		const auto pCloseButtonTexture = Texture::Create(sD3DMgr.GetTextureFromFile(L"E:\\shark\\close.png"));

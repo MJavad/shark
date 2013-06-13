@@ -8,12 +8,12 @@ namespace Components {
 		const auto pListBox = std::make_shared<ListBox>();
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
 		
-		pBorder->SetColor(0x90404040);
+		pBorder->SetColor(Utils::Color(0x90, 0x40, 0x40, 0x40));
 		pListBox->SetBorder(std::move(pBorder));
 
 		pListBox->SetWidth(fWidth);
 		pListBox->SetHeight(fHeight);
-		pListBox->SetColor(0x90101010);
+		pListBox->SetColor(Utils::Color(0x90, 0x10, 0x10, 0x10));
 		return pListBox;
 	}
 

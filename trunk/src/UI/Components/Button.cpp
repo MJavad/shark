@@ -11,7 +11,7 @@ namespace Components {
 
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
 		float4 fInvisible = {0.0f, 0.0f, 0.0f, 0.0f};
-		pBorder->SetColor(0xFF40B0FF);
+		pBorder->SetColor(Utils::Color(0xFF, 0x40, 0xB0, 0xFF));
 		pBorder->SetColorMod(fInvisible);
 		pBorder->SetHorizontalRounding(fHorizontalRounding);
 		pBorder->SetVerticalRounding(fVerticalRounding);
@@ -24,10 +24,10 @@ namespace Components {
 		pButton->SetVerticalRounding(fVerticalRounding);
 
 		std::array<Utils::Color, 4> gradient;
-		gradient[0] = 0xFF404040;
-		gradient[1] = 0xFF404040;
-		gradient[2] = 0xFF101010;
-		gradient[3] = 0xFF101010;
+		gradient[0] = Utils::Color(0xFF, 0x40, 0x40, 0x40);
+		gradient[1] = Utils::Color(0xFF, 0x40, 0x40, 0x40);
+		gradient[2] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
+		gradient[3] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
 		pButton->SetGradientColors(std::move(gradient));
 		return pButton;
 	}

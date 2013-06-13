@@ -3,7 +3,7 @@
 
 namespace UI {
 namespace Components {
-	Label::Label() : m_color(0xFFE0E0E0), m_formatFlags(0),
+	Label::Label() : m_color(0xFF, 0xE0, 0xE0, 0xE0), m_formatFlags(0),
 		m_shouldCache(true), m_dropShadow(true), m_shadowDirection(2.0f, 2.0f) {
 		const auto callback = std::bind(&Label::FlushFontCache, this);
 		m_lostDevice = sD3DMgr.OnDeviceLostEvent.connect(callback);
@@ -45,7 +45,8 @@ namespace Components {
 					RECT shadowRect = screenRect;
 					Utils::Vector2 vShadow = GetShadowDirection();
 					OffsetRect(&shadowRect, (int) vShadow.x, (int) vShadow.y);
-					pObject->DrawText(pSprite, swText, shadowRect, dwFormatFlags, GetModifiedColor(0x70000000));
+					pObject->DrawText(pSprite, swText, shadowRect, dwFormatFlags,
+						GetModifiedColor(Utils::Color(0x70, 0x00, 0x00, 0x00)));
 				}
 
 				pObject->DrawText(pSprite, swText, screenRect,
@@ -105,7 +106,8 @@ namespace Components {
 		if (pSprite != nullptr)
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 
-		pFontObject->DrawText(pSprite, swText, fontRect, DT_NOCLIP, 0xFFFFFFFF);
+		pFontObject->DrawText(pSprite, swText, fontRect,
+			DT_NOCLIP, Utils::Color(0xFF, 0xFF, 0xFF, 0xFF));
 
 		if (pSprite != nullptr)
 			pSprite->End();
@@ -119,7 +121,8 @@ namespace Components {
 			Utils::Vector2 vScreen = GetScreenPosition() + m_textIndent;
 			if (GetDropShadow()) {
 				Utils::Vector3 vShadow = vScreen + GetShadowDirection();
-				pSprite->Draw(m_fontCache, nullptr, nullptr, &vShadow, GetModifiedColor(0x70000000));
+				pSprite->Draw(m_fontCache, nullptr, nullptr, &vShadow,
+					GetModifiedColor(Utils::Color(0x70, 0x00, 0x00, 0x00)));
 			}
 
 			Utils::Vector3 vPosition = vScreen;

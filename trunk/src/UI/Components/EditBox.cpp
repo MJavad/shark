@@ -18,7 +18,7 @@ namespace Components {
 		//pLabel->SetDropShadow(false);
 
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
-		pBorder->SetColor(0x90B0B0B0);
+		pBorder->SetColor(Utils::Color(0x90, 0xB0, 0xB0, 0xB0));
 		pBorder->SetHorizontalRounding(fHorizontalRounding);
 		pBorder->SetVerticalRounding(fVerticalRounding);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
@@ -31,10 +31,10 @@ namespace Components {
 		pEditBox->SetVerticalRounding(fVerticalRounding);
 
 		std::array<Utils::Color, 4> gradient;
-		gradient[0] = 0xFF252525;
-		gradient[1] = 0xFF252525;
-		gradient[2] = 0xFF101010;
-		gradient[3] = 0xFF101010;
+		gradient[0] = Utils::Color(0xFF, 0x25, 0x25, 0x25);
+		gradient[1] = Utils::Color(0xFF, 0x25, 0x25, 0x25);
+		gradient[2] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
+		gradient[3] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
 		pEditBox->SetGradientColors(std::move(gradient));
 		return pEditBox;
 	}

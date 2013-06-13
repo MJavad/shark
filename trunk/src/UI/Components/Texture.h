@@ -7,7 +7,7 @@ namespace Components {
 	class Texture : public virtual IRectComponent
 	{
 	public:
-		Texture() : m_color(0xFFFFFFFF) {
+		Texture() : m_color(0xFF, 0xFF, 0xFF, 0xFF) {
 			D3DXMatrixIdentity(&m_transform);
 		}
 
