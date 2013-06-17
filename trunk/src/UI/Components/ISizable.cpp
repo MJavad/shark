@@ -2,6 +2,7 @@
 #include "ISizable.h"
 #include "Base/WndProc.h"
 #include "Base/D3DManager.h"
+#include "Base/FileManager.h"
 
 namespace UI {
 namespace Components {
@@ -9,8 +10,8 @@ namespace Components {
 	Utils::Vector2 ISizable::s_sizeVector;
 
 	ISizable::ISizable() : m_isGripVisible(true), m_isHovered(false), m_isSizeLimited(false) {
-		m_resizeTexture = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer.png");
-		m_resizeTextureHover = sD3DMgr.GetTextureFromFile(L"E:\\shark\\resizer_hover.png");
+		m_resizeTexture = sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\resizer.png");
+		m_resizeTextureHover = sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\resizer_hover.png");
 	}
 
 	void ISizable::OnRender(uint32 uTimePassed) {

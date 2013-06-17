@@ -9,6 +9,7 @@
 #include "Components/TabControl.h"
 #include "Components/EditBox.h"
 #include "Base/Engine.h"
+#include "Base/FileManager.h"
 
 using namespace UI::Components;
 
@@ -188,8 +189,8 @@ namespace UI {
 		pBackgroundLineRight->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
 		pFrame->PushChild(pBackgroundLineRight);
 
-		const auto pCloseButtonTexture = Texture::Create(sD3DMgr.GetTextureFromFile(L"E:\\shark\\close.png"));
-		const auto pCloseButtonTextureHover = Texture::Create(sD3DMgr.GetTextureFromFile(L"E:\\shark\\close_hover.png"));
+		const auto pCloseButtonTexture = Texture::Create(sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\close.png"));
+		const auto pCloseButtonTextureHover = Texture::Create(sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\close_hover.png"));
 
 		float4 fInvisible = {0.0f, 1.0f, 1.0f, 1.0f};
 		pCloseButtonTextureHover->SetVisibility(false);
