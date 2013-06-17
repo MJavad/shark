@@ -32,22 +32,19 @@ static const float BlurWeights[13] = {
 	0.002216,
 };
 
-struct PixelShaderInput
-{
+struct PixelShaderInput {
 	float4 position : POSITION0;
 	float2 texCoord : TEXCOORD0;
 	float4 color : TEXCOORD1;
 };
 
-struct VertexShaderInput
-{
+struct VertexShaderInput {
 	float3 position : POSITION0;
 	float2 texCoord : TEXCOORD0;
 	float4 color : COLOR0;
 };
 
-void VertexMain(in VertexShaderInput input, out PixelShaderInput output)
-{
+void VertexMain(in VertexShaderInput input, out PixelShaderInput output) {
 	output.position = mul(float4(input.position.xy, 0, 1), orthoMatrix);
 	output.position.x -= 1.0f;
 	output.position.y = 1.0f - output.position.y;
@@ -57,14 +54,12 @@ void VertexMain(in VertexShaderInput input, out PixelShaderInput output)
 	output.color = input.color;
 }
 
-float4 sinusInterpolate(float4 src, float4 dest, float pct)
-{
+float4 sinusInterpolate(float4 src, float4 dst, float pct) {
 	float sinval = sin(pct * 3.1415926 / 2.0f);
-	return sinval * src + (1 - sinval) * dest;
+	return sinval * dst + (1 - sinval) * src;
 }
 
-void PixelMain(in PixelShaderInput input, out float4 color : COLOR0)
-{
+void PixelMain(in PixelShaderInput input, out float4 color : COLOR0) {
 	color = 0;
 	float2 samp = input.texCoord;
 
@@ -75,9 +70,11 @@ void PixelMain(in PixelShaderInput input, out float4 color : COLOR0)
 	}
 
 	float2 position = input.texCoord * params.xy;
-	if (position.x < BorderDiff || position.y < BorderDiff ||
-		params.x - position.x < BorderDiff || params.y - position.y < BorderDiff) {
-
+	if (position.x < BorderDiff ||
+		position.y < BorderDiff ||
+		params.x - position.x < BorderDiff ||
+		params.y - position.y < BorderDiff)
+	{
 		float numPixels = 0;
 		for (float curDiff = 1; curDiff < BorderDiff; ++curDiff) {
 			samp = input.texCoord;
@@ -121,7 +118,7 @@ void PixelMain(in PixelShaderInput input, out float4 color : COLOR0)
 						 step(0, samp.y) * step(samp.y, 1);
 
 			float pct = numPixels / (curDiff * 8.0f);
-			color = sinusInterpolate(color, float4(color.rgb, 0), pct);
+			color = sinusInterpolate(float4(color.rgb, 0), color, pct);
 		}
 	}
 
