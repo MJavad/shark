@@ -22,17 +22,18 @@ namespace Components {
 		if (pSprite != nullptr && IsRectEmpty(&screenRect) != FALSE) {
 			D3DXMATRIX matTransform = GetTransform();
 			pSprite->SetTransform(&matTransform);
+
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 			pSprite->Draw(pTexture, nullptr, nullptr, &vScreen, GetModifiedColor(GetColor()));
 			pSprite->End();
+
 			pSprite->SetTransform(nullptr);
 		}
 		else {
-			float fWidth = GetWidth();
-			float fHeight = GetHeight();
-			const auto pRenderTarget = sD3DMgr.GetRenderTarget();
-			const auto dimensions = pRenderTarget->MakeDimension(fWidth, fHeight);
-			pRenderTarget->DrawSprite(vScreen, pTexture, dimensions, GetModifiedColor(GetColor()));
+			std::array<Utils::Color, 4> gradient;
+			gradient.fill(GetModifiedColor(GetColor()));
+			const auto dimensions = IRenderTarget::MakeDimension(GetWidth(), GetHeight());
+			sD3DMgr.GetRenderTarget()->DrawSprite(vScreen, pTexture, dimensions, gradient);
 		}
 	}
 }

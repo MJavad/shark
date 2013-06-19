@@ -4,18 +4,18 @@
 #include "UI/D3DSurface9.h"
 #include "FileManager.h"
 
-struct SVertex {
-    float x, y, z, r;
-    uint32 color;
-    static const uint32 FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE;
-};
-
-struct SVertexTex {
+struct UIVertex {
 	float x, y, z, u, v;
 	float4 color;
 };
 
-struct SVertexTexFVF {
+struct RHWDiffuseVertex {
+	float x, y, z, r;
+	uint32 color;
+	static const uint32 FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE;
+};
+
+struct RHWDiffuseTextureVertex {
 	float x, y, z, r;
 	uint32 color;
 	float u, v;
@@ -130,7 +130,8 @@ void RenderTarget9::SetClippingArea(const RECT *pRect) const {
 		m_device9->SetScissorRect(pRect);
 }
 
-std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 uWidth, uint32 uHeight) const {
+std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 uWidth, uint32 uHeight) const
+{
 	CComPtr<IDirect3DTexture9> pTexture = nullptr;
 	HRESULT hResult = D3DXCreateTexture(m_device9, uWidth, uHeight, 1,
 		D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pTexture);
@@ -141,7 +142,8 @@ std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 
 	return std::make_shared<UI::D3DTexture>(pTextureObject);
 }
 
-std::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32 uWidth, uint32 uHeight) const {
+std::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32 uWidth, uint32 uHeight) const
+{
 	CComPtr<IDirect3DSurface9> pBackBuffer = nullptr;
 	HRESULT hResult = m_device9->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
 	if (hResult != D3D_OK)
@@ -161,7 +163,10 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32
 	return std::make_shared<UI::D3DSurface9>(pSurface);
 }
 
-void RenderTarget9::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DSurface> &pSurface, uint32 uIndex, bool bClear) {
+void RenderTarget9::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DSurface> &pSurface,
+										   uint32 uIndex,
+										   bool bClear)
+{
 	CComPtr<IDirect3DSurface9> pOldSurface = nullptr;
 	auto pSurfaceObject = std::dynamic_pointer_cast<const UI::D3DSurface9>(pSurface);
 
@@ -176,7 +181,8 @@ void RenderTarget9::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DS
 	}
 }
 
-std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 uIndex) const {
+std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 uIndex) const
+{
 	CComPtr<IDirect3DSurface9> pSurface = nullptr;
 	HRESULT hResult = m_device9->GetRenderTarget(uIndex, &pSurface);
 	if (hResult != D3D_OK)
@@ -185,235 +191,71 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 uI
 	return std::make_shared<UI::D3DSurface9>(pSurface);
 }
 
-// Normal
-void RenderTarget9::DrawRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-								  uint32 dwColor, float fStroke) const {
-	float fWidth = GetDimensionWidth(dimensions);
+void RenderTarget9::DrawRectangle(const Utils::Vector2 &vPosition,
+								  const std::array<Utils::Vector2, 4> &dimensions,
+								  const std::array<Utils::Color, 4> &gradient,
+								  float fStroke) const
+{
+	/*float fWidth = GetDimensionWidth(dimensions);
 	float fHeight = GetDimensionHeight(dimensions);
 
-	SVertex vertices_top[] = {
-		{ vPosition.x, vPosition.y, 0, 1, dwColor },
-		{ vPosition.x + fWidth - fStroke, vPosition.y, 0, 1, dwColor },
-		{ vPosition.x + fWidth - fStroke, vPosition.y + fStroke, 0, 1, dwColor },
-		{ vPosition.x, vPosition.y + fStroke, 0, 1, dwColor }
+	RHWDiffuseVertex vertices_top[] = {
+		{ vPosition.x, vPosition.y, 0, 1, color },
+		{ vPosition.x + fWidth - fStroke, vPosition.y, 0, 1, color },
+		{ vPosition.x + fWidth - fStroke, vPosition.y + fStroke, 0, 1, color },
+		{ vPosition.x, vPosition.y + fStroke, 0, 1, color }
 	};
 
-	SVertex vertices_bottom[] = {
-		{ vPosition.x + fStroke, vPosition.y + fHeight - fStroke, 0, 1, dwColor },
-		{ vPosition.x + fWidth, vPosition.y + fHeight - fStroke, 0, 1, dwColor },
-		{ vPosition.x + fWidth, vPosition.y + fHeight, 0, 1, dwColor },
-		{ vPosition.x + fStroke, vPosition.y + fHeight, 0, 1, dwColor }
+	RHWDiffuseVertex vertices_bottom[] = {
+		{ vPosition.x + fStroke, vPosition.y + fHeight - fStroke, 0, 1, color },
+		{ vPosition.x + fWidth, vPosition.y + fHeight - fStroke, 0, 1, color },
+		{ vPosition.x + fWidth, vPosition.y + fHeight, 0, 1, color },
+		{ vPosition.x + fStroke, vPosition.y + fHeight, 0, 1, color }
 	};
 
-	SVertex vertices_left[] = {
-		{ vPosition.x, vPosition.y + fStroke, 0, 1, dwColor },
-		{ vPosition.x + fStroke, vPosition.y + fStroke, 0, 1, dwColor },
-		{ vPosition.x + fStroke, vPosition.y + fHeight, 0, 1, dwColor },
-		{ vPosition.x, vPosition.y + fHeight, 0, 1, dwColor }
+	RHWDiffuseVertex vertices_left[] = {
+		{ vPosition.x, vPosition.y + fStroke, 0, 1, color },
+		{ vPosition.x + fStroke, vPosition.y + fStroke, 0, 1, color },
+		{ vPosition.x + fStroke, vPosition.y + fHeight, 0, 1, color },
+		{ vPosition.x, vPosition.y + fHeight, 0, 1, color }
 	};
 
-	SVertex vertices_right[] = {
-		{ vPosition.x + fWidth - fStroke, vPosition.y, 0, 1, dwColor },
-		{ vPosition.x + fWidth, vPosition.y, 0, 1, dwColor },
-		{ vPosition.x + fWidth, vPosition.y + fHeight - fStroke, 0, 1, dwColor },
-		{ vPosition.x + fWidth - fStroke, vPosition.y + fHeight - fStroke, 0, 1, dwColor }
+	RHWDiffuseVertex vertices_right[] = {
+		{ vPosition.x + fWidth - fStroke, vPosition.y, 0, 1, color },
+		{ vPosition.x + fWidth, vPosition.y, 0, 1, color },
+		{ vPosition.x + fWidth, vPosition.y + fHeight - fStroke, 0, 1, color },
+		{ vPosition.x + fWidth - fStroke, vPosition.y + fHeight - fStroke, 0, 1, color }
 	};
 
-	m_device9->SetFVF(SVertex::FVF);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_top, sizeof(SVertex));
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_bottom, sizeof(SVertex));
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_left, sizeof(SVertex));
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_right, sizeof(SVertex));
+	m_device9->SetFVF(RHWDiffuseVertex::FVF);
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_top, sizeof(RHWDiffuseVertex));
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_bottom, sizeof(RHWDiffuseVertex));
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_left, sizeof(RHWDiffuseVertex));
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_right, sizeof(RHWDiffuseVertex));*/
 }
 
-void RenderTarget9::FillRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) const {
-	SVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, dwColor },
-		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, dwColor },
-		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, dwColor },
-		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 1, dwColor }
-	};
-
-	m_device9->SetFVF(SVertex::FVF);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(SVertex));
-}
-
-void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-										 const float4 &fHorizRadius, const float4 &fVertRadius, uint32 dwColor, float fStroke) const {
-	Utils::Color color(dwColor);
-	float4 fColor = {
-		color.R / 255.0f, color.G / 255.0f,
-		color.B / 255.0f, color.A / 255.0f
-	};
-
-	SVertexTex vertices[] = {
-		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, fColor },
-		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, fColor },
-		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, fColor },
-		{ vPosition.x + dimensions[3].x - 1, vPosition.y + dimensions[3].y + 2, 0, 0, 1, fColor }
-	};
-
-	m_device9->SetVertexShader(m_roundRectVertex);
-	m_device9->SetPixelShader(m_roundRectDrawPixel);
-
-	D3DVIEWPORT9 viewPort = {0};
-	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = (float) viewPort.Width;
-	float fScreenHeight = (float) viewPort.Height;
-	
-	D3DXMATRIX orthoProj;
-	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
-	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
-	
-	float fWidth = GetDimensionWidth(dimensions) + 4;
-	float fHeight = GetDimensionHeight(dimensions) + 4;
-	float params1[] = { fStroke, fStroke / fWidth, 0, 0 };
-	m_device9->SetPixelShaderConstantF(4, params1, 1);
-
-	float radius[] = { fHorizRadius._1, fHorizRadius._2, fHorizRadius._3, fHorizRadius._4,
-					   fVertRadius._1, fVertRadius._2, fVertRadius._3, fVertRadius._4 };
-	m_device9->SetPixelShaderConstantF(6, radius, 2);
-
-	float params2[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
-	m_device9->SetPixelShaderConstantF(5, params2, 1);
-	m_device9->SetVertexShaderConstantF(5, params2, 1);
-
-	m_device9->SetVertexDeclaration(m_vertexTexDecl);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(SVertexTex));
-
-	m_device9->SetVertexShader(nullptr);
-	m_device9->SetPixelShader(nullptr);
-}
-
-void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-										 const float4 &fHorizRadius, const float4 &fVertRadius, uint32 dwColor) const {
-	Utils::Color color(dwColor);
-	float4 fColor = {
-		color.R / 255.0f, color.G / 255.0f,
-		color.B / 255.0f, color.A / 255.0f
-	};
-
-	SVertexTex vertices[] = {
-		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, fColor },
-		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, fColor },
-		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, fColor },
-		{ vPosition.x + dimensions[3].x - 2, vPosition.y + dimensions[3].y + 2, 0, 0, 1, fColor }
-	};
-
-	m_device9->SetVertexShader(m_roundRectVertex);
-	m_device9->SetPixelShader(m_roundRectFillPixel);
-
-	D3DVIEWPORT9 viewPort = {0};
-	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = (float) viewPort.Width;
-	float fScreenHeight = (float) viewPort.Height;
-	
-	D3DXMATRIX orthoProj;
-	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
-	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
-	
-	float fWidth = GetDimensionWidth(dimensions) + 4;
-	float fHeight = GetDimensionHeight(dimensions) + 4;
-	float params1[] = { 1.0f, 1.0f / fWidth, 0, 0 };
-	m_device9->SetPixelShaderConstantF(4, params1, 1);
-
-	float radius[] = { fHorizRadius._1, fHorizRadius._2, fHorizRadius._3, fHorizRadius._4,
-					   fVertRadius._1, fVertRadius._2, fVertRadius._3, fVertRadius._4 };
-	m_device9->SetPixelShaderConstantF(6, radius, 2);
-
-	float params2[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
-	m_device9->SetPixelShaderConstantF(5, params2, 1);
-	m_device9->SetVertexShaderConstantF(5, params2, 1);
-
-	m_device9->SetVertexDeclaration(m_vertexTexDecl);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(SVertexTex));
-
-	m_device9->SetVertexShader(nullptr);
-	m_device9->SetPixelShader(nullptr);
-}
-
-void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition, std::shared_ptr<const UI::D3DTexture> pTexture,
-									   const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) {
-	auto pTexture9 = std::dynamic_pointer_cast<const UI::D3DTextureObject9>(pTexture->GetObject());
-	if (pTexture9 == nullptr)
-		return;
-
-	Utils::Color color(dwColor);
-	float4 fColor = {
-		color.R / 255.0f, color.G / 255.0f,
-		color.B / 255.0f, color.A / 255.0f
-	};
-
-	SVertexTex vertices[] = {
-		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 0, 0, fColor },
-		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, 0, fColor },
-		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, 1, fColor },
-		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 0, 1, fColor }
-	};
-
-	m_device9->SetVertexShader(m_blurVertex);
-	m_device9->SetPixelShader(m_blurPixel);
-	m_device9->SetTexture(0, pTexture9->GetD3DTexture9());
-
-	D3DVIEWPORT9 viewPort = {0};
-	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = (float) viewPort.Width;
-	float fScreenHeight = (float) viewPort.Height;
-	
-	D3DXMATRIX orthoProj;
-	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
-	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
-
-	float fWidth = GetDimensionWidth(dimensions);
-	float fHeight = GetDimensionHeight(dimensions);
-	float params[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
-	m_device9->SetPixelShaderConstantF(4, params, 1);
-	m_device9->SetVertexShaderConstantF(4, params, 1);
-
-	m_device9->SetVertexDeclaration(m_vertexTexDecl);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(SVertexTex));
-
-	m_device9->SetVertexShader(nullptr);
-	m_device9->SetPixelShader(nullptr);
-	m_device9->SetTexture(0, nullptr);
-}
-
-void RenderTarget9::DrawSprite(const Utils::Vector2 &vPosition, std::shared_ptr<const UI::D3DTexture> pTexture,
-							   const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) {
-	auto pTexture9 = std::dynamic_pointer_cast<const UI::D3DTextureObject9>(pTexture->GetObject());
-	if (pTexture9 == nullptr)
-		return;
-
-	SVertexTexFVF vertices[] = {
-		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, dwColor, 0, 0 },
-		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, dwColor, 1, 0 },
-		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, dwColor, 1, 1 },
-		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 1, dwColor, 0, 1 }
-	};
-
-	m_device9->SetTexture(0, pTexture9->GetD3DTexture9());
-	m_device9->SetFVF(SVertexTexFVF::FVF);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(SVertexTexFVF));
-
-	m_device9->SetTexture(0, nullptr);
-}
-
-// Gradient
-void RenderTarget9::FillRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-								  const std::array<Utils::Color, 4> &gradient) const {
-	SVertex vertices[] = {
+void RenderTarget9::FillRectangle(const Utils::Vector2 &vPosition,
+								  const std::array<Utils::Vector2, 4> &dimensions,
+								  const std::array<Utils::Color, 4> &gradient) const
+{
+	RHWDiffuseVertex vertices[] = {
 		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, gradient[0] },
 		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, gradient[1] },
 		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, gradient[2] },
 		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 1, gradient[3] }
 	};
 
-	m_device9->SetFVF(SVertex::FVF);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(SVertex));
+	m_device9->SetFVF(RHWDiffuseVertex::FVF);
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RHWDiffuseVertex));
 }
 
-void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-										 const float4 &fHorizRadius, const float4 &fVertRadius, const std::array<Utils::Color, 4> &gradient) const {
+void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &vPosition,
+										 const std::array<Utils::Vector2, 4> &dimensions,
+										 const float4 &fHorizRadius,
+										 const float4 &fVertRadius,
+										 const std::array<Utils::Color, 4> &gradient,
+										 float fStroke) const
+{	// shader wants float4 colors...
 	float4 fColor0 = {
 		gradient[0].R / 255.0f, gradient[0].G / 255.0f,
 		gradient[0].B / 255.0f, gradient[0].A / 255.0f
@@ -434,10 +276,81 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition, const 
 		gradient[3].B / 255.0f, gradient[3].A / 255.0f
 	};
 
-	SVertexTex vertices[] = {
+	UIVertex vertices[] = {
 		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, fColor0 },
 		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, fColor1 },
-		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2 , 0, 1, 1, fColor2 },
+		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, fColor2 },
+		{ vPosition.x + dimensions[3].x - 1, vPosition.y + dimensions[3].y + 2, 0, 0, 1, fColor3 }
+	};
+
+	m_device9->SetVertexShader(m_roundRectVertex);
+	m_device9->SetPixelShader(m_roundRectDrawPixel);
+
+	D3DVIEWPORT9 viewPort = {0};
+	m_device9->GetViewport(&viewPort);
+	float fScreenWidth = (float) viewPort.Width;
+	float fScreenHeight = (float) viewPort.Height;
+	
+	D3DXMATRIX orthoProj;
+	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
+	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
+	
+	float fWidth = GetDimensionWidth(dimensions) + 4;
+	float fHeight = GetDimensionHeight(dimensions) + 4;
+	float params1[] = { fStroke, fStroke / fWidth, 0, 0 };
+	m_device9->SetPixelShaderConstantF(4, params1, 1);
+
+	float radius[] = {
+		fHorizRadius._1, fHorizRadius._2,
+		fHorizRadius._3, fHorizRadius._4,
+
+		fVertRadius._1,  fVertRadius._2,
+		fVertRadius._3,  fVertRadius._4
+	};
+
+	m_device9->SetPixelShaderConstantF(6, radius, 2);
+
+	float params2[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
+	m_device9->SetPixelShaderConstantF(5, params2, 1);
+	m_device9->SetVertexShaderConstantF(5, params2, 1);
+
+	m_device9->SetVertexDeclaration(m_vertexTexDecl);
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(UIVertex));
+
+	m_device9->SetVertexShader(nullptr);
+	m_device9->SetPixelShader(nullptr);
+}
+
+void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition,
+										 const std::array<Utils::Vector2, 4> &dimensions,
+										 const float4 &fHorizRadius,
+										 const float4 &fVertRadius,
+										 const std::array<Utils::Color, 4> &gradient) const
+{	// shader wants float4 colors...
+	float4 fColor0 = {
+		gradient[0].R / 255.0f, gradient[0].G / 255.0f,
+		gradient[0].B / 255.0f, gradient[0].A / 255.0f
+	};
+
+	float4 fColor1 = {
+		gradient[1].R / 255.0f, gradient[1].G / 255.0f,
+		gradient[1].B / 255.0f, gradient[1].A / 255.0f
+	};
+
+	float4 fColor2 = {
+		gradient[2].R / 255.0f, gradient[2].G / 255.0f,
+		gradient[2].B / 255.0f, gradient[2].A / 255.0f
+	};
+
+	float4 fColor3 = {
+		gradient[3].R / 255.0f, gradient[3].G / 255.0f,
+		gradient[3].B / 255.0f, gradient[3].A / 255.0f
+	};
+
+	UIVertex vertices[] = {
+		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, fColor0 },
+		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, fColor1 },
+		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, fColor2 },
 		{ vPosition.x + dimensions[3].x - 2, vPosition.y + dimensions[3].y + 2, 0, 0, 1, fColor3 }
 	};
 
@@ -458,8 +371,14 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition, const 
 	float params1[] = { 1.0f, 1.0f / fWidth, 0, 0 };
 	m_device9->SetPixelShaderConstantF(4, params1, 1);
 
-	float radius[] = { fHorizRadius._1, fHorizRadius._2, fHorizRadius._3, fHorizRadius._4,
-					   fVertRadius._1, fVertRadius._2, fVertRadius._3, fVertRadius._4 };
+	float radius[] = {
+		fHorizRadius._1, fHorizRadius._2,
+		fHorizRadius._3, fHorizRadius._4,
+
+		fVertRadius._1,  fVertRadius._2,
+		fVertRadius._3,  fVertRadius._4
+	};
+
 	m_device9->SetPixelShaderConstantF(6, radius, 2);
 
 	float params2[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
@@ -467,10 +386,97 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition, const 
 	m_device9->SetVertexShaderConstantF(5, params2, 1);
 
 	m_device9->SetVertexDeclaration(m_vertexTexDecl);
-	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(SVertexTex));
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(UIVertex));
 
 	m_device9->SetVertexShader(nullptr);
 	m_device9->SetPixelShader(nullptr);
+}
+
+void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition,
+									  std::shared_ptr<const UI::D3DTexture> pTexture,
+									  const std::array<Utils::Vector2, 4> &dimensions,
+									  const std::array<Utils::Color, 4> &gradient) const
+{	// shader wants float4 colors...
+	float4 fColor0 = {
+		gradient[0].R / 255.0f, gradient[0].G / 255.0f,
+		gradient[0].B / 255.0f, gradient[0].A / 255.0f
+	};
+
+	float4 fColor1 = {
+		gradient[1].R / 255.0f, gradient[1].G / 255.0f,
+		gradient[1].B / 255.0f, gradient[1].A / 255.0f
+	};
+
+	float4 fColor2 = {
+		gradient[2].R / 255.0f, gradient[2].G / 255.0f,
+		gradient[2].B / 255.0f, gradient[2].A / 255.0f
+	};
+
+	float4 fColor3 = {
+		gradient[3].R / 255.0f, gradient[3].G / 255.0f,
+		gradient[3].B / 255.0f, gradient[3].A / 255.0f
+	};
+
+	UIVertex vertices[] = {
+		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 0, 0, fColor0 },
+		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, 0, fColor1 },
+		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, 1, fColor2 },
+		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 0, 1, fColor3 }
+	};
+
+	const auto textureObject = std::dynamic_pointer_cast
+		<const UI::D3DTextureObject9>(pTexture->GetObject());
+	if (textureObject == nullptr)
+		return;
+
+	m_device9->SetVertexShader(m_blurVertex);
+	m_device9->SetPixelShader(m_blurPixel);
+	m_device9->SetTexture(0, textureObject->GetD3DTexture9());
+
+	D3DVIEWPORT9 viewPort = {0};
+	m_device9->GetViewport(&viewPort);
+	float fScreenWidth = (float) viewPort.Width;
+	float fScreenHeight = (float) viewPort.Height;
+	
+	D3DXMATRIX orthoProj;
+	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
+	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
+
+	float fWidth = GetDimensionWidth(dimensions);
+	float fHeight = GetDimensionHeight(dimensions);
+	float params[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
+	m_device9->SetPixelShaderConstantF(4, params, 1);
+	m_device9->SetVertexShaderConstantF(4, params, 1);
+
+	m_device9->SetVertexDeclaration(m_vertexTexDecl);
+	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(UIVertex));
+
+	m_device9->SetVertexShader(nullptr);
+	m_device9->SetPixelShader(nullptr);
+	m_device9->SetTexture(0, nullptr);
+}
+
+void RenderTarget9::DrawSprite(const Utils::Vector2 &vPosition,
+							   std::shared_ptr<const UI::D3DTexture> pTexture,
+							   const std::array<Utils::Vector2, 4> &dimensions,
+							   const std::array<Utils::Color, 4> &gradient) const
+{
+	RHWDiffuseTextureVertex vertices[] = {
+		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, gradient[0], 0, 0 },
+		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, gradient[1], 1, 0 },
+		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, gradient[2], 1, 1 },
+		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 1, gradient[3], 0, 1 }
+	};
+
+	const auto textureObject = std::dynamic_pointer_cast
+		<const UI::D3DTextureObject9>(pTexture->GetObject());
+
+	if (textureObject != nullptr) {
+		m_device9->SetTexture(0, textureObject->GetD3DTexture9());
+		m_device9->SetFVF(RHWDiffuseTextureVertex::FVF);
+		m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RHWDiffuseTextureVertex));
+		m_device9->SetTexture(0, nullptr);
+	}
 }
 
 

@@ -40,7 +40,10 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget11::CreateRenderTargetSurface(uint3
 	return nullptr;
 }
 
-void RenderTarget11::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DSurface> &pSurface, uint32 uIndex, bool bClear) {
+void RenderTarget11::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DSurface> &pSurface,
+											uint32 uIndex,
+											bool bClear)
+{
 	// unimplemented...
 }
 
@@ -49,42 +52,52 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget11::GetRenderTargetSurface(uint32 u
 	return nullptr;
 }
 
-// Normal
-void RenderTarget11::DrawRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor, float fStroke) const {
+void RenderTarget11::DrawRectangle(const Utils::Vector2 &vPosition,
+								   const std::array<Utils::Vector2, 4> &dimensions,
+								   const std::array<Utils::Color, 4> &gradient,
+								   float fStroke) const
+{
 	// unimplemented...
 }
 
-void RenderTarget11::FillRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) const {
+void RenderTarget11::FillRectangle(const Utils::Vector2 &vPosition,
+								   const std::array<Utils::Vector2, 4> &dimensions,
+								   const std::array<Utils::Color, 4> &gradient) const
+{
 	// unimplemented...
 }
 
-void RenderTarget11::DrawRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-										  const float4 &fHorizRadius, const float4 &fVertRadius, uint32 dwColor, float fStroke) const {
+void RenderTarget11::DrawRoundedRectangle(const Utils::Vector2 &vPosition,
+										  const std::array<Utils::Vector2, 4> &dimensions,
+										  const float4 &fHorizRadius,
+										  const float4 &fVertRadius,
+										  const std::array<Utils::Color, 4> &gradient,
+										  float fStroke) const
+{
 	// unimplemented...
 }
 
-void RenderTarget11::FillRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-										  const float4 &fHorizRadius, const float4 &fVertRadius, uint32 dwColor) const {
+void RenderTarget11::FillRoundedRectangle(const Utils::Vector2 &vPosition,
+										  const std::array<Utils::Vector2, 4> &dimensions,
+										  const float4 &fHorizRadius,
+										  const float4 &fVertRadius,
+										  const std::array<Utils::Color, 4> &gradient) const
+{
 	// unimplemented...
 }
 
-void RenderTarget11::DrawBlurredSprite(const Utils::Vector2 &vPosition, std::shared_ptr<const UI::D3DTexture> pTexture,
-										const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) {
+void RenderTarget11::DrawBlurredSprite(const Utils::Vector2 &vPosition,
+									   std::shared_ptr<const UI::D3DTexture> pTexture,
+									   const std::array<Utils::Vector2, 4> &dimensions,
+									   const std::array<Utils::Color, 4> &gradient) const
+{
 	// unimplemented...
 }
 
-void RenderTarget11::DrawSprite(const Utils::Vector2 &vPosition, std::shared_ptr<const UI::D3DTexture> pTexture,
-								const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) {
-	// unimplemented...
-}
-
-
-// Gradient
-void RenderTarget11::FillRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, const std::array<Utils::Color, 4> &gradient) const {
-	// unimplemented...
-}
-
-void RenderTarget11::FillRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, const float4 &fHorizRadius,
-										  const float4 &fVertRadius, const std::array<Utils::Color, 4> &gradient) const {
+void RenderTarget11::DrawSprite(const Utils::Vector2 &vPosition,
+								std::shared_ptr<const UI::D3DTexture> pTexture,
+								const std::array<Utils::Vector2, 4> &dimensions,
+								const std::array<Utils::Color, 4> &gradient) const
+{
 	// unimplemented...
 }

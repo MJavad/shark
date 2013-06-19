@@ -26,10 +26,10 @@ public:
 
 	static std::array<Utils::Vector2, 4> MakeDimension(float fWidth, float fHeight) {
 		std::array<Utils::Vector2, 4> dimension;
-		dimension[0].x = 0;      dimension[0].y = 0;
-		dimension[1].x = fWidth; dimension[1].y = 0;
-		dimension[2].x = fWidth; dimension[2].y = fHeight;
-		dimension[3].x = 0;      dimension[3].y = fHeight;
+		dimension[0].x = 0;       dimension[0].y = 0;
+		dimension[1].x = fWidth;  dimension[1].y = 0;
+		dimension[2].x = fWidth;  dimension[2].y = fHeight;
+		dimension[3].x = 0;       dimension[3].y = fHeight;
 		return dimension;
 	}
 	
@@ -38,24 +38,35 @@ public:
 	virtual void SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DSurface> &pSurface, uint32 uIndex = 0, bool bClear = false) = 0;
 	virtual std::shared_ptr<UI::ID3DSurface> GetRenderTargetSurface(uint32 uIndex = 0) const = 0;
 
-	// Normal
-	virtual void DrawRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor, float fStroke) const = 0;
-	virtual void FillRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) const = 0;
+	virtual void DrawRectangle(const Utils::Vector2 &vPosition,
+		const std::array<Utils::Vector2, 4> &dimensions,
+		const std::array<Utils::Color, 4> &gradient,
+		float fStroke) const = 0;
 
-	virtual void DrawRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-		const float4 &fHorizRadius, const float4 &fVertRadius, uint32 dwColor, float fStroke) const = 0;
+	virtual void FillRectangle(const Utils::Vector2 &vPosition,
+		const std::array<Utils::Vector2, 4> &dimensions,
+		const std::array<Utils::Color, 4> &gradient) const = 0;
 
-	virtual void FillRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-		const float4 &fHorizRadius, const float4 &fVertRadius, uint32 dwColor) const = 0;
+	virtual void DrawRoundedRectangle(const Utils::Vector2 &vPosition,
+		const std::array<Utils::Vector2, 4> &dimensions,
+		const float4 &fHorizRadius,
+		const float4 &fVertRadius,
+		const std::array<Utils::Color, 4> &gradient,
+		float fStroke) const = 0;
 
-	virtual void DrawBlurredSprite(const Utils::Vector2 &vPosition, std::shared_ptr<const UI::D3DTexture> pTexture,
-		const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) = 0;
+	virtual void FillRoundedRectangle(const Utils::Vector2 &vPosition,
+		const std::array<Utils::Vector2, 4> &dimensions,
+		const float4 &fHorizRadius,
+		const float4 &fVertRadius,
+		const std::array<Utils::Color, 4> &gradient) const = 0;
 
-	virtual void DrawSprite(const Utils::Vector2 &vPosition, std::shared_ptr<const UI::D3DTexture> pTexture,
-		const std::array<Utils::Vector2, 4> &dimensions, uint32 dwColor) = 0;
+	virtual void DrawBlurredSprite(const Utils::Vector2 &vPosition,
+		std::shared_ptr<const UI::D3DTexture> pTexture,
+		const std::array<Utils::Vector2, 4> &dimensions,
+		const std::array<Utils::Color, 4> &gradient) const = 0;
 
-	// Gradient
-	virtual void FillRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions, const std::array<Utils::Color, 4> &gradient) const = 0;
-	virtual void FillRoundedRectangle(const Utils::Vector2 &vPosition, const std::array<Utils::Vector2, 4> &dimensions,
-		const float4 &fHorizRadius, const float4 &fVertRadius, const std::array<Utils::Color, 4> &gradient) const = 0;
+	virtual void DrawSprite(const Utils::Vector2 &vPosition,
+		std::shared_ptr<const UI::D3DTexture> pTexture,
+		const std::array<Utils::Vector2, 4> &dimensions,
+		const std::array<Utils::Color, 4> &gradient) const = 0;
 };

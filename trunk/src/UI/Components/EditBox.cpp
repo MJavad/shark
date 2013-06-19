@@ -73,7 +73,10 @@ namespace Components {
 			Utils::Vector2 vCaret;
 			vCaret.x = float(pContent->CPToX(s_caretPosition));
 			vCaret.y = vScreen.y + (GetHeight() / 2.0f - textHeight / 2.0f);
-			pRenderTarget->FillRectangle(vCaret, IRenderTarget::MakeDimension(3.0f, textHeight), pContent->GetColor());
+
+			std::array<Utils::Color, 4> gradient;
+			gradient.fill(pContent->GetColor());
+			pRenderTarget->FillRectangle(vCaret, IRenderTarget::MakeDimension(3.0f, textHeight), gradient);
 		}
 	}
 

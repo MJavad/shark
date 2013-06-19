@@ -57,8 +57,14 @@ namespace Components {
 				pRenderTarget->SetClippingArea(&newClipRect);
 			}
 
-			pRenderTarget->DrawBlurredSprite(vPosition + m_shadowDirection, m_shadowTexture,
-				dimensions, GetModifiedColor(Utils::Color(0xAA, 0x00, 0x00, 0x00)));
+			std::array<Utils::Color, 4> gradient;
+			gradient.fill(GetModifiedColor(Utils::Color(0xAA, 0x00, 0x00, 0x00)));
+
+			pRenderTarget->DrawBlurredSprite(
+				vPosition + m_shadowDirection,
+				m_shadowTexture,
+				dimensions,
+				gradient);
 
 			if (pClipRect != nullptr)
 				pRenderTarget->SetClippingArea(pClipRect);
@@ -67,25 +73,27 @@ namespace Components {
 			if (pSprite != nullptr) {
 				Utils::Vector3 vPosition3 = vPosition;
 				pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-
 				pSprite->Draw(m_shadowTexture, nullptr, nullptr, &vPosition3,
 					GetModifiedColor(Utils::Color(0xFF, 0xFF, 0xFF, 0xFF)));
-
 				pSprite->End();
 			}
 		}
 		else {
-			float4 fHorizontalRounding = GetHorizontalRoundings();
-			float4 fVerticalRounding = GetVerticalRoundings();
+			float4 horizRounding = GetHorizontalRoundings();
+			float4 vertRounding = GetVerticalRoundings();
 			const auto gradient = GetModifiedColor(GetGradientColors());
 
-			if (((fHorizontalRounding._1 != 0.0f && fVerticalRounding._1 != 0.0f) ||
-				 (fHorizontalRounding._2 != 0.0f && fVerticalRounding._2 != 0.0f) ||
-				 (fHorizontalRounding._3 != 0.0f && fVerticalRounding._3 != 0.0f) ||
-				 (fHorizontalRounding._4 != 0.0f && fVerticalRounding._4 != 0.0f)))
+			if (((horizRounding._1 != 0.0f && vertRounding._1 != 0.0f) ||
+				 (horizRounding._2 != 0.0f && vertRounding._2 != 0.0f) ||
+				 (horizRounding._3 != 0.0f && vertRounding._3 != 0.0f) ||
+				 (horizRounding._4 != 0.0f && vertRounding._4 != 0.0f)))
 			{
-				pRenderTarget->FillRoundedRectangle(vPosition, dimensions,
-					fHorizontalRounding, fVerticalRounding, gradient);
+				pRenderTarget->FillRoundedRectangle(
+					vPosition,
+					dimensions,
+					horizRounding,
+					vertRounding,
+					gradient);
 			}
 			else
 				pRenderTarget->FillRectangle(vPosition, dimensions, gradient);
@@ -96,7 +104,10 @@ namespace Components {
 		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 		const auto pOldSurface = pRenderTarget->GetRenderTargetSurface();
 
-		m_shadowTexture = pRenderTarget->CreateRenderTargetTexture((uint32) GetWidth(), (uint32) GetHeight());
+		uint32 uWidth = static_cast<uint32>(GetWidth());
+		uint32 uHeight = static_cast<uint32>(GetHeight());
+		m_shadowTexture = pRenderTarget->CreateRenderTargetTexture(uWidth, uHeight);
+
 		if (m_shadowTexture == nullptr)
 			throw std::runtime_error("Could not create shadow texture!");
 
@@ -104,19 +115,28 @@ namespace Components {
 		pRenderTarget->SetRenderTargetSurface(pSurface, 0, true);
 
 		const auto dimensions = GetDimensions();
-		float4 fHorizontalRounding = GetHorizontalRoundings();
-		float4 fVerticalRounding = GetVerticalRoundings();
+		const auto gradientColors = GetGradientColors();
+		float4 horizRounding = GetHorizontalRoundings();
+		float4 vertRounding = GetVerticalRoundings();
 
-		if (((fHorizontalRounding._1 != 0.0f && fVerticalRounding._1 != 0.0f) ||
-			 (fHorizontalRounding._2 != 0.0f && fVerticalRounding._2 != 0.0f) ||
-			 (fHorizontalRounding._3 != 0.0f && fVerticalRounding._3 != 0.0f) ||
-			 (fHorizontalRounding._4 != 0.0f && fVerticalRounding._4 != 0.0f)))
+		if (((horizRounding._1 != 0.0f && vertRounding._1 != 0.0f) ||
+			 (horizRounding._2 != 0.0f && vertRounding._2 != 0.0f) ||
+			 (horizRounding._3 != 0.0f && vertRounding._3 != 0.0f) ||
+			 (horizRounding._4 != 0.0f && vertRounding._4 != 0.0f)))
 		{
-			pRenderTarget->FillRoundedRectangle(Utils::Vector2(0.0f, 0.0f), dimensions,
-				fHorizontalRounding, fVerticalRounding, GetGradientColors());
+			pRenderTarget->FillRoundedRectangle(
+				Utils::Vector2(0.0f, 0.0f),
+				dimensions,
+				horizRounding,
+				vertRounding,
+				gradientColors);
 		}
-		else
-			pRenderTarget->FillRectangle(Utils::Vector2(0.0f, 0.0f), dimensions, GetGradientColors());
+		else {
+			pRenderTarget->FillRectangle(
+				Utils::Vector2(0.0f, 0.0f),
+				dimensions,
+				gradientColors);
+		}
 
 		pRenderTarget->SetRenderTargetSurface(pOldSurface);
 		GetInterface()->ClipStack.Apply();
