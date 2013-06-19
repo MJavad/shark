@@ -288,8 +288,8 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &vPosition,
 
 	D3DVIEWPORT9 viewPort = {0};
 	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = (float) viewPort.Width;
-	float fScreenHeight = (float) viewPort.Height;
+	float fScreenWidth = static_cast<float>(viewPort.Width);
+	float fScreenHeight = static_cast<float>(viewPort.Height);
 	
 	D3DXMATRIX orthoProj;
 	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
@@ -359,8 +359,8 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition,
 
 	D3DVIEWPORT9 viewPort = {0};
 	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = (float) viewPort.Width;
-	float fScreenHeight = (float) viewPort.Height;
+	float fScreenWidth = static_cast<float>(viewPort.Width);
+	float fScreenHeight = static_cast<float>(viewPort.Height);
 	
 	D3DXMATRIX orthoProj;
 	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
@@ -435,8 +435,8 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition,
 
 	D3DVIEWPORT9 viewPort = {0};
 	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = (float) viewPort.Width;
-	float fScreenHeight = (float) viewPort.Height;
+	float fScreenWidth = static_cast<float>(viewPort.Width);
+	float fScreenHeight = static_cast<float>(viewPort.Height);
 	
 	D3DXMATRIX orthoProj;
 	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
