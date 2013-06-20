@@ -41,7 +41,10 @@ HRESULT CALLBACK Detours::IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice, D3D
 
 	HRESULT hResult = sDelegates.IDirect3DDevice9__Reset(pDevice, pParams);
 
-	if (sD3DMgr.IsCreated())
+	if (hResult != D3D_OK)
+		LOG_DEBUG("An error occured while trying to perform a device reset operation. Reset returned %u.", hResult);
+
+	else if (sD3DMgr.IsCreated())
 		sD3DMgr.OnResetDevice();
 
 	return hResult;
