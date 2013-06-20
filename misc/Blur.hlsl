@@ -50,8 +50,7 @@ void VertexMain(in VertexShaderInput input, out PixelShaderInput output) {
 	output.position.y = 1.0f - output.position.y;
 
 	output.texCoord = input.texCoord;
-	output.texCoord.x += 1.0f / (params.z * 2.0f);
-	output.texCoord.y += 1.0f / (params.w * 2.0f);
+	output.texCoord.xy += 1.0f / (params.zw * 2.0f);
 
 	output.color = input.color;
 }
