@@ -22,9 +22,11 @@ void VertexMain(in VertexShaderInput vsInput, out PixelShaderInput output) {
 	output.position = mul(float4(vsInput.position.xy, 0, 1), orthoMatrix);
 	output.position.x -= 1.0f;
 	output.position.y = 1.0f - output.position.y;
-	output.position.x -= 1.0f / (params2.z * 2.0f);
-	output.position.y -= 1.0f / (params2.w * 2.0f);
+
 	output.texCoord = vsInput.texCoord;
+	output.texCoord.x += 1.0f / (params2.z * 2.0f);
+	output.texCoord.y += 1.0f / (params2.w * 2.0f);
+
 	output.color = vsInput.color;
 }
 
