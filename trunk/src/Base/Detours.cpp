@@ -58,7 +58,9 @@ HRESULT CALLBACK Detours::IDirect3D9__CreateDevice(IDirect3D9 *pD3D9, UINT Adapt
 	HRESULT hResult = sDelegates.IDirect3D9__CreateDevice(pD3D9, Adapter, DeviceType,
 		hFocusWindow, dwBehaviorFlags, pParams, ppReturnedDevice);
 
-	sD3DMgr.SetDevice9(*ppReturnedDevice);
+	if (hResult == D3D_OK)
+		sD3DMgr.SetDevice9(*ppReturnedDevice);
+
 	return hResult;
 }
 
@@ -69,7 +71,9 @@ HRESULT CALLBACK Detours::IDirect3D9Ex__CreateDeviceEx(IDirect3D9Ex *pD3D9Ex, UI
 	HRESULT hResult = sDelegates.IDirect3D9Ex__CreateDeviceEx(pD3D9Ex, Adapter, DeviceType,
 		hFocusWindow, dwBehaviorFlags, pParams, pDisplayMode, ppReturnedDevice);
 
-	sD3DMgr.SetDevice9(*ppReturnedDevice);
+	if (hResult == S_OK)
+		sD3DMgr.SetDevice9(*ppReturnedDevice);
+
 	return hResult;
 }
 

@@ -173,6 +173,8 @@ namespace Utils {
 							thread->resume();
 							Sleep(rand() % 2); // give him some time to move along... :D
 							thread->suspend();
+
+							LOG_DEBUG("Thread %u is executing 0x%08X. Address is scheduled for patching!", thread->id(), dwAddress);
 						}
 					}
 				}
