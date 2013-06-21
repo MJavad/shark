@@ -12,6 +12,9 @@ void Delegates::Initialize() {
 	IDirect3D9__CreateDevice = reinterpret_cast<IDirect3D9__CreateDevice_t>
 		(sOffsets.DirectX.IDirect3D9__CreateDevice);
 
+	IDirect3D9Ex__CreateDeviceEx = reinterpret_cast<IDirect3D9Ex__CreateDeviceEx_t>
+		(sOffsets.DirectX.IDirect3D9Ex__CreateDeviceEx);
+
 	IDXGISwapChain__Present = reinterpret_cast<IDXGISwapChain__Present_t>
 		(sOffsets.DirectX.IDXGISwapChain__Present);
 

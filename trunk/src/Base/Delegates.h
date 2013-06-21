@@ -5,6 +5,7 @@ class Delegates {
 		IDirect3DDevice9__EndScene(nullptr),
 		IDirect3DDevice9__Reset(nullptr),
 		IDirect3D9__CreateDevice(nullptr),
+		IDirect3D9Ex__CreateDeviceEx(nullptr),
 		IDXGISwapChain__Present(nullptr),
 		ID3D11DeviceContext__ClearRenderTargetView(nullptr),
 		D3D11CreateDeviceAndSwapChain(nullptr) {}
@@ -21,6 +22,11 @@ public:
 	typedef HRESULT (CALLBACK *IDirect3D9__CreateDevice_t) (IDirect3D9 *pD3D9, UINT Adapter, D3DDEVTYPE DeviceType,
 		HWND hFocusWindow, DWORD dwBehaviorFlags, D3DPRESENT_PARAMETERS *pParams, IDirect3DDevice9 **ppReturnedDevice);
 	IDirect3D9__CreateDevice_t IDirect3D9__CreateDevice;
+
+	typedef HRESULT (CALLBACK *IDirect3D9Ex__CreateDeviceEx_t) (IDirect3D9Ex *pD3D9Ex, UINT Adapter,
+		D3DDEVTYPE DeviceType, HWND hFocusWindow, DWORD dwBehaviorFlags, D3DPRESENT_PARAMETERS *pParams,
+		D3DDISPLAYMODEEX *pDisplayMode, IDirect3DDevice9Ex **ppReturnedDevice);
+	IDirect3D9Ex__CreateDeviceEx_t IDirect3D9Ex__CreateDeviceEx;
 
 	typedef HRESULT (CALLBACK *IDXGISwapChain__Present_t) (IDXGISwapChain *pSwapChain, UINT SyncInterval, UINT Flags);
 	IDXGISwapChain__Present_t IDXGISwapChain__Present;

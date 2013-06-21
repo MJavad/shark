@@ -26,6 +26,7 @@ public:
 		void Initialize();
 
 		DWORD_PTR IDirect3D9__CreateDevice;
+		DWORD_PTR IDirect3D9Ex__CreateDeviceEx;
 		DWORD_PTR IDirect3DDevice9__EndScene;
 		DWORD_PTR IDirect3DDevice9__Reset;
 

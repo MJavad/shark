@@ -10,6 +10,7 @@ void Detours::Initialize() {
 	ApplyDetour(sDelegates.IDirect3DDevice9__EndScene, IDirect3DDevice9__EndScene);
 	ApplyDetour(sDelegates.IDirect3DDevice9__Reset, IDirect3DDevice9__Reset);
 	ApplyDetour(sDelegates.IDirect3D9__CreateDevice, IDirect3D9__CreateDevice);
+	ApplyDetour(sDelegates.IDirect3D9Ex__CreateDeviceEx, IDirect3D9Ex__CreateDeviceEx);
 	ApplyDetour(sDelegates.IDXGISwapChain__Present, IDXGISwapChain__Present);
 	ApplyDetour(sDelegates.ID3D11DeviceContext__ClearRenderTargetView, ID3D11DeviceContext__ClearRenderTargetView);
 	ApplyDetour(sDelegates.D3D11CreateDeviceAndSwapChain, D3D11CreateDeviceAndSwapChain);
@@ -52,9 +53,21 @@ HRESULT CALLBACK Detours::IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice, D3D
 
 HRESULT CALLBACK Detours::IDirect3D9__CreateDevice(IDirect3D9 *pD3D9, UINT Adapter,
 		D3DDEVTYPE DeviceType, HWND hFocusWindow, DWORD dwBehaviorFlags,
-		D3DPRESENT_PARAMETERS *pParams, IDirect3DDevice9 **ppReturnedDevice) {
+		D3DPRESENT_PARAMETERS *pParams, IDirect3DDevice9 **ppReturnedDevice)
+{
 	HRESULT hResult = sDelegates.IDirect3D9__CreateDevice(pD3D9, Adapter, DeviceType,
 		hFocusWindow, dwBehaviorFlags, pParams, ppReturnedDevice);
+
+	sD3DMgr.SetDevice9(*ppReturnedDevice);
+	return hResult;
+}
+
+HRESULT CALLBACK Detours::IDirect3D9Ex__CreateDeviceEx(IDirect3D9Ex *pD3D9Ex, UINT Adapter,
+		D3DDEVTYPE DeviceType, HWND hFocusWindow, DWORD dwBehaviorFlags, D3DPRESENT_PARAMETERS *pParams,
+		D3DDISPLAYMODEEX *pDisplayMode, IDirect3DDevice9Ex **ppReturnedDevice)
+{
+	HRESULT hResult = sDelegates.IDirect3D9Ex__CreateDeviceEx(pD3D9Ex, Adapter, DeviceType,
+		hFocusWindow, dwBehaviorFlags, pParams, pDisplayMode, ppReturnedDevice);
 
 	sD3DMgr.SetDevice9(*ppReturnedDevice);
 	return hResult;

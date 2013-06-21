@@ -14,6 +14,7 @@ Offsets::SModule::SModule() {
 
 Offsets::SDirectX::SDirectX() {
 	IDirect3D9__CreateDevice = 0;
+	IDirect3D9Ex__CreateDeviceEx = 0;
 	IDirect3DDevice9__EndScene = 0;
 	IDirect3DDevice9__Reset = 0;
 	D3D11CreateDeviceAndSwapChain = 0;
@@ -39,21 +40,38 @@ void Offsets::SModule::Initialize() {
 }
 
 void Offsets::SDirectX::Initialize() {
-	// DirectX 9
-	HMODULE d3d9Handle = GetModuleHandleW(L"d3d9.dll");
+	// DirectX 9 - TODO: Think about something better instead of LoadLibrary here...
+	HMODULE d3d9Handle = LoadLibraryW(L"d3d9.dll");
 	if (d3d9Handle != nullptr) {
 		typedef IDirect3D9* (WINAPI *Direct3DCreate9_t) (UINT SDKVersion);
 		Direct3DCreate9_t pDirect3DCreate9 = reinterpret_cast<Direct3DCreate9_t>
 			(GetProcAddress(d3d9Handle, "Direct3DCreate9"));
 
-		IDirect3D9 *pD3D9 = pDirect3DCreate9(D3D_SDK_VERSION);
-		if (pD3D9 != nullptr) {
-			DWORD_PTR **ppD3D9VMT = reinterpret_cast<DWORD_PTR**>(pD3D9);
-			IDirect3D9__CreateDevice = (*ppD3D9VMT) [16];
-			pD3D9->Release();
+		if (pDirect3DCreate9 != nullptr) {
+			IDirect3D9 *pD3D9 = pDirect3DCreate9(D3D_SDK_VERSION);
+			if (pD3D9 != nullptr) {
+				DWORD_PTR **ppD3D9VMT = reinterpret_cast<DWORD_PTR**>(pD3D9);
+				IDirect3D9__CreateDevice = (*ppD3D9VMT) [16];
+				pD3D9->Release();
+			}
+			else
+				LOG_DEBUG("Direct3DCreate9 failed.");
 		}
-		else
-			LOG_DEBUG("Direct3DCreate9 failed.");
+
+		typedef HRESULT (WINAPI *Direct3DCreate9Ex_t) (_In_ UINT SDKVersion, _Out_ IDirect3D9Ex **ppD3D);
+		Direct3DCreate9Ex_t pDirect3DCreate9Ex = reinterpret_cast<Direct3DCreate9Ex_t>
+			(GetProcAddress(d3d9Handle, "Direct3DCreate9Ex"));
+
+		if (pDirect3DCreate9Ex != nullptr) {
+			IDirect3D9Ex *pD3D9Ex = nullptr;
+			if (pDirect3DCreate9Ex(D3D_SDK_VERSION, &pD3D9Ex) == S_OK) {
+				DWORD_PTR **ppD3D9ExVMT = reinterpret_cast<DWORD_PTR**>(pD3D9Ex);
+				IDirect3D9Ex__CreateDeviceEx = (*ppD3D9ExVMT) [20];
+				pD3D9Ex->Release();
+			}
+			else
+				LOG_DEBUG("Direct3DCreate9Ex failed.");
+		}
 
 		PIMAGE_DOS_HEADER pDosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(d3d9Handle);
 		PIMAGE_NT_HEADERS pNtHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>
@@ -74,7 +92,7 @@ void Offsets::SDirectX::Initialize() {
 			LOG_DEBUG("Could not find CD3DBase vm-table.");
 	}
 
-	// DirectX 11
+	// DirectX 11 - Optional for now
 	HMODULE d3d11Handle = GetModuleHandleW(L"d3d11.dll");
 	if (d3d11Handle != nullptr) {
 		WNDCLASSW wndClass = {0};
