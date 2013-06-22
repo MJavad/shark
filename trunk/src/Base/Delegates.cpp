@@ -9,6 +9,9 @@ void Delegates::Initialize() {
 	IDirect3DDevice9__Reset = reinterpret_cast<IDirect3DDevice9__Reset_t>
 		(sOffsets.DirectX.IDirect3DDevice9__Reset);
 
+	IDirect3DDevice9Ex__ResetEx = reinterpret_cast<IDirect3DDevice9Ex__ResetEx_t>
+		(sOffsets.DirectX.IDirect3DDevice9Ex__ResetEx);
+
 	IDirect3D9__CreateDevice = reinterpret_cast<IDirect3D9__CreateDevice_t>
 		(sOffsets.DirectX.IDirect3D9__CreateDevice);
 

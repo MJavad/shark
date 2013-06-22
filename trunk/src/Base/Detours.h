@@ -10,7 +10,11 @@ private:
 	// D3D9
 	static HRESULT CALLBACK IDirect3DDevice9__EndScene(IDirect3DDevice9 *pDevice);
 
-	static HRESULT CALLBACK IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice, D3DPRESENT_PARAMETERS *pParams);
+	static HRESULT CALLBACK IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice,
+		D3DPRESENT_PARAMETERS *pParams);
+
+	static HRESULT CALLBACK IDirect3DDevice9Ex__ResetEx(IDirect3DDevice9Ex *pDeviceEx,
+		D3DPRESENT_PARAMETERS *pParams, D3DDISPLAYMODEEX *pDisplayMode);
 
 	static HRESULT CALLBACK IDirect3D9__CreateDevice(IDirect3D9 *pD3D9, UINT Adapter,
 		D3DDEVTYPE DeviceType, HWND hFocusWindow, DWORD dwBehaviorFlags,

@@ -17,6 +17,7 @@ Offsets::SDirectX::SDirectX() {
 	IDirect3D9Ex__CreateDeviceEx = 0;
 	IDirect3DDevice9__EndScene = 0;
 	IDirect3DDevice9__Reset = 0;
+	IDirect3DDevice9Ex__ResetEx = 0;
 	D3D11CreateDeviceAndSwapChain = 0;
 	IDXGISwapChain__Present = 0;
 	ID3D11DeviceContext__ClearRenderTargetView = 0;
@@ -40,6 +41,24 @@ void Offsets::SModule::Initialize() {
 }
 
 void Offsets::SDirectX::Initialize() {
+	WNDCLASSW wndClass = {0};
+	wndClass.lpfnWndProc = DefWindowProcW;
+	wndClass.hInstance = sEngine.GetInstance();
+	wndClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
+	wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wndClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+	wndClass.lpszClassName = L"D3DShark_D3DInit";
+	ATOM hAtom = RegisterClassW(&wndClass);
+
+	if (hAtom == NULL)
+		LOG_DEBUG("Could not register window class.");
+
+	HWND hWindow = CreateWindow(MAKEINTATOM(hAtom), nullptr, 0, 0, 0,
+		0, 0, nullptr, nullptr, wndClass.hInstance, nullptr);
+
+	if (hWindow == nullptr)
+		LOG_DEBUG("Could not create dummy window.");
+
 	// DirectX 9 - TODO: Think about something better instead of LoadLibrary here...
 	HMODULE d3d9Handle = LoadLibraryW(L"d3d9.dll");
 	if (d3d9Handle != nullptr) {
@@ -55,7 +74,7 @@ void Offsets::SDirectX::Initialize() {
 				pD3D9->Release();
 			}
 			else
-				LOG_DEBUG("Direct3DCreate9 failed.");
+				LOG_DEBUG("D3D9: Direct3DCreate9 failed.");
 		}
 
 		typedef HRESULT (WINAPI *Direct3DCreate9Ex_t) (_In_ UINT SDKVersion, _Out_ IDirect3D9Ex **ppD3D);
@@ -65,12 +84,34 @@ void Offsets::SDirectX::Initialize() {
 		if (pDirect3DCreate9Ex != nullptr) {
 			IDirect3D9Ex *pD3D9Ex = nullptr;
 			if (pDirect3DCreate9Ex(D3D_SDK_VERSION, &pD3D9Ex) == S_OK) {
-				DWORD_PTR **ppD3D9ExVMT = reinterpret_cast<DWORD_PTR**>(pD3D9Ex);
-				IDirect3D9Ex__CreateDeviceEx = (*ppD3D9ExVMT) [20];
+				DWORD_PTR **d3d9ExVMT = reinterpret_cast<DWORD_PTR**>(pD3D9Ex);
+				IDirect3D9Ex__CreateDeviceEx = (*d3d9ExVMT) [20];
+
+				D3DPRESENT_PARAMETERS presentParams = {0};
+				presentParams.BackBufferCount = 1;
+				presentParams.BackBufferFormat = D3DFMT_UNKNOWN;
+				presentParams.MultiSampleType = D3DMULTISAMPLE_NONE;
+				presentParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
+				presentParams.hDeviceWindow = hWindow;
+				presentParams.Windowed = TRUE;
+				presentParams.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+
+				IDirect3DDevice9Ex *pDevice9Ex = nullptr;
+				if (pD3D9Ex->CreateDeviceEx(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWindow,
+						D3DCREATE_HARDWARE_VERTEXPROCESSING, &presentParams,
+						nullptr, &pDevice9Ex) == S_OK)
+				{
+					DWORD_PTR **device9ExVMT = reinterpret_cast<DWORD_PTR**>(pDevice9Ex);
+					IDirect3DDevice9Ex__ResetEx = (*device9ExVMT) [132];
+					pDevice9Ex->Release();
+				}
+				else
+					LOG_DEBUG("D3D9Ex: CreateDeviceEx failed.");
+
 				pD3D9Ex->Release();
 			}
 			else
-				LOG_DEBUG("Direct3DCreate9Ex failed.");
+				LOG_DEBUG("D3D9Ex: Direct3DCreate9Ex failed.");
 		}
 
 		PIMAGE_DOS_HEADER pDosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(d3d9Handle);
@@ -95,81 +136,62 @@ void Offsets::SDirectX::Initialize() {
 			IDirect3DDevice9__Reset = (*d3dBaseVMT) [16];
 		}
 		else
-			LOG_DEBUG("Could not find CD3DBase vm-table.");
+			LOG_DEBUG("D3D9: Could not find CD3DBase vm-table.");
 	}
 
 	// DirectX 11 - Optional for now
 	HMODULE d3d11Handle = GetModuleHandleW(L"d3d11.dll");
 	if (d3d11Handle != nullptr) {
-		WNDCLASSW wndClass = {0};
-		wndClass.lpfnWndProc = DefWindowProcW;
-		wndClass.hInstance = sEngine.GetInstance();
-		wndClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-		wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-		wndClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-		wndClass.lpszClassName = L"D3DShark_D3DInit";
+		ID3D11Device *pDevice11 = nullptr;
+		ID3D11DeviceContext *pDeviceContext11 = nullptr;
+		IDXGISwapChain *pSwapChain = nullptr;
 
-		ATOM hAtom = RegisterClassW(&wndClass);
-		if (hAtom != FALSE) {
-			HWND hWindow = CreateWindow(MAKEINTATOM(hAtom), nullptr, 0, 0, 0,
-				0, 0, nullptr, nullptr, wndClass.hInstance, nullptr);
+		DXGI_SWAP_CHAIN_DESC swapDesc = {0};
+		D3D_FEATURE_LEVEL featureLevels = D3D_FEATURE_LEVEL_11_0;
+		D3D_FEATURE_LEVEL featuresSupported;
 
-			if (hWindow != nullptr) {
-				ID3D11Device *pDevice11 = nullptr;
-				ID3D11DeviceContext *pDeviceContext11 = nullptr;
-				IDXGISwapChain *pSwapChain = nullptr;
+		swapDesc.BufferCount = 1;
+		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapDesc.BufferDesc.RefreshRate.Numerator = 60;
+		swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapDesc.OutputWindow = hWindow;
+		swapDesc.SampleDesc.Count = 1;
+		swapDesc.SampleDesc.Quality = 0;
+		swapDesc.Windowed = TRUE;
 
-				DXGI_SWAP_CHAIN_DESC swapDesc = {0};
-				D3D_FEATURE_LEVEL featureLevels = D3D_FEATURE_LEVEL_11_0;
-				D3D_FEATURE_LEVEL featuresSupported;
-				swapDesc.BufferCount = 1;
-				swapDesc.BufferDesc.Width = 1;
-				swapDesc.BufferDesc.Height = 1;
-				swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-				swapDesc.BufferDesc.RefreshRate.Numerator = 60;
-				swapDesc.BufferDesc.RefreshRate.Denominator = 1;
-				swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-				swapDesc.OutputWindow = hWindow;
-				swapDesc.SampleDesc.Count = 1;
-				swapDesc.SampleDesc.Quality = 0;
-				swapDesc.Windowed = TRUE;
+		typedef HRESULT (WINAPI *D3D11CreateDeviceAndSwapChain_t) (IDXGIAdapter *pAdapter, D3D_DRIVER_TYPE DriverType,
+			HMODULE Software, UINT Flags, const D3D_FEATURE_LEVEL *pFeatureLevels, UINT FeatureLevels,
+			UINT SDKVersion, const DXGI_SWAP_CHAIN_DESC *pSwapChainDesc, IDXGISwapChain **ppSwapChain,
+			ID3D11Device **ppDevice, D3D_FEATURE_LEVEL *pFeatureLevel, ID3D11DeviceContext **ppImmediateContext);
 
-				typedef HRESULT (WINAPI *D3D11CreateDeviceAndSwapChain_t) (IDXGIAdapter *pAdapter, D3D_DRIVER_TYPE DriverType,
-					HMODULE Software, UINT Flags, const D3D_FEATURE_LEVEL *pFeatureLevels, UINT FeatureLevels,
-					UINT SDKVersion, const DXGI_SWAP_CHAIN_DESC *pSwapChainDesc, IDXGISwapChain **ppSwapChain,
-					ID3D11Device **ppDevice, D3D_FEATURE_LEVEL *pFeatureLevel, ID3D11DeviceContext **ppImmediateContext);
+		D3D11CreateDeviceAndSwapChain = reinterpret_cast<DWORD_PTR>
+			(GetProcAddress(d3d11Handle, "D3D11CreateDeviceAndSwapChain"));
 
-				D3D11CreateDeviceAndSwapChain = reinterpret_cast<DWORD_PTR>
-					(GetProcAddress(d3d11Handle, "D3D11CreateDeviceAndSwapChain"));
+		D3D11CreateDeviceAndSwapChain_t pD3D11CreateDeviceAndSwapChain =
+			reinterpret_cast<D3D11CreateDeviceAndSwapChain_t>(D3D11CreateDeviceAndSwapChain);
 
-				D3D11CreateDeviceAndSwapChain_t pD3D11CreateDeviceAndSwapChain =
-					reinterpret_cast<D3D11CreateDeviceAndSwapChain_t>(D3D11CreateDeviceAndSwapChain);
+		if (pD3D11CreateDeviceAndSwapChain != nullptr &&
+			pD3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE,
+				nullptr, 0, &featureLevels, 1, D3D11_SDK_VERSION, &swapDesc, &pSwapChain,
+				&pDevice11, &featuresSupported, &pDeviceContext11) == S_OK)
+		{
+			DWORD_PTR **swapChain11VMT = reinterpret_cast<DWORD_PTR**>(pSwapChain);
+			DWORD_PTR **deviceContext11VMT = reinterpret_cast<DWORD_PTR**>(pDeviceContext11);
+			IDXGISwapChain__Present = (*swapChain11VMT) [8];
+			ID3D11DeviceContext__ClearRenderTargetView = (*deviceContext11VMT) [50];
 
-				if (pD3D11CreateDeviceAndSwapChain != nullptr &&
-					pD3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE,
-						nullptr, 0, &featureLevels, 1, D3D11_SDK_VERSION, &swapDesc, &pSwapChain,
-						&pDevice11, &featuresSupported, &pDeviceContext11) == S_OK)
-				{
-					DWORD_PTR **swapChain11VMT = reinterpret_cast<DWORD_PTR**>(pSwapChain);
-					DWORD_PTR **deviceContext11VMT = reinterpret_cast<DWORD_PTR**>(pDeviceContext11);
-					IDXGISwapChain__Present = (*swapChain11VMT) [8];
-					ID3D11DeviceContext__ClearRenderTargetView = (*deviceContext11VMT) [50];
-
-					pDevice11->Release();
-					pDeviceContext11->Release();
-					pSwapChain->Release();
-				}
-				else
-					LOG_DEBUG("D3D11CreateDeviceAndSwapChain failed.");
-
-				DestroyWindow(hWindow);
-			}
-			else
-				LOG_DEBUG("CreateWindow failed.");
-
-			UnregisterClass(MAKEINTATOM(hAtom), wndClass.hInstance);
+			pDevice11->Release();
+			pDeviceContext11->Release();
+			pSwapChain->Release();
 		}
 		else
-			LOG_DEBUG("RegisterClass failed.");
+			LOG_DEBUG("D3D11: D3D11CreateDeviceAndSwapChain failed.");
 	}
+
+	if (hWindow != nullptr)
+		DestroyWindow(hWindow);
+
+	if (hAtom != NULL)
+		UnregisterClass(MAKEINTATOM(hAtom), wndClass.hInstance);
 }

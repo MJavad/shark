@@ -29,6 +29,7 @@ public:
 		DWORD_PTR IDirect3D9Ex__CreateDeviceEx;
 		DWORD_PTR IDirect3DDevice9__EndScene;
 		DWORD_PTR IDirect3DDevice9__Reset;
+		DWORD_PTR IDirect3DDevice9Ex__ResetEx;
 
 		DWORD_PTR D3D11CreateDeviceAndSwapChain;
 		DWORD_PTR IDXGISwapChain__Present;

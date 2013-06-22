@@ -4,6 +4,7 @@ class Delegates {
 	SINGLETON_CLASS(Delegates) :
 		IDirect3DDevice9__EndScene(nullptr),
 		IDirect3DDevice9__Reset(nullptr),
+		IDirect3DDevice9Ex__ResetEx(nullptr),
 		IDirect3D9__CreateDevice(nullptr),
 		IDirect3D9Ex__CreateDeviceEx(nullptr),
 		IDXGISwapChain__Present(nullptr),
@@ -18,6 +19,9 @@ public:
 
 	typedef HRESULT (CALLBACK *IDirect3DDevice9__Reset_t) (IDirect3DDevice9 *pDevice, D3DPRESENT_PARAMETERS *pParams);
 	IDirect3DDevice9__Reset_t IDirect3DDevice9__Reset;
+
+	typedef HRESULT (CALLBACK *IDirect3DDevice9Ex__ResetEx_t) (IDirect3DDevice9Ex *pDeviceEx, D3DPRESENT_PARAMETERS *pParams, D3DDISPLAYMODEEX *pDisplayMode);
+	IDirect3DDevice9Ex__ResetEx_t IDirect3DDevice9Ex__ResetEx;
 
 	typedef HRESULT (CALLBACK *IDirect3D9__CreateDevice_t) (IDirect3D9 *pD3D9, UINT Adapter, D3DDEVTYPE DeviceType,
 		HWND hFocusWindow, DWORD dwBehaviorFlags, D3DPRESENT_PARAMETERS *pParams, IDirect3DDevice9 **ppReturnedDevice);
