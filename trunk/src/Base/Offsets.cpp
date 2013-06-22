@@ -77,16 +77,22 @@ void Offsets::SDirectX::Initialize() {
 		PIMAGE_NT_HEADERS pNtHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>
 			(reinterpret_cast<DWORD_PTR>(d3d9Handle) + pDosHeader->e_lfanew);
 
-		const byte devicePattern[] = {0xC7, 0x06, 0x00, 0x00, 0x00, 0x00, 0x89,
-									  0x86, 0x00, 0x00, 0x00, 0x00, 0x89, 0x86};
+		// Points to somewhere inside the CD3DBase constructor
+		const byte d3dBasePattern[] = {0x8B, 0x00,						   // mov register, register
+									   0xE8, 0x00, 0x00, 0x00, 0x00,	   // call offset
+									   0x33, 0xC0,						   // xor eax, eax
+									   0xC7, 0x06, 0x00, 0x00, 0x00, 0x00, // mov [esi], offset <- vmt
+									   0x89, 0x86, 0x00, 0x00, 0x00, 0x00, // mov [esi+offset], eax
+									   0x89, 0x86};						   // mov [esi+offset], eax
 
-		DWORD_PTR dwVtblAddr = sMemory.FindMemoryPattern(reinterpret_cast<DWORD_PTR>(d3d9Handle),
-			pNtHeaders->OptionalHeader.SizeOfCode, devicePattern, "xx????xx????xx");
+		DWORD_PTR d3dBaseOffset = sMemory.FindMemoryPattern(
+			pNtHeaders->OptionalHeader.ImageBase + pNtHeaders->OptionalHeader.BaseOfCode,
+			pNtHeaders->OptionalHeader.SizeOfCode, d3dBasePattern, "x?x????xxxx????xx????xx");
 
-		if (dwVtblAddr != 0) {
-			DWORD_PTR **ppDevice9VMT = reinterpret_cast<DWORD_PTR**>(dwVtblAddr + 2);
-			IDirect3DDevice9__EndScene = (*ppDevice9VMT) [42];
-			IDirect3DDevice9__Reset = (*ppDevice9VMT) [16];
+		if (d3dBaseOffset != 0) {
+			DWORD_PTR **d3dBaseVMT = reinterpret_cast<DWORD_PTR**>(d3dBaseOffset + 0x0B);
+			IDirect3DDevice9__EndScene = (*d3dBaseVMT) [42];
+			IDirect3DDevice9__Reset = (*d3dBaseVMT) [16];
 		}
 		else
 			LOG_DEBUG("Could not find CD3DBase vm-table.");
@@ -117,8 +123,8 @@ void Offsets::SDirectX::Initialize() {
 				D3D_FEATURE_LEVEL featureLevels = D3D_FEATURE_LEVEL_11_0;
 				D3D_FEATURE_LEVEL featuresSupported;
 				swapDesc.BufferCount = 1;
-				swapDesc.BufferDesc.Width = 0;
-				swapDesc.BufferDesc.Height = 0;
+				swapDesc.BufferDesc.Width = 1;
+				swapDesc.BufferDesc.Height = 1;
 				swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 				swapDesc.BufferDesc.RefreshRate.Numerator = 60;
 				swapDesc.BufferDesc.RefreshRate.Denominator = 1;
@@ -144,10 +150,10 @@ void Offsets::SDirectX::Initialize() {
 						nullptr, 0, &featureLevels, 1, D3D11_SDK_VERSION, &swapDesc, &pSwapChain,
 						&pDevice11, &featuresSupported, &pDeviceContext11) == S_OK)
 				{
-					DWORD_PTR **ppSwapChainVMT = reinterpret_cast<DWORD_PTR**>(pSwapChain);
-					DWORD_PTR **ppDeviceContext11VMT = reinterpret_cast<DWORD_PTR**>(pDeviceContext11);
-					IDXGISwapChain__Present = (*ppSwapChainVMT) [8];
-					ID3D11DeviceContext__ClearRenderTargetView = (*ppDeviceContext11VMT) [50];
+					DWORD_PTR **swapChain11VMT = reinterpret_cast<DWORD_PTR**>(pSwapChain);
+					DWORD_PTR **deviceContext11VMT = reinterpret_cast<DWORD_PTR**>(pDeviceContext11);
+					IDXGISwapChain__Present = (*swapChain11VMT) [8];
+					ID3D11DeviceContext__ClearRenderTargetView = (*deviceContext11VMT) [50];
 
 					pDevice11->Release();
 					pDeviceContext11->Release();
