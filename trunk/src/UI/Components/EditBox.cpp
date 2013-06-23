@@ -142,12 +142,10 @@ namespace Components {
 	}
 
 	void EditBox::InsertText(std::wstring swText) {
-		for (auto itr = swText.begin(), end = swText.end(); itr != end; ) {
-			if (!isprint(*itr))
-				swText.erase(itr++);
-			else
-				++itr;
-		}
+		swText.erase(std::remove_if(swText.begin(), swText.end(),
+			[] (wchar_t c) {
+			return !isprint(c);
+		}), swText.end());
 
 		const auto pContent = GetContent();
 		if (pContent != nullptr)
