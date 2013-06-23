@@ -17,35 +17,35 @@ public:
 
 	virtual void DrawRectangle(const Utils::Vector2 &vPosition,
 		const std::array<Utils::Vector2, 4> &dimensions,
-		const std::array<Utils::Color, 4> &gradient,
+		const std::array<D3DXCOLOR, 4> &gradient,
 		float fStroke) const;
 
 	virtual void FillRectangle(const Utils::Vector2 &vPosition,
 		const std::array<Utils::Vector2, 4> &dimensions,
-		const std::array<Utils::Color, 4> &gradient) const;
+		const std::array<D3DXCOLOR, 4> &gradient) const;
 
 	virtual void DrawRoundedRectangle(const Utils::Vector2 &vPosition,
 		const std::array<Utils::Vector2, 4> &dimensions,
 		const float4 &fHorizRadius,
 		const float4 &fVertRadius,
-		const std::array<Utils::Color, 4> &gradient,
+		const std::array<D3DXCOLOR, 4> &gradient,
 		float fStroke) const;
 
 	virtual void FillRoundedRectangle(const Utils::Vector2 &vPosition,
 		const std::array<Utils::Vector2, 4> &dimensions,
 		const float4 &fHorizRadius,
 		const float4 &fVertRadius,
-		const std::array<Utils::Color, 4> &gradient) const;
+		const std::array<D3DXCOLOR, 4> &gradient) const;
 
 	virtual void DrawBlurredSprite(const Utils::Vector2 &vPosition,
 		std::shared_ptr<const UI::D3DTexture> pTexture,
 		const std::array<Utils::Vector2, 4> &dimensions,
-		const std::array<Utils::Color, 4> &gradient) const;
+		const std::array<D3DXCOLOR, 4> &gradient) const;
 
 	virtual void DrawSprite(const Utils::Vector2 &vPosition,
 		std::shared_ptr<const UI::D3DTexture> pTexture,
 		const std::array<Utils::Vector2, 4> &dimensions,
-		const std::array<Utils::Color, 4> &gradient) const;
+		const std::array<D3DXCOLOR, 4> &gradient) const;
 
 protected:
 	IDXGISwapChain *m_swapChain;

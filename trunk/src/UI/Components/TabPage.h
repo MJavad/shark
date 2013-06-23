@@ -36,8 +36,7 @@ namespace Components {
 		}
 
 		virtual void OnFocusEndEventNotify() {
-			float4 fDefault = {1.0f, 1.0f, 1.0f, 1.0f};
-			FadeTo(200, fDefault);
+			FadeTo(200, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			return IFocusable::OnFocusEndEventNotify();
 		}
 

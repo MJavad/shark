@@ -6,7 +6,7 @@
 
 struct UIVertex {
 	float x, y, z, u, v;
-	float4 color;
+	D3DCOLORVALUE color;
 };
 
 struct RHWDiffuseVertex {
@@ -193,7 +193,7 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 uI
 
 void RenderTarget9::DrawRectangle(const Utils::Vector2 &vPosition,
 								  const std::array<Utils::Vector2, 4> &dimensions,
-								  const std::array<Utils::Color, 4> &gradient,
+								  const std::array<D3DXCOLOR, 4> &gradient,
 								  float fStroke) const
 {
 	/*float fWidth = GetDimensionWidth(dimensions);
@@ -236,7 +236,7 @@ void RenderTarget9::DrawRectangle(const Utils::Vector2 &vPosition,
 
 void RenderTarget9::FillRectangle(const Utils::Vector2 &vPosition,
 								  const std::array<Utils::Vector2, 4> &dimensions,
-								  const std::array<Utils::Color, 4> &gradient) const
+								  const std::array<D3DXCOLOR, 4> &gradient) const
 {
 	RHWDiffuseVertex vertices[] = {
 		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, gradient[0] },
@@ -253,34 +253,14 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &vPosition,
 										 const std::array<Utils::Vector2, 4> &dimensions,
 										 const float4 &fHorizRadius,
 										 const float4 &fVertRadius,
-										 const std::array<Utils::Color, 4> &gradient,
+										 const std::array<D3DXCOLOR, 4> &gradient,
 										 float fStroke) const
-{	// shader wants float4 colors...
-	float4 fColor0 = {
-		gradient[0].R / 255.0f, gradient[0].G / 255.0f,
-		gradient[0].B / 255.0f, gradient[0].A / 255.0f
-	};
-
-	float4 fColor1 = {
-		gradient[1].R / 255.0f, gradient[1].G / 255.0f,
-		gradient[1].B / 255.0f, gradient[1].A / 255.0f
-	};
-
-	float4 fColor2 = {
-		gradient[2].R / 255.0f, gradient[2].G / 255.0f,
-		gradient[2].B / 255.0f, gradient[2].A / 255.0f
-	};
-
-	float4 fColor3 = {
-		gradient[3].R / 255.0f, gradient[3].G / 255.0f,
-		gradient[3].B / 255.0f, gradient[3].A / 255.0f
-	};
-
+{
 	UIVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, fColor0 },
-		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, fColor1 },
-		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, fColor2 },
-		{ vPosition.x + dimensions[3].x - 1, vPosition.y + dimensions[3].y + 2, 0, 0, 1, fColor3 }
+		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
+		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
+		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
+		{ vPosition.x + dimensions[3].x - 1, vPosition.y + dimensions[3].y + 2, 0, 0, 1, gradient[3] }
 	};
 
 	m_device9->SetVertexShader(m_roundRectVertex);
@@ -325,33 +305,13 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition,
 										 const std::array<Utils::Vector2, 4> &dimensions,
 										 const float4 &fHorizRadius,
 										 const float4 &fVertRadius,
-										 const std::array<Utils::Color, 4> &gradient) const
-{	// shader wants float4 colors...
-	float4 fColor0 = {
-		gradient[0].R / 255.0f, gradient[0].G / 255.0f,
-		gradient[0].B / 255.0f, gradient[0].A / 255.0f
-	};
-
-	float4 fColor1 = {
-		gradient[1].R / 255.0f, gradient[1].G / 255.0f,
-		gradient[1].B / 255.0f, gradient[1].A / 255.0f
-	};
-
-	float4 fColor2 = {
-		gradient[2].R / 255.0f, gradient[2].G / 255.0f,
-		gradient[2].B / 255.0f, gradient[2].A / 255.0f
-	};
-
-	float4 fColor3 = {
-		gradient[3].R / 255.0f, gradient[3].G / 255.0f,
-		gradient[3].B / 255.0f, gradient[3].A / 255.0f
-	};
-
+										 const std::array<D3DXCOLOR, 4> &gradient) const
+{
 	UIVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, fColor0 },
-		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, fColor1 },
-		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, fColor2 },
-		{ vPosition.x + dimensions[3].x - 2, vPosition.y + dimensions[3].y + 2, 0, 0, 1, fColor3 }
+		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
+		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
+		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
+		{ vPosition.x + dimensions[3].x - 2, vPosition.y + dimensions[3].y + 2, 0, 0, 1, gradient[3] }
 	};
 
 	m_device9->SetVertexShader(m_roundRectVertex);
@@ -395,33 +355,13 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition,
 void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition,
 									  std::shared_ptr<const UI::D3DTexture> pTexture,
 									  const std::array<Utils::Vector2, 4> &dimensions,
-									  const std::array<Utils::Color, 4> &gradient) const
-{	// shader wants float4 colors...
-	float4 fColor0 = {
-		gradient[0].R / 255.0f, gradient[0].G / 255.0f,
-		gradient[0].B / 255.0f, gradient[0].A / 255.0f
-	};
-
-	float4 fColor1 = {
-		gradient[1].R / 255.0f, gradient[1].G / 255.0f,
-		gradient[1].B / 255.0f, gradient[1].A / 255.0f
-	};
-
-	float4 fColor2 = {
-		gradient[2].R / 255.0f, gradient[2].G / 255.0f,
-		gradient[2].B / 255.0f, gradient[2].A / 255.0f
-	};
-
-	float4 fColor3 = {
-		gradient[3].R / 255.0f, gradient[3].G / 255.0f,
-		gradient[3].B / 255.0f, gradient[3].A / 255.0f
-	};
-
+									  const std::array<D3DXCOLOR, 4> &gradient) const
+{
 	UIVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 0, 0, fColor0 },
-		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, 0, fColor1 },
-		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, 1, fColor2 },
-		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 0, 1, fColor3 }
+		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 0, 0, gradient[0] },
+		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, 0, gradient[1] },
+		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, 1, gradient[2] },
+		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 0, 1, gradient[3] }
 	};
 
 	const auto textureObject = std::dynamic_pointer_cast
@@ -459,7 +399,7 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition,
 void RenderTarget9::DrawSprite(const Utils::Vector2 &vPosition,
 							   std::shared_ptr<const UI::D3DTexture> pTexture,
 							   const std::array<Utils::Vector2, 4> &dimensions,
-							   const std::array<Utils::Color, 4> &gradient) const
+							   const std::array<D3DXCOLOR, 4> &gradient) const
 {
 	RHWDiffuseTextureVertex vertices[] = {
 		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, gradient[0], 0, 0 },

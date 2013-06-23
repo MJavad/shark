@@ -48,17 +48,17 @@ namespace Components {
 			m_vertRoundings._4 = fVerticalRounding;
 		}
 
-		virtual void SetColor(const Utils::Color &color) {
+		virtual void SetColor(const D3DXCOLOR &color) {
 			FlushShadowTexture();
 			m_colors.fill(color);
 		}
 
-		virtual void SetGradientColors(std::array<Utils::Color, 4> gradient) {
+		virtual void SetGradientColors(std::array<D3DXCOLOR, 4> gradient) {
 			FlushShadowTexture();
 			m_colors = std::move(gradient);
 		}
 
-		virtual std::array<Utils::Color, 4> GetGradientColors() const {
+		virtual std::array<D3DXCOLOR, 4> GetGradientColors() const {
 			return m_colors;
 		}
 
@@ -113,7 +113,7 @@ namespace Components {
 
 		float4 m_horizRoundings;
 		float4 m_vertRoundings;
-		std::array<Utils::Color, 4> m_colors;
+		std::array<D3DXCOLOR, 4> m_colors;
 		std::array<Utils::Vector2, 4> m_dimensions;
 
 		Utils::SEventDelegate<void ()> m_lostDevice;

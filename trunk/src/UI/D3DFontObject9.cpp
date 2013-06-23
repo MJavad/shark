@@ -12,7 +12,7 @@ namespace UI {
 	}
 
 	void D3DFontObject9::DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring swText,
-								  RECT &screenRect, uint32 dwFlags, const Utils::Color &color) const {
+								  RECT &screenRect, uint32 dwFlags, const D3DXCOLOR &color) const {
 		if (m_d3dxFont != nullptr) {
 			CComPtr<ID3DXSprite> pD3DXSprite = nullptr;
 			const auto pSprite9 = std::dynamic_pointer_cast<const D3DSprite9>(pSprite);

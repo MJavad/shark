@@ -20,37 +20,37 @@ namespace Components {
 		virtual void SetWidth(float fWidth);
 		virtual void SetHeight(float fHeight);
 		
-		virtual void SetColor(const Utils::Color &color) {
+		virtual void SetColor(const D3DXCOLOR &color) {
 			Rectangle::SetColor(color);
 			m_isSelected ? m_selectedColors.fill(color):
 							m_deselectedColors.fill(color);
 		}
 		
-		virtual void SetGradientColors(const std::array<Utils::Color, 4> &gradient) {
+		virtual void SetGradientColors(const std::array<D3DXCOLOR, 4> &gradient) {
 			Rectangle::SetGradientColors(gradient);
 			m_isSelected ? m_selectedColors = gradient :
 							m_deselectedColors = gradient;
 		}
 
-		virtual void SetSelectedColor(const Utils::Color &color) {
+		virtual void SetSelectedColor(const D3DXCOLOR &color) {
 			m_selectedColors.fill(color);
 			if (m_isSelected)
 				Rectangle::SetColor(color);
 		}
 		
-		virtual void SetSelectedGradientColors(const std::array<Utils::Color, 4> &gradient) {
+		virtual void SetSelectedGradientColors(const std::array<D3DXCOLOR, 4> &gradient) {
 			m_selectedColors = gradient;
 			if (m_isSelected)
 				Rectangle::SetGradientColors(gradient);
 		}
 
-		virtual void SetDeselectedColor(const Utils::Color &color) {
+		virtual void SetDeselectedColor(const D3DXCOLOR &color) {
 			m_deselectedColors.fill(color);
 			if (!m_isSelected)
 				Rectangle::SetColor(color);
 		}
 		
-		virtual void SetDeselectedGradientColors(const std::array<Utils::Color, 4> &gradient) {
+		virtual void SetDeselectedGradientColors(const std::array<D3DXCOLOR, 4> &gradient) {
 			m_deselectedColors = gradient;
 			if (!m_isSelected)
 				Rectangle::SetGradientColors(gradient);
@@ -92,7 +92,7 @@ namespace Components {
 		bool m_isSelected;
 		std::shared_ptr<Label> m_caption;
 		std::shared_ptr<Rectangle> m_border;
-		std::array<Utils::Color, 4> m_deselectedColors, m_selectedColors;
+		std::array<D3DXCOLOR, 4> m_deselectedColors, m_selectedColors;
 	};
 }
 }

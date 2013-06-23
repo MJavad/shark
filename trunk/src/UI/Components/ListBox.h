@@ -9,9 +9,7 @@ namespace Components {
 	{
 	public:
 		ListBox() : m_isSelecting(false), m_isMultiSelect(false) {}
-
-		static std::shared_ptr<ListBox> Create(float fWidth = 200.0f,
-			float fHeight = 160.0f);
+		static std::shared_ptr<ListBox> Create(float fWidth = 200.0f, float fHeight = 160.0f);
 
 		virtual void OnRender(uint32 uTimePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);

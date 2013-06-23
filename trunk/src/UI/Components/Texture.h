@@ -7,7 +7,7 @@ namespace Components {
 	class Texture : public virtual IRectComponent
 	{
 	public:
-		Texture() : m_color(0xFF, 0xFF, 0xFF, 0xFF) {
+		Texture() : m_color(0xFFFFFFFF) {
 			D3DXMatrixIdentity(&m_transform);
 		}
 
@@ -33,18 +33,18 @@ namespace Components {
 				D3DXMatrixIdentity(&m_transform);
 		}
 
-		virtual Utils::Color GetColor() const {
+		virtual D3DXCOLOR GetColor() const {
 			return m_color;
 		}
 
-		virtual void SetColor(const Utils::Color &color) {
+		virtual void SetColor(const D3DXCOLOR &color) {
 			m_color = color;
 		}
 
 	private:
 		D3DXMATRIX m_transform;
 		std::shared_ptr<D3DTexture> m_texture;
-		Utils::Color m_color;
+		D3DXCOLOR m_color;
 	};
 }
 }

@@ -13,20 +13,19 @@ namespace Components {
 	}
 
 	void TabControl::OnRender(uint32 uTimePassed) {
-		bool bValidActiveTab = IsValidTabIndex(m_activeTab);
+		bool validActiveTab = IsValidTabIndex(m_activeTab);
 		Utils::Vector2 vPosition = GetPosition();
 		SetPosition(vPosition + Utils::Vector2(0.0f, 20.0f));
 		SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 		Rectangle::OnRender(uTimePassed);
-		float4 fDefault = {1.0f, 1.0f, 1.0f, 1.0f};
 
-		GetInterface()->ClipStack.SetRect(GetFullRect(), [&] () {
+		GetInterface()->ClipStack.SetRect(GetFullRect(), [&] {
 			for (const auto& pTabPage : m_tabPages) {
 				if (pTabPage->GetVisibility()) {
-					float4 fCurrent = pTabPage->GetColorMod();
-					pTabPage->SetColorMod(fDefault);
+					D3DXCOLOR previousColor = pTabPage->GetColorMod();
+					pTabPage->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 					pTabPage->RenderChildren(uTimePassed);
-					pTabPage->SetColorMod(fCurrent);
+					pTabPage->SetColorMod(previousColor);
 				}
 			}
 		});
@@ -44,7 +43,7 @@ namespace Components {
 				continue;
 
 			fCurrentOffset -= (pTabPage->GetWidth() - 2);
-			if (!bValidActiveTab || pTabPage != m_tabPages[m_activeTab]) {
+			if (!validActiveTab || pTabPage != m_tabPages[m_activeTab]) {
 				SetChildOffset(Utils::Vector2(fCurrentOffset + 2, 0.0f));
 				pTabPage->OnRender(uTimePassed);
 			}
@@ -52,19 +51,17 @@ namespace Components {
 				fActiveTabOffset = (fCurrentOffset + 2);
 		}
 
-		if (!bValidActiveTab ||
-			!m_tabPages[m_activeTab]->GetVisibility())
+		if (!validActiveTab || !m_tabPages[m_activeTab]->GetVisibility())
 			return;
 
 		const auto &pActiveTab = m_tabPages[m_activeTab];
-		float4 fPrevious = pActiveTab->GetColorMod();
-		float4 fLight = fPrevious;
-		fLight._2 *= 1.5f; fLight._3 *= 1.5f; fLight._4 *= 1.5f;
+		D3DXCOLOR previousColor = pActiveTab->GetColorMod();
+		D3DXCOLOR highlightColor = previousColor * 1.5f;
 
-		pActiveTab->SetColorMod(fLight);
+		pActiveTab->SetColorMod(highlightColor);
 		SetChildOffset(Utils::Vector2(fActiveTabOffset, 0.0f));
 		pActiveTab->OnRender(uTimePassed);
-		pActiveTab->SetColorMod(fPrevious);
+		pActiveTab->SetColorMod(previousColor);
 	}
 
 	void TabControl::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -108,8 +105,7 @@ namespace Components {
 
 		const auto pContent = pTabPage->GetContent();
 		if (pContent != nullptr && !m_tabPages.empty()) {
-			float4 fInvis = {0.0f, 1.0f, 1.0f, 1.0f};
-			pContent->SetColorMod(fInvis);
+			pContent->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 			pContent->SetVisibility(false);
 		}
 

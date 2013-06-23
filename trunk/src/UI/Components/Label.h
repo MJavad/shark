@@ -28,11 +28,11 @@ namespace Components {
 			FlushFontCache();
 		}
 
-		virtual Utils::Color GetColor() const {
+		virtual D3DXCOLOR GetColor() const {
 			return m_color;
 		}
 
-		virtual void SetColor(const Utils::Color &color) {
+		virtual void SetColor(const D3DXCOLOR &color) {
 			m_color = color;
 		}
 
@@ -103,7 +103,7 @@ namespace Components {
 		
 	private:
 		std::wstring m_text;
-		Utils::Color m_color;
+		D3DXCOLOR m_color;
 		uint32 m_formatFlags;
 		bool m_shouldCache, m_dropShadow;
 		Utils::Vector2 m_shadowDirection;

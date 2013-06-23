@@ -18,7 +18,7 @@ namespace Components {
 		//pLabel->SetDropShadow(false);
 
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
-		pBorder->SetColor(Utils::Color(0x90, 0xB0, 0xB0, 0xB0));
+		pBorder->SetColor(0x90B0B0B0);
 		pBorder->SetHorizontalRounding(fHorizontalRounding);
 		pBorder->SetVerticalRounding(fVerticalRounding);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
@@ -30,11 +30,11 @@ namespace Components {
 		pEditBox->SetHorizontalRounding(fHorizontalRounding);
 		pEditBox->SetVerticalRounding(fVerticalRounding);
 
-		std::array<Utils::Color, 4> gradient;
-		gradient[0] = Utils::Color(0xFF, 0x25, 0x25, 0x25);
-		gradient[1] = Utils::Color(0xFF, 0x25, 0x25, 0x25);
-		gradient[2] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
-		gradient[3] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
+		std::array<D3DXCOLOR, 4> gradient;
+		gradient[0] = 0xFF252525;
+		gradient[1] = 0xFF252525;
+		gradient[2] = 0xFF101010;
+		gradient[3] = 0xFF101010;
 		pEditBox->SetGradientColors(std::move(gradient));
 		return pEditBox;
 	}
@@ -74,7 +74,7 @@ namespace Components {
 			vCaret.x = float(pContent->CPToX(s_caretPosition));
 			vCaret.y = vScreen.y + (GetHeight() / 2.0f - textHeight / 2.0f);
 
-			std::array<Utils::Color, 4> gradient;
+			std::array<D3DXCOLOR, 4> gradient;
 			gradient.fill(pContent->GetModifiedColor(pContent->GetColor()));
 			pRenderTarget->FillRectangle(vCaret, IRenderTarget::MakeDimension(3.0f, textHeight), gradient);
 		}
@@ -186,20 +186,16 @@ namespace Components {
 		const auto pBorder = GetBorder();
 		bool result = IFocusable::OnFocusStartEventNotify();
 
-		if (!result && pBorder != nullptr) {
-			float4 fFocused = {1.77f, 0.36f, 1.0f, 1.45f};
-			pBorder->FadeTo(100, fFocused);
-		}
+		if (!result && pBorder != nullptr)
+			pBorder->FadeTo(100, D3DXCOLOR(0.36f, 1.0f, 1.45f, 1.77f));
 
 		return result;
 	}
 
 	void EditBox::OnFocusEndEventNotify() {
 		const auto pBorder = GetBorder();
-		if (pBorder != nullptr) {
-			float4 fOrig = {1.0f, 1.0f, 1.0f, 1.0f};
-			pBorder->FadeTo(300, fOrig);
-		}
+		if (pBorder != nullptr)
+			pBorder->FadeTo(300, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 		return IFocusable::OnFocusEndEventNotify();
 	}

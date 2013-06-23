@@ -29,7 +29,7 @@ namespace Components {
 		pTabPage->SetHorizontalRoundings(horizontalRoundings);
 
 		const auto pBorder = std::make_shared<Rectangle>();
-		pBorder->SetColor(Utils::Color(0xA0, 0x20, 0x90, 0xCC));
+		pBorder->SetColor(0xA02090CC);
 		pBorder->SetVerticalRoundings(verticalRoundings);
 		pBorder->SetHorizontalRoundings(horizontalRoundings);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
@@ -41,11 +41,11 @@ namespace Components {
 		pBorder->SetDimensions(std::move(dimensions));
 		pTabPage->SetBorder(std::move(pBorder));
 
-		std::array<Utils::Color, 4> gradient;
-		gradient[0] = Utils::Color(0xFF, 0x40, 0x40, 0x40);
-		gradient[1] = Utils::Color(0xFF, 0x40, 0x40, 0x40);
-		gradient[2] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
-		gradient[3] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
+		std::array<D3DXCOLOR, 4> gradient;
+		gradient[0] = 0xFF404040;
+		gradient[1] = 0xFF404040;
+		gradient[2] = 0xFF101010;
+		gradient[3] = 0xFF101010;
 		pTabPage->SetGradientColors(std::move(gradient));
 		return pTabPage;
 	}

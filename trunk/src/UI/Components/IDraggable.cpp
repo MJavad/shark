@@ -40,8 +40,7 @@ namespace Components {
 			break;
 
 		case WM_MOUSEMOVE:
-			if (!sWndProc.LastMessageHandled &&
-				IsDragged() && GetInterface()->ClipStack.PtInClipArea(vPosition) &&
+			if (IsDragged() && GetInterface()->ClipStack.PtInClipArea(vPosition) &&
 				!OnDragMoveEventNotify(&vPosition)) {
 				vPosition -= s_dragVector;
 				auto pParent = GetUIParent();

@@ -10,9 +10,8 @@ namespace Components {
 		pButton->SetCaption(Label::Create(std::move(swText), DT_VCENTER | DT_CENTER));
 
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
-		float4 fInvisible = {0.0f, 0.0f, 0.0f, 0.0f};
-		pBorder->SetColor(Utils::Color(0xFF, 0x40, 0xB0, 0xFF));
-		pBorder->SetColorMod(fInvisible);
+		pBorder->SetColor(0xFF40B0FF);
+		pBorder->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 		pBorder->SetHorizontalRounding(fHorizontalRounding);
 		pBorder->SetVerticalRounding(fVerticalRounding);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
@@ -23,11 +22,11 @@ namespace Components {
 		pButton->SetHorizontalRounding(fHorizontalRounding);
 		pButton->SetVerticalRounding(fVerticalRounding);
 
-		std::array<Utils::Color, 4> gradient;
-		gradient[0] = Utils::Color(0xFF, 0x40, 0x40, 0x40);
-		gradient[1] = Utils::Color(0xFF, 0x40, 0x40, 0x40);
-		gradient[2] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
-		gradient[3] = Utils::Color(0xFF, 0x10, 0x10, 0x10);
+		std::array<D3DXCOLOR, 4> gradient;
+		gradient[0] = 0xFF404040;
+		gradient[1] = 0xFF404040;
+		gradient[2] = 0xFF101010;
+		gradient[3] = 0xFF101010;
 		pButton->SetGradientColors(std::move(gradient));
 		return pButton;
 	}
@@ -108,8 +107,7 @@ namespace Components {
 	}
 
 	void Button::OnPushEventNotify(Utils::Vector2 *pvPosition) {
-		float4 fPressed = {1.4f, 0.80f, 0.80f, 0.80f};
-		FadeTo(75, fPressed);
+		FadeTo(75, D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.4f));
 		Focus();
 
 		IPushable::OnPushEventNotify(pvPosition);
@@ -123,9 +121,7 @@ namespace Components {
 	}
 
 	void Button::OnReleaseEventNotify(Utils::Vector2 *pvPosition) {
-		float4 fOrig = {1.0f, 1.0f, 1.0f, 1.0f};
-		FadeTo(100, fOrig);
-
+		FadeTo(100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		IPushable::OnReleaseEventNotify(pvPosition);
 	}
 
@@ -133,20 +129,16 @@ namespace Components {
 		const auto pBorder = GetBorder();
 		bool result = IFocusable::OnFocusStartEventNotify();
 
-		if (!result && pBorder != nullptr) {
-			float4 fFocused = {1.0f, 1.0f, 1.0f, 1.0f};
-			pBorder->FadeTo(100, fFocused);
-		}
+		if (!result && pBorder != nullptr)
+			pBorder->FadeTo(100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 		return result;
 	}
 
 	void Button::OnFocusEndEventNotify() {
 		const auto pBorder = GetBorder();
-		if (pBorder != nullptr) {
-			float4 fOrig = {0.0f, 0.0f, 0.0f, 0.0f};
-			pBorder->FadeTo(300, fOrig);
-		}
+		if (pBorder != nullptr)
+			pBorder->FadeTo(300, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 
 		IFocusable::OnFocusEndEventNotify();
 	}

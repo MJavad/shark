@@ -10,7 +10,7 @@ namespace UI {
 	}
 
 	void D3DSprite9::Draw(const std::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,
-		const Utils::Vector3 *pCenter, const Utils::Vector3 *pPosition, const Utils::Color &color) const {
+		const Utils::Vector3 *pCenter, const Utils::Vector3 *pPosition, const D3DXCOLOR &color) const {
 		if (m_d3dxSprite != nullptr) {
 			CComPtr<IDirect3DTexture9> pD3DTexture9 = nullptr;
 			const auto pTexture9 = std::dynamic_pointer_cast<const D3DTextureObject9>(pTexture->GetObject());

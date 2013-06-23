@@ -23,17 +23,16 @@ namespace Components {
 		void ClearHover() {
 			if (m_isHovered) {
 				m_isHovered = false;
-				float4 fOrig = {1.0f, 1.0f, 1.0f, 1.0f};
-				FadeTo(400, fOrig);
+				FadeTo(400, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 		}
 		
-		float4 GetHoverColor() const {
+		D3DXCOLOR GetHoverColor() const {
 			return m_hoverColor;
 		}
 
-		void SetHoverColor(const float4 &fHoverColor) {
-			m_hoverColor = fHoverColor;
+		void SetHoverColor(const D3DXCOLOR &hoverColor) {
+			m_hoverColor = hoverColor;
 		}
 
 		// returning true = no hover
@@ -41,10 +40,9 @@ namespace Components {
 		Utils::Event<bool (const std::shared_ptr<IHoverable>&)> OnHoverEndEvent;
 
 	protected:
-		IHoverable() : m_isHovered(false) {
-			m_hoverColor._1 = 1.4f; m_hoverColor._2 = 1.5f;
-			m_hoverColor._3 = 1.5f; m_hoverColor._4 = 1.5f;
-		}
+		IHoverable() :
+			m_isHovered(false),
+			m_hoverColor(1.5f, 1.5f, 1.5f, 1.4f) {}
 
 		virtual bool OnHoverStartEventNotify() {
 			return OnHoverStartEvent(get_this<IHoverable>());
@@ -56,7 +54,7 @@ namespace Components {
 
 	private:
 		bool m_isHovered;
-		float4 m_hoverColor;
+		D3DXCOLOR m_hoverColor;
 	};
 }
 }

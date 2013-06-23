@@ -30,7 +30,7 @@ namespace Components {
 			pSprite->SetTransform(nullptr);
 		}
 		else {
-			std::array<Utils::Color, 4> gradient;
+			std::array<D3DXCOLOR, 4> gradient;
 			gradient.fill(GetModifiedColor(GetColor()));
 			const auto dimensions = IRenderTarget::MakeDimension(GetWidth(), GetHeight());
 			sD3DMgr.GetRenderTarget()->DrawSprite(vScreen, pTexture, dimensions, gradient);

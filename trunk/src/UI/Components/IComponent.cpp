@@ -7,12 +7,9 @@ namespace UI {
 namespace Components {
 	IComponent::IComponent(): m_isVisible(true),
 							  m_fadeActive(false),
-							  m_prevFade(false)
-	{
-		m_colorMod._1 = 1.0f; m_colorMod._2 = 1.0f;
-		m_colorMod._3 = 1.0f; m_colorMod._4 = 1.0f;
-
-		// register for update...
+							  m_prevFade(false),
+							  m_colorMod(1.0f, 1.0f, 1.0f, 1.0f)
+	{	// register for update...
 		m_updateDelegate = sD3DMgr.OnUpdateEvent +=
 		[this] (uint32 uTimePassed) {
 			OnUpdate(uTimePassed);
@@ -26,19 +23,17 @@ namespace Components {
 	void IComponent::OnUpdate(uint32 uTimePassed) {
 		if (m_fadeActive) {
 			if (m_fadeTimePassed < m_fadeTime) {
-				float4 colorMod = {0};
-				colorMod._1 = ((m_fadeTo._1 - m_fadeSrc._1) * 1000.0f) / m_fadeTime * m_fadeTimePassed / 1000.0f + m_fadeSrc._1;
-				colorMod._2 = ((m_fadeTo._2 - m_fadeSrc._2) * 1000.0f) / m_fadeTime * m_fadeTimePassed / 1000.0f + m_fadeSrc._2;
-				colorMod._3 = ((m_fadeTo._3 - m_fadeSrc._3) * 1000.0f) / m_fadeTime * m_fadeTimePassed / 1000.0f + m_fadeSrc._3;
-				colorMod._4 = ((m_fadeTo._4 - m_fadeSrc._4) * 1000.0f) / m_fadeTime * m_fadeTimePassed / 1000.0f + m_fadeSrc._4;
-				SetColorMod(colorMod);
+				float fadeTime = static_cast<float>(m_fadeTime);
+				float fadeTimePassed = static_cast<float>(m_fadeTimePassed);
+				D3DXCOLOR colorChange = ((m_fadeTo - m_fadeSrc) * 1000.0f) / fadeTime;
+				SetColorMod((colorChange * fadeTimePassed) / 1000.0f + m_fadeSrc);
 			}
 			else {
 				m_fadeActive = false;
 				SetColorMod(m_fadeTo);
 			}
 
-			m_isVisible = (m_colorMod._1 > 0.0f);
+			m_isVisible = (m_colorMod.a > 0.0f);
 			m_fadeTimePassed += uTimePassed;
 		}
 	}
@@ -99,26 +94,21 @@ namespace Components {
 		return false;
 	}
 
-	Utils::Color IComponent::GetModifiedColor(const Utils::Color &color) const {
-		Utils::Color result(color);
+	D3DXCOLOR IComponent::GetModifiedColor(const D3DXCOLOR &color) const {
+		D3DXCOLOR result(color);
 		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent()) {
-			float4 colorMod = pParent->GetColorMod();
-			uint32 currA = uint32(result.A * colorMod._1);
-			uint32 currR = uint32(result.R * colorMod._2);
-			uint32 currG = uint32(result.G * colorMod._3);
-			uint32 currB = uint32(result.B * colorMod._4);
-
-			(currA & ~0xFF) != 0 ? result.A = 0xFF : result.A = (currA & 0xFF);
-			(currR & ~0xFF) != 0 ? result.R = 0xFF : result.R = (currR & 0xFF);
-			(currG & ~0xFF) != 0 ? result.G = 0xFF : result.G = (currG & 0xFF);
-			(currB & ~0xFF) != 0 ? result.B = 0xFF : result.B = (currB & 0xFF);
+			const auto colorMod = pParent->GetColorMod();
+			result.a *= colorMod.a;
+			result.r *= colorMod.r;
+			result.g *= colorMod.g;
+			result.b *= colorMod.b;
 		}
 
 		return result;
 	}
 
-	std::array<Utils::Color, 4> IComponent::GetModifiedColor(const std::array<Utils::Color, 4> &gradient) const {
-		std::array<Utils::Color, 4> result;
+	std::array<D3DXCOLOR, 4> IComponent::GetModifiedColor(const std::array<D3DXCOLOR, 4> &gradient) const {
+		std::array<D3DXCOLOR, 4> result;
 		result[0] = GetModifiedColor(gradient[0]);
 		result[1] = GetModifiedColor(gradient[1]);
 		result[2] = GetModifiedColor(gradient[2]);
@@ -126,7 +116,7 @@ namespace Components {
 		return result;
 	}
 
-	void IComponent::FadeTo(uint32 uFadeTime, const float4 &fadeColor) {
+	void IComponent::FadeTo(uint32 uFadeTime, const D3DXCOLOR &fadeColor) {
 		m_fadeActive = true;
 		m_prevFade = true;
 		m_fadeTimePassed = 0;
@@ -139,7 +129,7 @@ namespace Components {
 		if (!m_prevFade)
 			return;
 
-		float4 temp = m_fadeTo;
+		D3DXCOLOR temp(m_fadeTo);
 		m_fadeTo = m_fadeSrc;
 		m_fadeSrc = temp;
 		m_fadeActive = true;
@@ -147,26 +137,24 @@ namespace Components {
 	}
 
 	void IComponent::Hide(uint32 time) {
-		float4 fInvis = {0.0f, 1.0f, 1.0f, 1.0f};
-		FadeTo(time, fInvis);
+		FadeTo(time, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 	}
 
 	void IComponent::Show(uint32 time) {
-		float4 visible = {1.0f, 1.0f, 1.0f, 1.0f};
-		float4 highlight = {1.1f, 1.25f, 1.25f, 1.45f};
-		float4 colorMod = GetColorMod();
+		D3DXCOLOR standard(1.0f, 1.0f, 1.0f, 1.0f);
+		D3DXCOLOR highlight(1.25f, 1.25f, 1.45f, 1.1f);
 
-		if (visible._1 == colorMod._1 && visible._2 == colorMod._2 &&
-			visible._3 == colorMod._3 && visible._4 == colorMod._4) {
+		if (GetColorMod() != standard)
+			FadeTo(time, standard);
+
+		else {
 			FadeTo(time, highlight);
-
-			sEngine.PulseTimer.AddTimer(time * 2, [=] (const Utils::STimerDispatchEvt&) {
-				this->FadeTo(uint32(time * 1.5f), visible);
-				return TIMER_STOP_EXECUTION;
-			});
+			sEngine.PulseTimer.AddTimer(time * 2, [=]
+				(const Utils::STimerDispatchEvt&) {
+					this->FadeTo(uint32(time * 1.5f), standard);
+					return TIMER_STOP_EXECUTION;
+				});
 		}
-		else
-			FadeTo(time, visible);
 	}
 }
 }

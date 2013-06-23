@@ -18,7 +18,7 @@ namespace UI {
 		D3DPOOL Pool;
 		uint32 Filter;
 		uint32 MipFilter;
-		Utils::Color ColorKey;
+		D3DXCOLOR ColorKey;
 	};
 
 	class ID3DTextureObject abstract

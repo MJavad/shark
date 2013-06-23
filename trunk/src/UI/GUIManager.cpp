@@ -104,9 +104,8 @@ namespace UI {
 
 		tabButton1->OnClickEvent += [testFrame2, editBox]
 			(const std::shared_ptr<IPushable>&, Utils::Vector2*) {
-				float4 fVisib = {1.0f, 1.0f, 1.0f, 1.0f};
-				testFrame2->SetColorMod(fVisib);
 				testFrame2->SetVisibility(true);
+				testFrame2->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 				editBox->Focus();
 				throw std::runtime_error("Testing...");
 			};
@@ -135,7 +134,7 @@ namespace UI {
 		sD3DMgr.PushInterface(mainInterface);
 	}
 
-	std::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float fWidth, float fHeight, const Utils::Color &color) const {
+	std::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float fWidth, float fHeight, const D3DXCOLOR &color) const {
 		const auto pFrame = Frame::Create(fWidth, fHeight);
 		pFrame->SetMinSize(Utils::Vector2(140.0f, 50.0f));
 		pFrame->SetMaxSize(Utils::Vector2(900.0f, 700.0f));
@@ -151,11 +150,11 @@ namespace UI {
 		pBackground->SetHorizontalRoundings(frameRoundings);
 		pFrame->PushChild(pBackground);
 
-		std::array<Utils::Color, 4> gradient;
-		gradient[0] = Utils::Color(0xFF, 0x50, 0x50, 0x50);
-		gradient[1] = Utils::Color(0xFF, 0x50, 0x50, 0x50);
-		gradient[2] = Utils::Color(0x50, 0x10, 0x10, 0x10);
-		gradient[3] = Utils::Color(0x50, 0x10, 0x10, 0x10);
+		std::array<D3DXCOLOR, 4> gradient;
+		gradient[0] = 0xFF505050;
+		gradient[1] = 0xFF505050;
+		gradient[2] = 0x50101010;
+		gradient[3] = 0x50101010;
 
 		const auto pHeaderBar = Rectangle::Create(fWidth, 25.0f);
 		pHeaderBar->SetGradientColors(std::move(gradient));
@@ -165,36 +164,35 @@ namespace UI {
 
 		const auto pWindowTitle = Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER, fWidth);
 		pWindowTitle->SetPosition(Utils::Vector2(0.0f, 5.0f));
-		pWindowTitle->SetColor(Utils::Color(0x90, 0xFF, 0xFF, 0xFF));
+		pWindowTitle->SetColor(0x90FFFFFF);
 		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, 0, FW_BOLD));
 		pFrame->PushChild(pWindowTitle);
 
 		const auto pBackgroundLineTop = Rectangle::Create(fWidth, 1.0f);
 		pBackgroundLineTop->SetPosition(Utils::Vector2(0.0f, 29.0f));
-		pBackgroundLineTop->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
+		pBackgroundLineTop->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineTop);
 
 		const auto pBackgroundLineLeft = Rectangle::Create(1.0f, fHeight - 31.0f);
 		pBackgroundLineLeft->SetPosition(Utils::Vector2(0.0f, 30.0f));
-		pBackgroundLineLeft->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
+		pBackgroundLineLeft->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineLeft);
 
 		const auto pBackgroundLineBottom = Rectangle::Create(fWidth - 1.0f, 1.0f);
 		pBackgroundLineBottom->SetPosition(Utils::Vector2(0.0f, fHeight - 1.0f));
-		pBackgroundLineBottom->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
+		pBackgroundLineBottom->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineBottom);
 
 		const auto pBackgroundLineRight = Rectangle::Create(1.0f, fHeight - 31.0f);
 		pBackgroundLineRight->SetPosition(Utils::Vector2(fWidth - 1.0f, 30.0f));
-		pBackgroundLineRight->SetColor(Utils::Color(0x90, 0x30, 0x30, 0x30));
+		pBackgroundLineRight->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineRight);
 
 		const auto pCloseButtonTexture = Texture::Create(sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\close.png"));
 		const auto pCloseButtonTextureHover = Texture::Create(sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\close_hover.png"));
 
-		float4 fInvisible = {0.0f, 1.0f, 1.0f, 1.0f};
 		pCloseButtonTextureHover->SetVisibility(false);
-		pCloseButtonTextureHover->SetColorMod(fInvisible);
+		pCloseButtonTextureHover->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 
 		const auto pCloseButton = std::make_shared<Button>();
 		pCloseButton->SetPosition(Utils::Vector2(fWidth - 27.0f, 2.0f));
@@ -203,10 +201,8 @@ namespace UI {
 		pCloseButton->SetHeight(23);
 		pCloseButton->AddTexture(pCloseButtonTexture);
 		pCloseButton->AddTexture(pCloseButtonTextureHover);
+		pCloseButton->SetHoverColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		pFrame->PushChild(pCloseButton);
-
-		float4 fHoverColor = {1.0f, 1.0f, 1.0f, 1.0f};
-		pCloseButton->SetHoverColor(fHoverColor);
 
 		// Register default events for frames...
 
@@ -284,7 +280,7 @@ namespace UI {
 		pFrame->OnFrameHighlightStartEvent += [pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight]
 			(const std::shared_ptr<Frame>&) {
-				float4 fadeIn = {1.0f, 0.6f, 1.3f, 1.6f};
+				D3DXCOLOR fadeIn(0.6f, 1.3f, 1.6f, 1.0f);
 				pHeaderBar->FadeTo(200, fadeIn);
 				pBackgroundLineTop->FadeTo(200, fadeIn);
 				pBackgroundLineLeft->FadeTo(200, fadeIn);
@@ -295,7 +291,7 @@ namespace UI {
 		pFrame->OnFrameHighlightEndEvent += [pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight]
 			(const std::shared_ptr<Frame>&) {
-				float4 fadeOut = {1.0f, 1.0f, 1.0f, 1.0f};
+				D3DXCOLOR fadeOut(1.0f, 1.0f, 1.0f, 1.0f);
 				pHeaderBar->FadeTo(200, fadeOut);
 				pBackgroundLineTop->FadeTo(200, fadeOut);
 				pBackgroundLineLeft->FadeTo(200, fadeOut);

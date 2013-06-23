@@ -17,14 +17,14 @@ namespace Components {
 		std::list<std::shared_ptr<const IComponent>> GetUIHierarchy() const;
 		std::shared_ptr<ComponentInterface> GetInterface() const;
 		Utils::Vector2 GetScreenPosition() const;
-		Utils::Color GetModifiedColor(const Utils::Color &color) const;
-		std::array<Utils::Color, 4> GetModifiedColor(const std::array<Utils::Color, 4> &gradient) const;
+		D3DXCOLOR GetModifiedColor(const D3DXCOLOR &color) const;
+		std::array<D3DXCOLOR, 4> GetModifiedColor(const std::array<D3DXCOLOR, 4> &gradient) const;
 
 		bool IsVisible() const;
 		bool HasParent(const std::shared_ptr<const IComponent> &pParent) const;
 
 		void StopFade() { m_fadeActive = false; }
-		void FadeTo(uint32 uFadeTime, const float4 &fadeColor);
+		void FadeTo(uint32 uFadeTime, const D3DXCOLOR &fadeColor);
 		void UndoFade();
 
 		virtual void Hide(uint32 time = 200);
@@ -54,12 +54,12 @@ namespace Components {
 			m_childOffset = vOffset;
 		}
 
-		virtual float4 GetColorMod() const {
+		virtual D3DXCOLOR GetColorMod() const {
 			return m_colorMod;
 		}
 
-		virtual void SetColorMod(const float4 &fColorMod) {
-			m_colorMod = fColorMod;
+		virtual void SetColorMod(const D3DXCOLOR &colorMod) {
+			m_colorMod = colorMod;
 		}
 
 		virtual std::shared_ptr<IComponent> GetUIParent() const {
@@ -108,11 +108,11 @@ namespace Components {
 
 	private:
 		bool m_isVisible;
-		float4 m_colorMod;
+		D3DXCOLOR m_colorMod;
 
 		bool m_fadeActive, m_prevFade;
 		uint32 m_fadeTime, m_fadeTimePassed;
-		float4 m_fadeTo, m_fadeSrc;
+		D3DXCOLOR m_fadeTo, m_fadeSrc;
 
 		Utils::Vector2 m_position, m_childOffset;
 

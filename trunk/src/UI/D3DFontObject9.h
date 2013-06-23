@@ -18,10 +18,10 @@ namespace UI {
 		}
 
 		virtual void DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring swText,
-			RECT &screenRect, uint32 dwFlags, const Utils::Color &color) const;
+			RECT &screenRect, uint32 dwFlags, const D3DXCOLOR &color) const;
 
 		virtual RECT GetTextExtent(std::wstring swText, RECT rect, uint32 dwFlags) const {
-			DrawText(nullptr, std::move(swText), rect, dwFlags | DT_CALCRECT, 0);
+			DrawText(nullptr, std::move(swText), rect, dwFlags | DT_CALCRECT, D3DXCOLOR());
 			return rect;
 		}
 

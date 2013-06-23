@@ -57,8 +57,8 @@ namespace Components {
 				pRenderTarget->SetClippingArea(&newClipRect);
 			}
 
-			std::array<Utils::Color, 4> gradient;
-			gradient.fill(GetModifiedColor(Utils::Color(0xAA, 0x00, 0x00, 0x00)));
+			std::array<D3DXCOLOR, 4> gradient;
+			gradient.fill(GetModifiedColor(0xAA000000));
 
 			pRenderTarget->DrawBlurredSprite(
 				vPosition + m_shadowDirection,
@@ -73,8 +73,7 @@ namespace Components {
 			if (pSprite != nullptr) {
 				Utils::Vector3 vPosition3 = vPosition;
 				pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-				pSprite->Draw(m_shadowTexture, nullptr, nullptr, &vPosition3,
-					GetModifiedColor(Utils::Color(0xFF, 0xFF, 0xFF, 0xFF)));
+				pSprite->Draw(m_shadowTexture, nullptr, nullptr, &vPosition3, GetModifiedColor(0xFFFFFFFF));
 				pSprite->End();
 			}
 		}

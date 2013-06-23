@@ -23,7 +23,7 @@ namespace UI {
 		virtual void OnResetDevice() const {}
 
 		virtual void DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring swText,
-			RECT &screenRect, uint32 dwFlags, const Utils::Color &color) const = 0;
+			RECT &screenRect, uint32 dwFlags, const D3DXCOLOR &color) const = 0;
 
 		virtual RECT GetTextExtent(std::wstring swText, RECT rect, uint32 flags) const = 0;
 		virtual RECT CalcTextRect(std::wstring swText, uint32 begin, uint32 end, RECT rect) const = 0;

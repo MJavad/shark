@@ -14,7 +14,7 @@ namespace UI {
 		virtual void OnResetDevice() const {}
 		virtual void Begin(uint32 dwFlags) {}
 		virtual void Draw(const std::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,
-			const Utils::Vector3 *pCenter, const Utils::Vector3 *pPosition, const Utils::Color &color) const = 0;
+			const Utils::Vector3 *pCenter, const Utils::Vector3 *pPosition, const D3DXCOLOR &color) const = 0;
 		virtual void End() {}
 
 		virtual void SetTransform(const D3DXMATRIX *pMatrix) {
