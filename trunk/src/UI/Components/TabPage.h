@@ -27,17 +27,17 @@ namespace Components {
 		}
 
 	protected:
-		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
-		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
+		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition);
 
-		virtual bool OnFocusStartEventNotify() {
+		virtual bool _notifyFocusStartEvent() {
 			FadeTo(200, GetHoverColor());
-			return IFocusable::OnFocusStartEventNotify();
+			return IFocusable::_notifyFocusStartEvent();
 		}
 
-		virtual void OnFocusEndEventNotify() {
+		virtual void _notifyFocusEndEvent() {
 			FadeTo(200, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			return IFocusable::OnFocusEndEventNotify();
+			return IFocusable::_notifyFocusEndEvent();
 		}
 
 	private:

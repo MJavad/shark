@@ -44,11 +44,11 @@ namespace Components {
 			m_isHovered(false),
 			m_hoverColor(1.5f, 1.5f, 1.5f, 1.4f) {}
 
-		virtual bool OnHoverStartEventNotify() {
+		virtual bool _notifyHoverStartEvent() {
 			return OnHoverStartEvent(get_this<IHoverable>());
 		}
 
-		virtual bool OnHoverEndEventNotify() {
+		virtual bool _notifyHoverEndEvent() {
 			return OnHoverEndEvent(get_this<IHoverable>());
 		}
 

@@ -19,15 +19,15 @@ namespace Components {
 	protected:
 		IPushable() : m_isClicking(false) {}
 
-		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition) {
+		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition) {
 			OnClickEvent(get_this<IPushable>(), pvPosition);
 		}
 
-		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition) {
+		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition) {
 			OnPushEvent(get_this<IPushable>(), pvPosition);
 		}
 
-		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition) {
+		virtual void _notifyReleaseEvent(Utils::Vector2 *pvPosition) {
 			OnReleaseEvent(get_this<IPushable>(), pvPosition);
 		}
 

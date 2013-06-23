@@ -37,15 +37,15 @@ namespace Components {
 		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragMoveEvent;
 
 	protected:
-		virtual bool OnDragStartEventNotify(Utils::Vector2 *pvPosition) {
+		virtual bool _notifyDragStartEvent(Utils::Vector2 *pvPosition) {
 			return OnDragStartEvent(get_this<IDraggable>(), pvPosition);
 		}
 
-		virtual bool OnDragEndEventNotify(Utils::Vector2 *pvPosition) {
+		virtual bool _notifyDragEndEvent(Utils::Vector2 *pvPosition) {
 			return OnDragEndEvent(get_this<IDraggable>(), pvPosition);
 		}
 
-		virtual bool OnDragMoveEventNotify(Utils::Vector2 *pvPosition) {
+		virtual bool _notifyDragMoveEvent(Utils::Vector2 *pvPosition) {
 			return OnDragMoveEvent(get_this<IDraggable>(), pvPosition);
 		}
 

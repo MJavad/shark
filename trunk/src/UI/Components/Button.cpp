@@ -62,7 +62,7 @@ namespace Components {
 			case WM_CHAR:
 				if (wParam == VK_SPACE &&
 					!sWndProc.LastMessageHandled) {
-					OnClickEventNotify(nullptr);
+					_notifyClickEvent(nullptr);
 					sWndProc.LastMessageHandled = true;
 				}
 				break;
@@ -106,28 +106,28 @@ namespace Components {
 			pBorder->SetHeight(fHeight + 2);
 	}
 
-	void Button::OnPushEventNotify(Utils::Vector2 *pvPosition) {
+	void Button::_notifyPushEvent(Utils::Vector2 *pvPosition) {
 		FadeTo(75, D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.4f));
 		Focus();
 
-		IPushable::OnPushEventNotify(pvPosition);
+		IPushable::_notifyPushEvent(pvPosition);
 	}
 
-	void Button::OnClickEventNotify(Utils::Vector2 *pvPosition) {
+	void Button::_notifyClickEvent(Utils::Vector2 *pvPosition) {
 		if (IsHovered())
 			FadeTo(100, GetHoverColor());
 
-		IPushable::OnClickEventNotify(pvPosition);
+		IPushable::_notifyClickEvent(pvPosition);
 	}
 
-	void Button::OnReleaseEventNotify(Utils::Vector2 *pvPosition) {
+	void Button::_notifyReleaseEvent(Utils::Vector2 *pvPosition) {
 		FadeTo(100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		IPushable::OnReleaseEventNotify(pvPosition);
+		IPushable::_notifyReleaseEvent(pvPosition);
 	}
 
-	bool Button::OnFocusStartEventNotify() {
+	bool Button::_notifyFocusStartEvent() {
 		const auto pBorder = GetBorder();
-		bool result = IFocusable::OnFocusStartEventNotify();
+		bool result = IFocusable::_notifyFocusStartEvent();
 
 		if (!result && pBorder != nullptr)
 			pBorder->FadeTo(100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
@@ -135,12 +135,12 @@ namespace Components {
 		return result;
 	}
 
-	void Button::OnFocusEndEventNotify() {
+	void Button::_notifyFocusEndEvent() {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
 			pBorder->FadeTo(300, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 
-		IFocusable::OnFocusEndEventNotify();
+		IFocusable::_notifyFocusEndEvent();
 	}
 }
 }

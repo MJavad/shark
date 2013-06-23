@@ -86,15 +86,15 @@ namespace Components {
 	protected:
 		ISizable();
 
-		virtual bool OnResizeStartEventNotify(Utils::Vector2 *pvPosition) {
+		virtual bool _notifyResizeStartEvent(Utils::Vector2 *pvPosition) {
 			return OnResizeStartEvent(get_this<ISizable>(), pvPosition);
 		}
 
-		virtual bool OnResizeEndEventNotify(Utils::Vector2 *pvPosition) {
+		virtual bool _notifyResizeEndEvent(Utils::Vector2 *pvPosition) {
 			return OnResizeEndEvent(get_this<ISizable>(), pvPosition);
 		}
 
-		virtual bool OnResizeEventNotify(float fWidth, float fHeight) {
+		virtual bool _notifyResizeEvent(float fWidth, float fHeight) {
 			return OnResizeEvent(get_this<ISizable>(), fWidth, fHeight);
 		}
 

@@ -16,12 +16,12 @@ namespace Components {
 			if (IsFocused())
 				return true;
 
-			const auto pActiveFocus = GetActiveFocus();
-			if (pActiveFocus != nullptr)
-				pActiveFocus->OnFocusEndEventNotify();
+			const auto activeFocus = GetActiveFocus();
+			if (activeFocus != nullptr)
+				activeFocus->_notifyFocusEndEvent();
 
 			s_activeFocus = get_this<IFocusable>();
-			return !OnFocusStartEventNotify();
+			return !_notifyFocusStartEvent();
 		}
 
 		virtual void Unfocus() {
@@ -29,7 +29,7 @@ namespace Components {
 				return;
 
 			s_activeFocus.reset();
-			OnFocusEndEventNotify();
+			_notifyFocusEndEvent();
 		}
 
 		static std::shared_ptr<IFocusable> GetActiveFocus() {
@@ -51,11 +51,11 @@ namespace Components {
 		Utils::Event<void (const std::shared_ptr<IFocusable>&)> OnFocusEndEvent;
 
 	protected:
-		virtual bool OnFocusStartEventNotify() {
+		virtual bool _notifyFocusStartEvent() {
 			return OnFocusStartEvent(get_this<IFocusable>());
 		}
 
-		virtual void OnFocusEndEventNotify() {
+		virtual void _notifyFocusEndEvent() {
 			OnFocusEndEvent(get_this<IFocusable>());
 		}
 

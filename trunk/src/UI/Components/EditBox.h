@@ -9,7 +9,7 @@ namespace Components {
 	class EditBox : public Rectangle, public IFocusable, public IPushable
 	{
 	public:
-		EditBox() : m_scrollPosition(0) {}
+		EditBox() : m_scrollPosition(0.0f), m_maxLength(80) {}
 
 		static std::shared_ptr<EditBox> Create(float fWidth = 200.0f, float fHeight = 25.0f,
 			float fHorizontalRounding = 6.0f, float fVerticalRounding = 3.0f);
@@ -44,31 +44,82 @@ namespace Components {
 				m_border->SetUIParent(shared_from_this());
 		}
 
-		void InsertText(std::wstring swText);
-		void EraseText(uint32 numChars);
+		std::wstring GetCurrentSelection() const;
+
+		Utils::Event<void (const std::shared_ptr<EditBox>&)> OnContentChangedEvent;
 
 	protected:
-		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
-		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
-		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition);
+		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyReleaseEvent(Utils::Vector2 *pvPosition);
 
-		virtual bool OnFocusStartEventNotify();
-		virtual void OnFocusEndEventNotify();
+		virtual bool _notifyFocusStartEvent();
+		virtual void _notifyFocusEndEvent();
+
+		virtual void _notifyContentChangedEvent() {
+			OnContentChangedEvent(get_this<EditBox>());
+		}
 
 	private:
 		static bool s_renderCaret;
 		static uint32 s_caretPosition;
 		static uint32 s_caretTimer;
+
 		static bool s_activeSelection;
 		static bool s_swapSelection;
+		static uint32 s_selectPosition1, s_selectPosition2;
 
-		int32 m_scrollPosition;
+		uint32 m_maxLength;
+		float m_scrollPosition;
 		std::shared_ptr<Label> m_content;
 		std::shared_ptr<Rectangle> m_border;
 
 		void _onChar(wchar_t c);
 		void _onKeyDown(int key);
 		void _onMouseMove(const Utils::Vector2 &vPosition);
+
+		static void _resetCaret() {
+			s_renderCaret = true;
+			s_caretTimer = timeGetTime();
+		}
+
+		static void _clearSelection() {
+			s_swapSelection = false;
+			s_selectPosition1 = s_caretPosition;
+			s_selectPosition2 = s_caretPosition;
+		}
+
+		static uint32 _getSelectionCount() {
+			return labs(s_selectPosition1 - s_selectPosition2);
+		}
+
+		bool _hasSelection() const {
+			return IsFocused() && s_selectPosition1 != s_selectPosition2;
+		}
+
+		void _eraseSelection() {
+			uint32 numChars = _getSelectionCount();
+			uint32 writePosition = _getWritePosition();
+			_clearSelection();
+			_eraseText(writePosition, numChars);
+			_placeCaret(writePosition);
+		}
+
+		uint32 _getWritePosition() const {
+			if (!_hasSelection())
+				return s_caretPosition;
+
+			return min(s_selectPosition1, s_selectPosition2);
+		}
+
+		bool _scrollTo(uint32 position);
+		void _placeCaret(uint32 position, bool select = false);
+
+		uint32 _insertText(std::wstring swText);
+		uint32 _insertText(uint32 insertPosition, std::wstring swText);
+
+		uint32 _eraseText(uint32 numChars);
+		uint32 _eraseText(uint32 erasePosition, uint32 numChars);
 	};
 }
 }

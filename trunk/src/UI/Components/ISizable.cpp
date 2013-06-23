@@ -32,7 +32,7 @@ namespace Components {
 
 	void ISizable::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		if (!IsVisible()) {
-			if (IsSizing() && !OnResizeEndEventNotify(nullptr))
+			if (IsSizing() && !_notifyResizeEndEvent(nullptr))
 				ResetActiveSizer();
 
 			return;
@@ -50,7 +50,7 @@ namespace Components {
 				vSize.y += GetHeight();
 
 				if (!IsSizing() && PtInSizerRect(vPosition) &&
-					!OnResizeStartEventNotify(&vPosition))
+					!_notifyResizeStartEvent(&vPosition))
 					StartSizing(vSize - vPosition);
 
 				sWndProc.LastMessageHandled |= IsSizing();
@@ -59,7 +59,7 @@ namespace Components {
 
 		case WM_LBUTTONUP:
 			if (IsSizing()) {
-				if (!OnResizeEndEventNotify(&vPosition)) {
+				if (!_notifyResizeEndEvent(&vPosition)) {
 					ResetActiveSizer();
 					m_isHovered = PtInSizerRect(vPosition);
 				}
@@ -95,7 +95,7 @@ namespace Components {
 				if (vSize.y < 0.0f)
 					vSize.y = 0.0f;
 
-				if (!OnResizeEventNotify(vSize.x, vSize.y)) {
+				if (!_notifyResizeEvent(vSize.x, vSize.y)) {
 					SetWidth(vSize.x);
 					SetHeight(vSize.y);
 				}

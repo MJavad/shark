@@ -70,20 +70,20 @@ namespace Components {
 		}
 
 	protected:
-		virtual void OnPushEventNotify(Utils::Vector2 *pvPosition);
-		virtual void OnClickEventNotify(Utils::Vector2 *pvPosition);
-		virtual void OnReleaseEventNotify(Utils::Vector2 *pvPosition);
+		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyReleaseEvent(Utils::Vector2 *pvPosition);
 
-		virtual bool OnHoverStartEventNotify() {
-			return IHoverable::OnHoverStartEventNotify() || IsPressed();
+		virtual bool _notifyHoverStartEvent() {
+			return IHoverable::_notifyHoverStartEvent() || IsPressed();
 		}
 
-		virtual bool OnHoverEndEventNotify() {
-			return IHoverable::OnHoverEndEventNotify() || IsPressed();
+		virtual bool _notifyHoverEndEvent() {
+			return IHoverable::_notifyHoverEndEvent() || IsPressed();
 		}
 
-		virtual bool OnFocusStartEventNotify();
-		virtual void OnFocusEndEventNotify();
+		virtual bool _notifyFocusStartEvent();
+		virtual void _notifyFocusEndEvent();
 
 	private:
 		bool m_renderRect;

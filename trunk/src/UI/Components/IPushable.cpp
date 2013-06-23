@@ -12,7 +12,7 @@ namespace Components {
 		case WM_LBUTTONDOWN:
 			if (!m_isClicking && !sWndProc.LastMessageHandled &&
 				PtInBoundingRect(vPosition)) {
-				OnPushEventNotify(&vPosition);
+				_notifyPushEvent(&vPosition);
 				m_isClicking = true;
 				sWndProc.LastMessageHandled = true;
 			}
@@ -20,10 +20,10 @@ namespace Components {
 
 		case WM_LBUTTONUP:
 			if (m_isClicking) {
-				OnReleaseEventNotify(&vPosition);
+				_notifyReleaseEvent(&vPosition);
 				if (!sWndProc.LastMessageHandled &&
 					PtInBoundingRect(vPosition))
-					OnClickEventNotify(&vPosition);
+					_notifyClickEvent(&vPosition);
 
 				m_isClicking = false;
 				sWndProc.LastMessageHandled = true;

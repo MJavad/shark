@@ -19,7 +19,7 @@ namespace Components {
 		void CreateCachedFontBatch();
 		void RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const;
 
-		virtual std::wstring GetText() const {
+		virtual const std::wstring& GetText() const {
 			return m_text;
 		}
 

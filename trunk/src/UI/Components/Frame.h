@@ -28,7 +28,7 @@ namespace Components {
 			m_sizable = bSizable;
 
 			if (IsSizing()) {
-				OnResizeEndEventNotify(nullptr);
+				_notifyResizeEndEvent(nullptr);
 				ResetActiveSizer();
 			}
 		}
