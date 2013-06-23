@@ -58,7 +58,7 @@ namespace Components {
 			}
 
 			std::array<D3DXCOLOR, 4> gradient;
-			gradient.fill(GetModifiedColor(0xAA000000));
+			gradient.fill(CalculateAbsoluteColor(0xAA000000));
 
 			pRenderTarget->DrawBlurredSprite(
 				vPosition + m_shadowDirection,
@@ -73,14 +73,14 @@ namespace Components {
 			if (pSprite != nullptr) {
 				Utils::Vector3 vPosition3 = vPosition;
 				pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-				pSprite->Draw(m_shadowTexture, nullptr, nullptr, &vPosition3, GetModifiedColor(0xFFFFFFFF));
+				pSprite->Draw(m_shadowTexture, nullptr, nullptr, &vPosition3, CalculateAbsoluteColor(0xFFFFFFFF));
 				pSprite->End();
 			}
 		}
 		else {
 			float4 horizRounding = GetHorizontalRoundings();
 			float4 vertRounding = GetVerticalRoundings();
-			const auto gradient = GetModifiedColor(GetGradientColors());
+			const auto gradient = CalculateAbsoluteColor(GetGradientColors());
 
 			if (((horizRounding._1 != 0.0f && vertRounding._1 != 0.0f) ||
 				 (horizRounding._2 != 0.0f && vertRounding._2 != 0.0f) ||

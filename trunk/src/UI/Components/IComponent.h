@@ -17,8 +17,8 @@ namespace Components {
 		std::list<std::shared_ptr<const IComponent>> GetUIHierarchy() const;
 		std::shared_ptr<ComponentInterface> GetInterface() const;
 		Utils::Vector2 GetScreenPosition() const;
-		D3DXCOLOR GetModifiedColor(const D3DXCOLOR &color) const;
-		std::array<D3DXCOLOR, 4> GetModifiedColor(const std::array<D3DXCOLOR, 4> &gradient) const;
+		D3DXCOLOR CalculateAbsoluteColor(const D3DXCOLOR &color) const;
+		std::array<D3DXCOLOR, 4> CalculateAbsoluteColor(const std::array<D3DXCOLOR, 4> &gradient) const;
 
 		bool IsVisible() const;
 		bool HasParent(const std::shared_ptr<const IComponent> &pParent) const;

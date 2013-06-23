@@ -11,7 +11,7 @@ namespace Components {
 	public:
 		ListBoxEntry() : m_isSelected(false) {}
 		
-		static std::shared_ptr<ListBoxEntry> Create(std::wstring swText = L"");
+		static std::shared_ptr<ListBoxEntry> Create(std::wstring swText = std::wstring());
 
 		virtual void OnRender(uint32 uTimePassed);
 		void RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const;
@@ -23,13 +23,13 @@ namespace Components {
 		virtual void SetColor(const D3DXCOLOR &color) {
 			Rectangle::SetColor(color);
 			m_isSelected ? m_selectedColors.fill(color):
-							m_deselectedColors.fill(color);
+						   m_deselectedColors.fill(color);
 		}
 		
 		virtual void SetGradientColors(const std::array<D3DXCOLOR, 4> &gradient) {
 			Rectangle::SetGradientColors(gradient);
 			m_isSelected ? m_selectedColors = gradient :
-							m_deselectedColors = gradient;
+						   m_deselectedColors = gradient;
 		}
 
 		virtual void SetSelectedColor(const D3DXCOLOR &color) {
@@ -62,8 +62,7 @@ namespace Components {
 
 		virtual void SetSelected(bool bSelected) {
 			m_isSelected = bSelected;
-			Rectangle::SetGradientColors(m_isSelected ?
-							m_selectedColors : m_deselectedColors);
+			Rectangle::SetGradientColors(m_isSelected ? m_selectedColors : m_deselectedColors);
 		}
 
 		virtual std::shared_ptr<Label> GetCaption() const {

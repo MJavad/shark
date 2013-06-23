@@ -45,11 +45,12 @@ namespace Components {
 					RECT shadowRect = screenRect;
 					Utils::Vector2 vShadow = GetShadowDirection();
 					OffsetRect(&shadowRect, (int) vShadow.x, (int) vShadow.y);
-					pObject->DrawText(pSprite, swText, shadowRect, dwFormatFlags, GetModifiedColor(0x70000000));
+					pObject->DrawText(pSprite, swText, shadowRect, dwFormatFlags,
+						CalculateAbsoluteColor(0x70000000));
 				}
 
-				pObject->DrawText(pSprite, swText, screenRect,
-					dwFormatFlags, GetModifiedColor(GetColor()));
+				pObject->DrawText(pSprite, swText, screenRect, dwFormatFlags,
+					CalculateAbsoluteColor(GetColor()));
 
 				if (pSprite != nullptr)
 					pSprite->End();
@@ -119,11 +120,13 @@ namespace Components {
 			Utils::Vector2 vScreen = GetScreenPosition() + m_textIndent;
 			if (GetDropShadow()) {
 				Utils::Vector3 vShadow = vScreen + GetShadowDirection();
-				pSprite->Draw(m_fontCache, nullptr, nullptr, &vShadow, GetModifiedColor(0x70000000));
+				pSprite->Draw(m_fontCache, nullptr, nullptr, &vShadow,
+					CalculateAbsoluteColor(0x70000000));
 			}
 
 			Utils::Vector3 vPosition = vScreen;
-			pSprite->Draw(m_fontCache, nullptr, nullptr, &vPosition, GetModifiedColor(GetColor()));
+			pSprite->Draw(m_fontCache, nullptr, nullptr, &vPosition,
+				CalculateAbsoluteColor(GetColor()));
 		}
 	}
 

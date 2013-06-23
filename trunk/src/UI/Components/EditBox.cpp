@@ -75,7 +75,7 @@ namespace Components {
 			vCaret.y = vScreen.y + (GetHeight() / 2.0f - textHeight / 2.0f);
 
 			std::array<D3DXCOLOR, 4> gradient;
-			gradient.fill(pContent->GetModifiedColor(pContent->GetColor()));
+			gradient.fill(pContent->CalculateAbsoluteColor(pContent->GetColor()));
 			pRenderTarget->FillRectangle(vCaret, IRenderTarget::MakeDimension(3.0f, textHeight), gradient);
 		}
 	}

@@ -24,14 +24,14 @@ namespace Components {
 			pSprite->SetTransform(&matTransform);
 
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
-			pSprite->Draw(pTexture, nullptr, nullptr, &vScreen, GetModifiedColor(GetColor()));
+			pSprite->Draw(pTexture, nullptr, nullptr, &vScreen, CalculateAbsoluteColor(GetColor()));
 			pSprite->End();
 
 			pSprite->SetTransform(nullptr);
 		}
 		else {
 			std::array<D3DXCOLOR, 4> gradient;
-			gradient.fill(GetModifiedColor(GetColor()));
+			gradient.fill(CalculateAbsoluteColor(GetColor()));
 			const auto dimensions = IRenderTarget::MakeDimension(GetWidth(), GetHeight());
 			sD3DMgr.GetRenderTarget()->DrawSprite(vScreen, pTexture, dimensions, gradient);
 		}

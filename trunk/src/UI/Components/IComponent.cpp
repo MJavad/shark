@@ -94,7 +94,7 @@ namespace Components {
 		return false;
 	}
 
-	D3DXCOLOR IComponent::GetModifiedColor(const D3DXCOLOR &color) const {
+	D3DXCOLOR IComponent::CalculateAbsoluteColor(const D3DXCOLOR &color) const {
 		D3DXCOLOR result(color);
 		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			const auto colorMod = pParent->GetColorMod();
@@ -107,12 +107,12 @@ namespace Components {
 		return result;
 	}
 
-	std::array<D3DXCOLOR, 4> IComponent::GetModifiedColor(const std::array<D3DXCOLOR, 4> &gradient) const {
+	std::array<D3DXCOLOR, 4> IComponent::CalculateAbsoluteColor(const std::array<D3DXCOLOR, 4> &gradient) const {
 		std::array<D3DXCOLOR, 4> result;
-		result[0] = GetModifiedColor(gradient[0]);
-		result[1] = GetModifiedColor(gradient[1]);
-		result[2] = GetModifiedColor(gradient[2]);
-		result[3] = GetModifiedColor(gradient[3]);
+		result[0] = CalculateAbsoluteColor(gradient[0]);
+		result[1] = CalculateAbsoluteColor(gradient[1]);
+		result[2] = CalculateAbsoluteColor(gradient[2]);
+		result[3] = CalculateAbsoluteColor(gradient[3]);
 		return result;
 	}
 

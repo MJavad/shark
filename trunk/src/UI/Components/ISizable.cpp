@@ -25,7 +25,7 @@ namespace Components {
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 			pSprite->Draw(m_isHovered ? m_resizeTextureHover : m_resizeTexture, nullptr,
-				nullptr, &vPosition, GetModifiedColor(0xFFFFFFFF));
+				nullptr, &vPosition, CalculateAbsoluteColor(0xFFFFFFFF));
 			pSprite->End();
 		}
 	}
