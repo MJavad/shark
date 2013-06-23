@@ -10,10 +10,9 @@ namespace Components {
 							  m_prevFade(false),
 							  m_colorMod(1.0f, 1.0f, 1.0f, 1.0f)
 	{	// register for update...
-		m_updateDelegate = sD3DMgr.OnUpdateEvent +=
-		[this] (uint32 uTimePassed) {
-			OnUpdate(uTimePassed);
-		};
+		using namespace std::placeholders;
+		m_updateDelegate = sD3DMgr.OnUpdateEvent.connect(
+			std::bind(&IComponent::OnUpdate, this, _1));
 	}
 
 	IComponent::~IComponent() {
