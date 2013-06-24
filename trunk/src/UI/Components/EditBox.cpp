@@ -16,7 +16,7 @@ namespace Components {
 	std::shared_ptr<EditBox> EditBox::Create(float fWidth, float fHeight,
 		float fHorizontalRounding, float fVerticalRounding) {
 		const auto pEditBox = std::make_shared<EditBox>();
-		const auto pLabel = Label::Create(L"", DT_VCENTER | DT_SINGLELINE, fWidth, fHeight);
+		const auto pLabel = Label::Create(L"", DT_CENTER |DT_VCENTER | DT_SINGLELINE, fWidth, fHeight);
 		pLabel->SetPosition(Utils::Vector2(5.0f, 0.0f)); // indent
 		//pLabel->SetDropShadow(false);
 
@@ -371,11 +371,8 @@ namespace Components {
 		int32 scrollOffset = eraseOffset - 1;
 
 		// adjust scrolling if needed
-		if (eraseOffset >= 0 &&
-			scrollOffset > 0 &&
-			_scrollTo(scrollOffset))
-		{
-			// scroll even more if we're at the beginning
+		if (scrollOffset > 0 && _scrollTo(scrollOffset)) {
+			// scroll even more, if we're at the beginning
 			scrollOffset = eraseOffset - 4;
 			if (scrollOffset > 0)
 				_scrollTo(scrollOffset);
@@ -402,6 +399,25 @@ namespace Components {
 			eraseCount = numChars;
 
 		if (eraseCount > 0) {
+			// if it's a center aligned box we need to adjust the scroll pos a little
+			if ((pContent->GetFormatFlags() & DT_CENTER)) {
+				std::wstring eraseText = pContent->GetText().substr(erasePosition, numChars);
+
+				const auto fontProxy = pContent->GetFont();
+				if (fontProxy != nullptr) {
+					const auto fontObject = fontProxy->GetObject();
+					if (fontObject != nullptr) {
+						RECT textRect = {0};
+						textRect = fontObject->GetTextExtent(eraseText,
+							textRect, DT_LEFT | DT_TOP | DT_SINGLELINE);
+
+						m_scrollPosition -= (textRect.right - textRect.left) / 2.0f;
+						if (m_scrollPosition < 0.0f)
+							m_scrollPosition = 0.0f;
+					}
+				}
+			}
+
 			_resetCaret();
 			textString.erase(erasePosition, eraseCount);
 			pContent->SetText(std::move(textString));

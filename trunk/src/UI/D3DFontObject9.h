@@ -25,7 +25,6 @@ namespace UI {
 			return rect;
 		}
 
-		virtual RECT CalcTextRect(std::wstring swText, uint32 begin, uint32 end, RECT rect) const;
 		virtual POINT GetGlyphCellInc(wchar_t c) const;
 
 		CComPtr<ID3DXFont> GetD3DXFont() const { return m_d3dxFont; }

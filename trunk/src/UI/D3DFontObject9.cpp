@@ -43,28 +43,4 @@ namespace UI {
 		cellInc.y = glyphRect.bottom - glyphRect.top;
 		return cellInc;
 	}
-	
-	RECT D3DFontObject9::CalcTextRect(std::wstring swText, uint32 begin, uint32 end, RECT rect) const {
-		if (m_d3dxFont == nullptr)
-			return rect;
-		
-		uint32 length = swText.length();
-		if (begin >= length || end >= length || begin == end)
-			return rect;
-
-		// Replace whitespaces with a non-breaking space to fix calculation issues.
-		std::transform(swText.begin(), swText.end(), swText.begin(), [] (wchar_t c) {
-			return c != 0x20 ? c : 0xA0;
-		});
-
-		m_d3dxFont->DrawTextW(nullptr, swText.data(), max(begin, end),
-			&rect, DT_CALCRECT | DT_LEFT | DT_TOP | DT_SINGLELINE, 0);
-
-		RECT tempRect = rect;
-		m_d3dxFont->DrawTextW(nullptr, swText.data(), min(begin, end),
-			&tempRect, DT_CALCRECT | DT_LEFT | DT_TOP | DT_SINGLELINE, 0);
-
-		rect.left = tempRect.right;
-		return rect;
-	}
 }

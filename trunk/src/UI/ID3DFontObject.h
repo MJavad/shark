@@ -26,7 +26,6 @@ namespace UI {
 			RECT &screenRect, uint32 dwFlags, const D3DXCOLOR &color) const = 0;
 
 		virtual RECT GetTextExtent(std::wstring swText, RECT rect, uint32 flags) const = 0;
-		virtual RECT CalcTextRect(std::wstring swText, uint32 begin, uint32 end, RECT rect) const = 0;
 		virtual POINT GetGlyphCellInc(wchar_t c) const = 0;
 	};
 }
