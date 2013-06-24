@@ -76,6 +76,35 @@ namespace Components {
 
 		// caret is only drawn if the editbox has focus
 		if (IsFocused()) {
+			// get the font's height
+			float textHeight = 15;
+			float controlHeight = GetHeight();
+
+			const auto pFont = pContent->GetFont();
+			if (pFont != nullptr)
+				textHeight = static_cast<float>(pFont->GetDescription().Height);
+
+			Utils::Vector2 vScreen = GetScreenPosition();
+			const auto pRenderTarget = sD3DMgr.GetRenderTarget();
+
+			if (_hasSelection()) {
+				float transformed1 = static_cast<float>(pContent->CPToX(s_selectPosition1));
+				float transformed2 = static_cast<float>(pContent->CPToX(s_selectPosition2));
+
+				Utils::Vector2 vSelection;
+				vSelection.x = min(transformed1, transformed2);
+				vSelection.y = vScreen.y + (controlHeight / 2.0f - textHeight / 2.0f);
+				float width = std::fabs(transformed1 - transformed2);
+
+				D3DXCOLOR textColor = pContent->GetColor();
+				textColor.a *= 0.35f;
+				textColor.b *= 1.4f;
+
+				std::array<D3DXCOLOR, 4> gradient;
+				gradient.fill(pContent->CalculateAbsoluteColor(textColor));
+				pRenderTarget->FillRectangle(vSelection, IRenderTarget::MakeDimension(width, textHeight), gradient);
+			}
+
 			// caret blink update...
 			uint32 timeNow = timeGetTime();
 			if (timeNow - s_caretTimer > 600) {
@@ -83,21 +112,12 @@ namespace Components {
 				s_renderCaret = !s_renderCaret;
 			}
 
-			Utils::Vector2 vScreen = GetScreenPosition();
-			const auto pRenderTarget = sD3DMgr.GetRenderTarget();
-
 			// draw caret...
 			if (s_renderCaret) {
-				// get the font's height
-				float textHeight = 15;
-				const auto pFont = pContent->GetFont();
-				if (pFont != nullptr)
-					textHeight = static_cast<float>(pFont->GetDescription().Height);
-
 				// the screen coordinates of the caret
 				Utils::Vector2 vCaret;
 				vCaret.x = static_cast<float>(pContent->CPToX(s_caretPosition));
-				vCaret.y = vScreen.y + (GetHeight() / 2.0f - textHeight / 2.0f);
+				vCaret.y = vScreen.y + (controlHeight / 2.0f - textHeight / 2.0f);
 
 				// caret and text have equal colors
 				std::array<D3DXCOLOR, 4> gradient;
@@ -201,7 +221,15 @@ namespace Components {
 	}
 
 	void EditBox::_onMouseMove(const Utils::Vector2 &vPosition) {
+		if (s_activeSelection) {
+			const auto pContent = GetContent();
+			if (pContent != nullptr) {
+				int32 positionOffset = static_cast<int32>(vPosition.x + m_scrollPosition);
+				_placeCaret(pContent->XToCP(positionOffset), true);
+			}
 
+			sWndProc.LastMessageHandled = true;
+		}
 	}
 
 	bool EditBox::_scrollTo(uint32 position) {
@@ -307,7 +335,7 @@ namespace Components {
 		}), swText.end());
 
 		// calculate how many chars it should insert...
-		auto textString = pContent->GetText();
+		const auto& textString = pContent->GetText();
 		int32 remainingChars = (m_maxLength - textString.length()) + _getSelectionCount();
 		uint32 insertCount = (remainingChars < 0 ? 0 : remainingChars);
 
@@ -319,8 +347,9 @@ namespace Components {
 			_resetCaret();
 			_eraseSelection();
 
-			textString.insert(insertPosition, swText, 0, insertCount);
-			pContent->SetText(std::move(textString));
+			auto currentText = pContent->GetText();
+			currentText.insert(insertPosition, swText, 0, insertCount);
+			pContent->SetText(std::move(currentText));
 			_notifyContentChangedEvent();
 		}
 
@@ -383,16 +412,19 @@ namespace Components {
 	}
 
 	void EditBox::_notifyPushEvent(Utils::Vector2 *pvPosition) {
+		_resetCaret();
 		const auto pContent = GetContent();
 		if (pContent != nullptr && pvPosition != nullptr)
 			_placeCaret(pContent->XToCP(static_cast<int32>(pvPosition->x + m_scrollPosition)));
 
+		_clearSelection();
 		if (IsFocused()) {
 			// handle double click
 		}
 		else
 			Focus();
 
+		s_activeSelection = true;
 		IPushable::_notifyPushEvent(pvPosition);
 	}
 

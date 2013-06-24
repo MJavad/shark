@@ -90,7 +90,7 @@ namespace Components {
 		}
 
 		static uint32 _getSelectionCount() {
-			return labs(s_selectPosition1 - s_selectPosition2);
+			return std::labs(s_selectPosition1 - s_selectPosition2);
 		}
 
 		bool _hasSelection() const {
