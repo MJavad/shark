@@ -16,9 +16,11 @@ namespace Components {
 	std::shared_ptr<EditBox> EditBox::Create(float fWidth, float fHeight,
 		float fHorizontalRounding, float fVerticalRounding) {
 		const auto pEditBox = std::make_shared<EditBox>();
-		const auto pLabel = Label::Create(L"", DT_VCENTER | DT_SINGLELINE, fWidth, fHeight);
-		pLabel->SetPosition(Utils::Vector2(5.0f, 0.0f)); // indent
-		//pLabel->SetDropShadow(false);
+
+		// label is indented by 5 px.
+		const auto pLabel = Label::Create(L"", DT_CENTER | DT_VCENTER | DT_SINGLELINE,
+			max(fWidth - 10.0f, 0.0f), fHeight);
+		pLabel->SetPosition(Utils::Vector2(5.0f, 0.0f));
 
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
 		pBorder->SetColor(0x90B0B0B0);
@@ -161,8 +163,10 @@ namespace Components {
 		Rectangle::SetWidth(fWidth);
 
 		const auto pContent = GetContent();
-		if (pContent != nullptr)
-			pContent->SetWidth(max(fWidth - 10.0f, 0.0f));
+		if (pContent != nullptr) {
+			float indent = pContent->GetPosition().x;
+			pContent->SetWidth(max(fWidth - indent * 2.0f, 0.0f));
+		}
 
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
