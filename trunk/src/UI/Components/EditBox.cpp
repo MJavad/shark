@@ -16,7 +16,7 @@ namespace Components {
 	std::shared_ptr<EditBox> EditBox::Create(float fWidth, float fHeight,
 		float fHorizontalRounding, float fVerticalRounding) {
 		const auto pEditBox = std::make_shared<EditBox>();
-		const auto pLabel = Label::Create(L"", DT_CENTER |DT_VCENTER | DT_SINGLELINE, fWidth, fHeight);
+		const auto pLabel = Label::Create(L"", DT_VCENTER | DT_SINGLELINE, fWidth, fHeight);
 		pLabel->SetPosition(Utils::Vector2(5.0f, 0.0f)); // indent
 		//pLabel->SetDropShadow(false);
 
@@ -34,8 +34,8 @@ namespace Components {
 		pEditBox->SetVerticalRounding(fVerticalRounding);
 
 		std::array<D3DXCOLOR, 4> gradient;
-		gradient[0] = 0xFF252525;
-		gradient[1] = 0xFF252525;
+		gradient[0] = 0xFF353535;
+		gradient[1] = 0xFF353535;
 		gradient[2] = 0xFF101010;
 		gradient[3] = 0xFF101010;
 		pEditBox->SetGradientColors(std::move(gradient));
