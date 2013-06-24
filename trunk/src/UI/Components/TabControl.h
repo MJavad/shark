@@ -8,7 +8,8 @@ namespace Components {
 	{
 	public:
 		TabControl() : m_activeTab(0) {}
-		static std::shared_ptr<TabControl> Create(float fWidth, float fHeight, uint32 dwColor = 0x90000000);
+		static std::shared_ptr<TabControl> Create(float fWidth,
+			float fHeight, D3DXCOLOR dwColor = 0x90000000);
 
 		virtual void OnRender(uint32 uTimePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);

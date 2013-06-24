@@ -98,15 +98,19 @@ namespace UI {
 		page1->GetContent()->PushChild(tabButton1);
 		page2->GetContent()->PushChild(testFrame2);
 
-		const auto editBox = EditBox::Create();
-		editBox->SetPosition(Utils::Vector2(500, 500));
-		testFrame1->PushChild(editBox);
+		const auto editBox1 = EditBox::Create(true);
+		editBox1->SetPosition(Utils::Vector2(500, 465));
+		testFrame1->PushChild(editBox1);
 
-		tabButton1->OnClickEvent += [testFrame2, editBox]
+		const auto editBox2 = EditBox::Create();
+		editBox2->SetPosition(Utils::Vector2(500, 500));
+		testFrame1->PushChild(editBox2);
+
+		tabButton1->OnClickEvent += [testFrame2, editBox2]
 			(const std::shared_ptr<IPushable>&, Utils::Vector2*) {
 				testFrame2->SetVisibility(true);
 				testFrame2->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-				editBox->Focus();
+				editBox2->Focus();
 				throw std::runtime_error("Testing...");
 			};
 

@@ -5,7 +5,11 @@
 namespace UI {
 namespace Components {
 	std::shared_ptr<Button> Button::Create(std::wstring swText,
-		float fWidth, float fHeight, float fHorizontalRounding, float fVerticalRounding) {
+										   float fWidth,
+										   float fHeight,
+										   float fHorizontalRounding,
+										   float fVerticalRounding)
+	{
 		const auto pButton = std::make_shared<Button>();
 		pButton->SetCaption(Label::Create(std::move(swText), DT_VCENTER | DT_CENTER));
 

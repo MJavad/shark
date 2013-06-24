@@ -11,7 +11,8 @@ namespace Components {
 	public:
 		EditBox() : m_scrollPosition(0.0f), m_maxLength(80) {}
 
-		static std::shared_ptr<EditBox> Create(float fWidth = 200.0f, float fHeight = 25.0f,
+		static std::shared_ptr<EditBox> Create(bool centerAlign = false,
+			float fWidth = 200.0f, float fHeight = 25.0f,
 			float fHorizontalRounding = 6.0f, float fVerticalRounding = 3.0f);
 
 		virtual void OnRender(uint32 uTimePassed);

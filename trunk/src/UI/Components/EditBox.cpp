@@ -13,13 +13,18 @@ namespace Components {
 	uint32 EditBox::s_selectPosition1 = 0;
 	uint32 EditBox::s_selectPosition2 = 0;
 
-	std::shared_ptr<EditBox> EditBox::Create(float fWidth, float fHeight,
-		float fHorizontalRounding, float fVerticalRounding) {
-		const auto pEditBox = std::make_shared<EditBox>();
+	std::shared_ptr<EditBox> EditBox::Create(bool centerAlign,
+											 float fWidth,
+											 float fHeight,
+											 float fHorizontalRounding,
+											 float fVerticalRounding)
+	{
+		uint32 alignFlags = DT_VCENTER | DT_SINGLELINE;
+		if (centerAlign)
+			alignFlags |= DT_CENTER;
 
 		// label is indented by 5 px.
-		const auto pLabel = Label::Create(L"", DT_CENTER | DT_VCENTER | DT_SINGLELINE,
-			max(fWidth - 10.0f, 0.0f), fHeight);
+		const auto pLabel = Label::Create(L"", alignFlags, max(fWidth - 10.0f, 0.0f), fHeight);
 		pLabel->SetPosition(Utils::Vector2(5.0f, 0.0f));
 
 		const auto pBorder = Rectangle::Create(fWidth, fHeight);
@@ -28,6 +33,7 @@ namespace Components {
 		pBorder->SetVerticalRounding(fVerticalRounding);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
 
+		const auto pEditBox = std::make_shared<EditBox>();
 		pEditBox->SetContent(std::move(pLabel));
 		pEditBox->SetBorder(std::move(pBorder));
 		pEditBox->SetWidth(fWidth);
@@ -36,8 +42,8 @@ namespace Components {
 		pEditBox->SetVerticalRounding(fVerticalRounding);
 
 		std::array<D3DXCOLOR, 4> gradient;
-		gradient[0] = 0xFF353535;
-		gradient[1] = 0xFF353535;
+		gradient[0] = 0xFF303030;
+		gradient[1] = 0xFF303030;
 		gradient[2] = 0xFF101010;
 		gradient[3] = 0xFF101010;
 		pEditBox->SetGradientColors(std::move(gradient));
@@ -332,11 +338,8 @@ namespace Components {
 		if (pContent == nullptr)
 			return 0; // cannot insert - no label attached
 
-		// remove all characters which cannot be printed
-		swText.erase(std::remove_if(swText.begin(), swText.end(),
-			[] (wchar_t c) {
-			return !isprint(c);
-		}), swText.end());
+		// remove all characters which cannot be printed (control characters)
+		swText.erase(std::remove_if(swText.begin(), swText.end(), std::iscntrl), swText.end());
 
 		// calculate how many chars it should insert...
 		const auto& textString = pContent->GetText();

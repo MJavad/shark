@@ -16,7 +16,10 @@ namespace Components {
 	}
 
 	std::shared_ptr<Label> Label::Create(std::wstring swText,
-		uint32 dwFormatFlags, float fWidth, float fHeight) {
+										 uint32 dwFormatFlags,
+										 float fWidth,
+										 float fHeight)
+	{
 		const auto pLabel = std::make_shared<Label>();
 		pLabel->SetText(std::move(swText));
 		pLabel->SetWidth(fWidth);

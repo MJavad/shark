@@ -4,7 +4,10 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<TabControl> TabControl::Create(float fWidth, float fHeight, uint32 dwColor) {
+	std::shared_ptr<TabControl> TabControl::Create(float fWidth,
+												   float fHeight,
+												   D3DXCOLOR dwColor)
+	{
 		const auto pTabControl = std::make_shared<TabControl>();
 		pTabControl->SetWidth(fWidth);
 		pTabControl->SetHeight(fHeight);
