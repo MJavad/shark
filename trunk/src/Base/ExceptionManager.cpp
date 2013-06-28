@@ -413,8 +413,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 	ACTCTX actCtx = {0};
 	actCtx.cbSize = sizeof(actCtx);
-	actCtx.dwFlags = ACTCTX_FLAG_RESOURCE_NAME_VALID | ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_LANGID_VALID;
-	actCtx.wLangId = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
+	actCtx.dwFlags = ACTCTX_FLAG_RESOURCE_NAME_VALID | ACTCTX_FLAG_HMODULE_VALID;
 	actCtx.lpResourceName = MAKEINTRESOURCE(IDR_RT_MANIFEST1);
 	actCtx.hModule = sEngine.GetInstance();
 	HANDLE hActCtx = CreateActCtx(&actCtx);

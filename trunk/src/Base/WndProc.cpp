@@ -19,7 +19,7 @@ bool WndProc::Attach(HWND hWnd) {
 		Detach();
 	else return true;
 
-	LONG_PTR nResult = SetWindowLongPtrW(hWnd, GWL_WNDPROC,
+	LONG_PTR nResult = SetWindowLongPtr(hWnd, GWL_WNDPROC,
 		reinterpret_cast<LONG_PTR>(WindowProc));
 
 	if (nResult == 0) {

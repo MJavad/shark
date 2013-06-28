@@ -64,6 +64,7 @@ typedef signed char int8;
 #include <boost/algorithm/string.hpp>
 #include <codecvt>
 #include <atlbase.h>
+#include <iostream>
 #include "Mutex.h"
 #include "Color.h"
 #include "Vector.h"

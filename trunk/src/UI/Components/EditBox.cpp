@@ -143,20 +143,28 @@ namespace Components {
 	}
 
 	void EditBox::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
-		if (!sWndProc.LastMessageHandled &&
-			GetVisibility() && IsFocused()) {
+		if (IsFocused()) {
 			switch (uMsg)
 			{
+			case WM_LBUTTONDOWN:
+				if (sWndProc.LastMessageHandled ||
+					!PtInBoundingRect(Utils::Vector2(lParam)))
+					Unfocus();
+				break;
+
 			case WM_CHAR:
-				_onChar(wParam & 0xFFFF);
+				if (!sWndProc.LastMessageHandled)
+					_onChar(wParam & 0xFFFF);
 				break;
 
 			case WM_KEYDOWN:
-				_onKeyDown(wParam);
+				if (!sWndProc.LastMessageHandled)
+					_onKeyDown(wParam);
 				break;
 
 			case WM_MOUSEMOVE:
-				_onMouseMove(Utils::Vector2(lParam));
+				if (!sWndProc.LastMessageHandled)
+					_onMouseMove(Utils::Vector2(lParam));
 				break;
 			}
 		}
@@ -192,9 +200,34 @@ namespace Components {
 	}
 
 	void EditBox::_onChar(wchar_t c) {
-		std::wstring swText;
-		swText += c;
-		_insertText(std::move(swText));
+		switch (c) {
+		case 0x01: // ctrl + a
+			_selectAll();
+			break;
+
+		case 0x03: // ctrl + c
+		case 0x18: // ctrl + x
+			// set clipboard data
+
+			if (c == 24)
+				_eraseSelection();
+			break;
+
+		case 0x16: // ctrl + v
+			// _insetText(GetClipboardData());
+			break;
+
+		case 0x7F: // ctrl + back
+
+			break;
+
+		default: {
+			std::wstring swText;
+			swText += c;
+			_insertText(std::move(swText));
+			}
+		}
+
 		sWndProc.LastMessageHandled = true;
 	}
 
@@ -208,19 +241,46 @@ namespace Components {
 			_eraseText(s_caretPosition, 1);
 			break;
 
+		case VK_ESCAPE:
 		case VK_RETURN:
 			Unfocus();
 			break;
 
 		case VK_LEFT: {
 			int32 position = s_caretPosition - 1;
-			_placeCaret(position < 0 ? 0 : position);
-			// todo: selection -> GetKeyState(VK_SHIFT) ?
+			_placeCaret(position < 0 ? 0 : position, true);
+
+			if ((GetKeyState(VK_SHIFT) & 0x8000) != 0x8000)
+				_clearSelection();
 			}
 			break;
 
-		case VK_RIGHT:
-			_placeCaret(s_caretPosition + 1);
+		case VK_RIGHT: {
+			_placeCaret(s_caretPosition + 1, true);
+
+			if ((GetKeyState(VK_SHIFT) & 0x8000) != 0x8000)
+				_clearSelection();
+			}
+			break;
+
+		case VK_HOME:
+		case VK_UP: {
+			_placeCaret(0, true);
+
+			if ((GetKeyState(VK_SHIFT) & 0x8000) != 0x8000)
+				_clearSelection();
+			}
+			break;
+
+		case VK_END:
+		case VK_DOWN: {
+			const auto pContent = GetContent();
+			if (pContent != nullptr)
+				_placeCaret(pContent->GetText().length(), true);
+
+			if ((GetKeyState(VK_SHIFT) & 0x8000) != 0x8000)
+				_clearSelection();
+			}
 			break;
 
 		//default:
@@ -270,7 +330,7 @@ namespace Components {
 		// need to scroll left...
 		if (fullRect.left + m_scrollPosition > rightOffset) {
 			float scrollOffset = static_cast<float>(rightOffset - leftOffset);
-			if (pContent->GetFormatFlags() & DT_CENTER)
+			if ((pContent->GetFormatFlags() & DT_CENTER) == DT_CENTER)
 				scrollOffset /= 2.0f;
 
 			scrollUpdate = (scrollOffset < m_scrollPosition);
@@ -281,7 +341,7 @@ namespace Components {
 		// need to scroll right...
 		else if (fullRect.right + m_scrollPosition < rightOffset) {
 			float scrollOffset = static_cast<float>(rightOffset - leftOffset) - boxWidth + vIndent.x * 2;
-			if (pContent->GetFormatFlags() & DT_CENTER)
+			if ((pContent->GetFormatFlags() & DT_CENTER) == DT_CENTER)
 				scrollOffset /= 2.0f;
 
 			scrollUpdate = (scrollOffset > m_scrollPosition);
@@ -407,7 +467,7 @@ namespace Components {
 
 		if (eraseCount > 0) {
 			// if it's a center aligned box we need to adjust the scroll pos a little
-			if ((pContent->GetFormatFlags() & DT_CENTER)) {
+			if ((pContent->GetFormatFlags() & DT_CENTER) == DT_CENTER) {
 				std::wstring eraseText = pContent->GetText().substr(erasePosition, numChars);
 
 				const auto fontProxy = pContent->GetFont();
@@ -435,25 +495,21 @@ namespace Components {
 	}
 
 	void EditBox::_notifyPushEvent(Utils::Vector2 *pvPosition) {
-		_resetCaret();
 		const auto pContent = GetContent();
 		if (pContent != nullptr && pvPosition != nullptr)
 			_placeCaret(pContent->XToCP(static_cast<int32>(pvPosition->x + m_scrollPosition)));
 
 		_clearSelection();
-		if (IsFocused()) {
-			// handle double click
-		}
-		else
-			Focus();
+		Focus();
 
 		s_activeSelection = true;
 		IPushable::_notifyPushEvent(pvPosition);
 	}
 
-	void EditBox::_notifyClickEvent(Utils::Vector2 *pvPosition) {
-
-		IPushable::_notifyClickEvent(pvPosition);
+	void EditBox::_notifyDblClickEvent(Utils::Vector2 *pvPosition) {
+		_selectAll();
+		s_activeSelection = true;
+		IPushable::_notifyDblClickEvent(pvPosition);
 	}
 
 	void EditBox::_notifyReleaseEvent(Utils::Vector2 *pvPosition) {
@@ -462,11 +518,16 @@ namespace Components {
 	}
 
 	bool EditBox::_notifyFocusStartEvent() {
-		const auto pBorder = GetBorder();
 		bool result = IFocusable::_notifyFocusStartEvent();
 
-		if (!result && pBorder != nullptr)
-			pBorder->FadeTo(100, D3DXCOLOR(0.36f, 1.0f, 1.45f, 1.77f));
+		if (!result) {
+			_resetCaret();
+			_selectAll();
+
+			const auto pBorder = GetBorder();
+			if (pBorder != nullptr)
+				pBorder->FadeTo(100, D3DXCOLOR(0.36f, 1.0f, 1.45f, 1.77f));
+		}
 
 		return result;
 	}

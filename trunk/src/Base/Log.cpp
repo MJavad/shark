@@ -7,14 +7,12 @@ void Log::Initialize() {
 
 // TODO: Proper implementation
 void Log::OutDebug(const std::wstring &swMessage) const {
-	std::wstring swBuffer(L"[DEBUG] ");
-	swBuffer += swMessage;
-	MessageBoxW(nullptr, swBuffer.c_str(), L"Debug Message", MB_OK);
+	std::wcout << L"[DEBUG] " << swMessage << std::endl;
 }
 
 // TODO: Proper implementation
 void Log::OutMessage(const std::wstring &swMessage) const {
-	MessageBoxW(nullptr, swMessage.c_str(), L"Message", MB_OK);
+	std::wcout << L"[MSG] " << swMessage << std::endl;
 }
 
 void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile,

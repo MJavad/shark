@@ -9,6 +9,9 @@
 #include "ExceptionManager.h"
 #include "FileManager.h"
 
+#include <io.h>
+#include <fcntl.h>
+
 BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 	switch (dwReason)
 	{
@@ -30,6 +33,7 @@ BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved) {
 // EXPORTS: Load
 BOOL WINAPI LoadInternal(LPVOID lpParam) {
 	srand(timeGetTime());
+	SetupDebugConsole();
 
 	sLog.Initialize();
 	sOffsets.Initialize();
@@ -49,4 +53,29 @@ BOOL WINAPI UnloadInternal(LPVOID lpParam) {
 		sEngine.InitializeShutdown();
 
 	return EXIT_SUCCESS;
+}
+
+void SetupDebugConsole() {
+	AllocConsole();
+	SetConsoleTitleW(L"Debug Console");
+
+	// set stdout
+	HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	int nOutputHandle = _open_osfhandle(reinterpret_cast<intptr_t>(hOutput), _O_TEXT);
+	*stdout = *_fdopen(nOutputHandle, "w");
+	setvbuf(stdout, nullptr, _IONBF, 0);
+
+	// set stdin
+	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+	int nInputHandle = _open_osfhandle(reinterpret_cast<intptr_t>(hInput), _O_TEXT);
+	*stdin = *_fdopen(nInputHandle, "r");
+	setvbuf(stdin, nullptr, _IONBF, 0);
+
+	// set sterr
+	HANDLE hError = GetStdHandle(STD_ERROR_HANDLE);
+	int nErrorHandle = _open_osfhandle(reinterpret_cast<intptr_t>(hError), _O_TEXT);
+	*stderr = *_fdopen(nErrorHandle, "w");
+	setvbuf(stderr, nullptr, _IONBF, 0);
+
+	std::ios::sync_with_stdio();
 }

@@ -51,7 +51,7 @@ namespace Components {
 
 	protected:
 		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition);
-		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyDblClickEvent(Utils::Vector2 *pvPosition);
 		virtual void _notifyReleaseEvent(Utils::Vector2 *pvPosition);
 
 		virtual bool _notifyFocusStartEvent();
@@ -104,6 +104,20 @@ namespace Components {
 			_clearSelection();
 			_eraseText(writePosition, numChars);
 			_placeCaret(writePosition);
+		}
+
+		void _selectRange(uint32 position, uint32 numChars) {
+			const auto pContent = GetContent();
+			if (pContent != nullptr) {
+				uint32 length = pContent->GetText().length();
+				s_selectPosition1 = min(position, length);
+				s_selectPosition2 = min(position + numChars, length);
+			}
+		}
+
+		void _selectAll() {
+			s_swapSelection = true;
+			_selectRange(0, UINT_MAX);
 		}
 
 		uint32 _getWritePosition() const {

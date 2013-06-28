@@ -10,9 +10,19 @@ namespace Components {
 		switch (uMsg)
 		{
 		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
 			if (!m_isClicking && !sWndProc.LastMessageHandled &&
 				PtInBoundingRect(vPosition)) {
 				_notifyPushEvent(&vPosition);
+
+				uint32 time_now = timeGetTime();
+				if (m_lastClick + GetDoubleClickTime() > time_now) {
+					m_lastClick = 0;
+					_notifyDblClickEvent(&vPosition);
+				}
+				else
+					m_lastClick = time_now;
+
 				m_isClicking = true;
 				sWndProc.LastMessageHandled = true;
 			}
