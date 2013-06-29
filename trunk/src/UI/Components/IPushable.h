@@ -21,18 +21,22 @@ namespace Components {
 		IPushable() : m_isClicking(false), m_lastClick(0) {}
 
 		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: Click triggered.", this);
 			OnClickEvent(get_this<IPushable>(), pvPosition);
 		}
 
 		virtual void _notifyDblClickEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: DblClick triggered.", this);
 			OnDblClickEvent(get_this<IPushable>(), pvPosition);
 		}
 
 		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: Push triggered.", this);
 			OnPushEvent(get_this<IPushable>(), pvPosition);
 		}
 
 		virtual void _notifyReleaseEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: Release triggered.", this);
 			OnReleaseEvent(get_this<IPushable>(), pvPosition);
 		}
 

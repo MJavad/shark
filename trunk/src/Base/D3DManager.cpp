@@ -251,6 +251,7 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
 	if (m_device9 != nullptr)
 		pFont->SetDevice(m_device9);
 
+	LOG_DEBUG(L"Font '%s' created!", fontDesc.FaceName.c_str());
 	return pFont;
 }
 
@@ -291,6 +292,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	if (m_device9 != nullptr)
 		pTexture->SetDevice(m_device9);
 
+	LOG_DEBUG(L"Texture from file '%s' created!", texDesc.FilePathOrResource.c_str());
 	return pTexture;
 }
 
@@ -333,5 +335,6 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	if (m_device9 != nullptr)
 		pTexture->SetDevice(m_device9);
 
+	LOG_DEBUG(L"Texture from resource '%s' created!", texDesc.FilePathOrResource.c_str());
 	return pTexture;
 }

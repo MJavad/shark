@@ -7,12 +7,12 @@ void Log::Initialize() {
 
 // TODO: Proper implementation
 void Log::OutDebug(const std::wstring &swMessage) const {
-	std::wcout << L"[DEBUG] " << swMessage << std::endl;
+	std::wcout << swMessage << std::endl;
 }
 
 // TODO: Proper implementation
 void Log::OutMessage(const std::wstring &swMessage) const {
-	std::wcout << L"[MSG] " << swMessage << std::endl;
+	std::wcout << swMessage << std::endl;
 }
 
 void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile,
@@ -30,9 +30,26 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	o << pswzFunction << L' ';
 #endif
 
+#ifdef DEBUG_USE_FILENAMES
+	#ifdef DEBUG_USE_FUNCTIONNAMES
+		o << L'(';
+	#endif
+
+	o << pswzFile << L':' << uLine;
+
+	#ifdef DEBUG_USE_FUNCTIONNAMES
+		o << L')';
+	#endif
+
+	o << L' ';
+#endif
+
+#if defined (DEBUG_USE_FUNCTIONNAMES) || defined (DEBUG_USE_FILENAMES)
+	o << L"- ";
+#endif
+
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-	o << L'(' << pswzFile << L':' << uLine << L") - "
-	  << conv.from_bytes(sBuffer);
+	o << conv.from_bytes(sBuffer);
 	OutDebug(o.str());
 }
 
@@ -51,7 +68,24 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	o << pswzFunction << L' ';
 #endif
 
-	o << L'(' << pswzFile << L':' << uLine << L") - "
-	  << swBuffer;
+#ifdef DEBUG_USE_FILENAMES
+	#ifdef DEBUG_USE_FUNCTIONNAMES
+		o << L'(';
+	#endif
+
+	o << pswzFile << L':' << uLine;
+
+	#ifdef DEBUG_USE_FUNCTIONNAMES
+		o << L')';
+	#endif
+
+	o << L' ';
+#endif
+
+#if defined (DEBUG_USE_FUNCTIONNAMES) || defined (DEBUG_USE_FILENAMES)
+	o << L"- ";
+#endif
+
+	o << swBuffer;
 	OutDebug(o.str());
 }

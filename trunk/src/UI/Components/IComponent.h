@@ -83,6 +83,7 @@ namespace Components {
 		}
 
 		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+			LOG_DEBUG("%08X: TabPressed triggered.", this);
 			auto pParent = GetUIParent();
 			if (pParent != nullptr)
 				return pParent->OnTabPressed(shared_from_this());

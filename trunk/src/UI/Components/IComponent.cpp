@@ -13,10 +13,13 @@ namespace Components {
 		using namespace std::placeholders;
 		m_updateDelegate = sD3DMgr.OnUpdateEvent.connect(
 			std::bind(&IComponent::OnUpdate, this, _1));
+
+		LOG_DEBUG("%08X: Component created.", this);
 	}
 
 	IComponent::~IComponent() {
 		sD3DMgr.OnUpdateEvent -= m_updateDelegate;
+		LOG_DEBUG("%08X: Component destroyed.", this);
 	}
 
 	void IComponent::OnUpdate(uint32 uTimePassed) {

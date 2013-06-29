@@ -8,6 +8,7 @@ namespace UI {
 			fontDesc.Width, fontDesc.Weight, fontDesc.MipLevels, fontDesc.Italic,
 			fontDesc.CharSet, fontDesc.OutputPrecision, fontDesc.Quality,
 			fontDesc.PitchAndFamily, fontDesc.FaceName.c_str(), &m_d3dxFont);
+
 		assert(hResult == D3D_OK);
 	}
 

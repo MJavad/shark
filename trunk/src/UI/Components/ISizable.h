@@ -87,10 +87,12 @@ namespace Components {
 		ISizable();
 
 		virtual bool _notifyResizeStartEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: ResizeStart triggered.", this);
 			return OnResizeStartEvent(get_this<ISizable>(), pvPosition);
 		}
 
 		virtual bool _notifyResizeEndEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: ResizeEnd triggered.", this);
 			return OnResizeEndEvent(get_this<ISizable>(), pvPosition);
 		}
 

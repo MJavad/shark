@@ -38,10 +38,12 @@ namespace Components {
 
 	protected:
 		virtual bool _notifyDragStartEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: DragStart triggered.", this);
 			return OnDragStartEvent(get_this<IDraggable>(), pvPosition);
 		}
 
 		virtual bool _notifyDragEndEvent(Utils::Vector2 *pvPosition) {
+			LOG_DEBUG("%08X: DragEnd triggered.", this);
 			return OnDragEndEvent(get_this<IDraggable>(), pvPosition);
 		}
 

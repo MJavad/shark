@@ -58,6 +58,7 @@ namespace Components {
 		virtual void _notifyFocusEndEvent();
 
 		virtual void _notifyContentChangedEvent() {
+			LOG_DEBUG("%08X: ContentChanged triggered.", this);
 			OnContentChangedEvent(get_this<EditBox>());
 		}
 

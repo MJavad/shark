@@ -17,8 +17,20 @@ public:
 
 #define sLog ::Log::Instance()
 
-#ifdef DEBUG_USE_FUNCTIONNAMES
-#define LOG_DEBUG(fmt, ...) sLog.OutDebugFormatted(__FUNCTIONW__, __FILEW__, __LINE__, fmt, __VA_ARGS__)
+#ifdef DEBUG_USE_LOG
+	#ifdef DEBUG_USE_FUNCTIONNAMES
+		#ifdef DEBUG_USE_FILENAMES
+			#define LOG_DEBUG(fmt, ...) (sLog.OutDebugFormatted(__FUNCTIONW__, __FILEW__, __LINE__, fmt, __VA_ARGS__))
+		#else
+			#define LOG_DEBUG(fmt, ...) (sLog.OutDebugFormatted(__FUNCTIONW__, nullptr, 0, fmt, __VA_ARGS__))
+		#endif
+	#else
+		#ifdef DEBUG_USE_FILENAMES
+			#define LOG_DEBUG(fmt, ...) (sLog.OutDebugFormatted(nullptr, __FILEW__, __LINE__, fmt, __VA_ARGS__))
+		#else
+			#define LOG_DEBUG(fmt, ...) (sLog.OutDebugFormatted(nullptr, nullptr, 0, fmt, __VA_ARGS__))
+		#endif
+	#endif
 #else
-#define LOG_DEBUG(fmt, ...) sLog.OutDebugFormatted(nullptr, __FILEW__, __LINE__, fmt, __VA_ARGS__)
+	#define LOG_DEBUG(fmt, ...) ((void)0)
 #endif

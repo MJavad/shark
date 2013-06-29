@@ -7,7 +7,11 @@
 #pragma warning(disable: 4100)
 
 //#define VARIADIC_TEMPLATES_SUPPORTED
+
+// Logging...
+#define DEBUG_USE_LOG
 #define DEBUG_USE_FUNCTIONNAMES
+#define DEBUG_USE_FILENAMES
 
 typedef unsigned long long uint64;
 typedef signed long long int64;

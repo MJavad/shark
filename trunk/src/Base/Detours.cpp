@@ -40,13 +40,15 @@ HRESULT CALLBACK Detours::IDirect3DDevice9__EndScene(IDirect3DDevice9 *pDevice) 
 HRESULT CALLBACK Detours::IDirect3DDevice9__Reset(IDirect3DDevice9 *pDevice,
 												  D3DPRESENT_PARAMETERS *pParams)
 {
+	LOG_DEBUG("D3D9Device Reset called!");
+
 	if (sD3DMgr.IsCreated())
 		sD3DMgr.OnLostDevice();
 
 	HRESULT hResult = sDelegates.IDirect3DDevice9__Reset(pDevice, pParams);
 
 	if (hResult != D3D_OK)
-		LOG_DEBUG("An error occured while trying to perform a d3d9 reset operation. Reset returned %u.", hResult);
+		LOG_DEBUG("D3D9Device Reset failed. Return value: %u.", hResult);
 
 	else if (sD3DMgr.IsCreated())
 		sD3DMgr.OnResetDevice();
@@ -58,13 +60,15 @@ HRESULT CALLBACK Detours::IDirect3DDevice9Ex__ResetEx(IDirect3DDevice9Ex *pDevic
 													  D3DPRESENT_PARAMETERS *pParams,
 													  D3DDISPLAYMODEEX *pDisplayMode)
 {
+	LOG_DEBUG("D3D9ExDevice ResetEx called!");
+
 	if (sD3DMgr.IsCreated())
 		sD3DMgr.OnLostDevice();
 
 	HRESULT hResult = sDelegates.IDirect3DDevice9Ex__ResetEx(pDeviceEx, pParams, pDisplayMode);
 
 	if (hResult != D3D_OK)
-		LOG_DEBUG("An error occured while trying to perform a d3d9ex reset operation. Reset returned %u.", hResult);
+		LOG_DEBUG("D3D9ExDevice ResetEx failed. Return value: %u.", hResult);
 
 	else if (sD3DMgr.IsCreated())
 		sD3DMgr.OnResetDevice();
@@ -80,10 +84,13 @@ HRESULT CALLBACK Detours::IDirect3D9__CreateDevice(IDirect3D9 *pD3D9,
 												   D3DPRESENT_PARAMETERS *pParams,
 												   IDirect3DDevice9 **ppReturnedDevice)
 {
+	LOG_DEBUG("D3D9 CreateDevice called!");
 	HRESULT hResult = sDelegates.IDirect3D9__CreateDevice(pD3D9, Adapter, DeviceType,
 		hFocusWindow, dwBehaviorFlags, pParams, ppReturnedDevice);
 
-	if (hResult == D3D_OK)
+	if (hResult != D3D_OK)
+		LOG_DEBUG("D3D9 CreateDevice failed. Return value: %u.", hResult);
+	else
 		sD3DMgr.SetDevice9(*ppReturnedDevice);
 
 	return hResult;
@@ -98,10 +105,13 @@ HRESULT CALLBACK Detours::IDirect3D9Ex__CreateDeviceEx(IDirect3D9Ex *pD3D9Ex,
 													   D3DDISPLAYMODEEX *pDisplayMode,
 													   IDirect3DDevice9Ex **ppReturnedDevice)
 {
+	LOG_DEBUG("D3D9Ex CreateDeviceEx called!");
 	HRESULT hResult = sDelegates.IDirect3D9Ex__CreateDeviceEx(pD3D9Ex, Adapter, DeviceType,
 		hFocusWindow, dwBehaviorFlags, pParams, pDisplayMode, ppReturnedDevice);
 
-	if (hResult == S_OK)
+	if (hResult != S_OK)
+		LOG_DEBUG("D3D9Ex CreateDeviceEx failed. Return value: %u.", hResult);
+	else
 		sD3DMgr.SetDevice9(*ppReturnedDevice);
 
 	return hResult;
@@ -159,6 +169,8 @@ HRESULT WINAPI Detours::D3D11CreateDeviceAndSwapChain(IDXGIAdapter *pAdapter,
 													  D3D_FEATURE_LEVEL *pFeatureLevel,
 													  ID3D11DeviceContext **ppImmediateContext)
 {
+	LOG_DEBUG("D3D11 CreateDeviceAndSwapChain called!");
+
 	sD3DMgr.SetDevice11(nullptr);
 	sD3DMgr.SetDeviceContext11(nullptr);
 	sD3DMgr.SetSwapChain(nullptr);
