@@ -16,7 +16,7 @@ void Log::OutMessage(const std::wstring &swMessage) const {
 }
 
 void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile,
-	uint32 uLine, const char *pszFormat, ...) const {
+							uint32 uLine, const char *pszFormat, ...) const {
 	std::string sBuffer;
 	va_list vaArgs = nullptr;
 	va_start(vaArgs, pszFormat);
@@ -26,27 +26,23 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	va_end(vaArgs);
 
 	std::wostringstream o;
-#ifdef DEBUG_USE_FUNCTIONNAMES
-	o << pswzFunction << L' ';
-#endif
+	if (pswzFunction != nullptr)
+		o << pswzFunction << L' ';
 
-#ifdef DEBUG_USE_FILENAMES
-	#ifdef DEBUG_USE_FUNCTIONNAMES
-		o << L'(';
-	#endif
+	if (pswzFile != nullptr) {
+		if (pswzFunction != nullptr)
+			o << L'(';
 
-	o << pswzFile << L':' << uLine;
+		o << pswzFile << L':' << uLine;
 
-	#ifdef DEBUG_USE_FUNCTIONNAMES
-		o << L')';
-	#endif
+		if (pswzFunction != nullptr)
+			o << L')';
 
-	o << L' ';
-#endif
+		o << L' ';
+	}
 
-#if defined (DEBUG_USE_FUNCTIONNAMES) || defined (DEBUG_USE_FILENAMES)
-	o << L"- ";
-#endif
+	if (pswzFunction != nullptr || pswzFile != nullptr)
+		o << L"- ";
 
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
 	o << conv.from_bytes(sBuffer);
@@ -54,7 +50,7 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 }
 
 void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile,
-	uint32 uLine, const wchar_t *pswzFormat, ...) const {
+							uint32 uLine, const wchar_t *pswzFormat, ...) const {
 	std::wstring swBuffer;
 	va_list vaArgs = nullptr;
 	va_start(vaArgs, pswzFormat);
@@ -64,27 +60,23 @@ void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile
 	va_end(vaArgs);
 
 	std::wostringstream o;
-#ifdef DEBUG_USE_FUNCTIONNAMES
-	o << pswzFunction << L' ';
-#endif
+	if (pswzFunction != nullptr)
+		o << pswzFunction << L' ';
 
-#ifdef DEBUG_USE_FILENAMES
-	#ifdef DEBUG_USE_FUNCTIONNAMES
-		o << L'(';
-	#endif
+	if (pswzFile != nullptr) {
+		if (pswzFunction != nullptr)
+			o << L'(';
 
-	o << pswzFile << L':' << uLine;
+		o << pswzFile << L':' << uLine;
 
-	#ifdef DEBUG_USE_FUNCTIONNAMES
-		o << L')';
-	#endif
+		if (pswzFunction != nullptr)
+			o << L')';
 
-	o << L' ';
-#endif
+		o << L' ';
+	}
 
-#if defined (DEBUG_USE_FUNCTIONNAMES) || defined (DEBUG_USE_FILENAMES)
-	o << L"- ";
-#endif
+	if (pswzFunction != nullptr || pswzFile != nullptr)
+		o << L"- ";
 
 	o << swBuffer;
 	OutDebug(o.str());
