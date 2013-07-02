@@ -69,6 +69,7 @@ namespace Components {
 
 		static bool s_activeSelection;
 		static bool s_swapSelection;
+		static bool s_handleDblClick;
 		static uint32 s_selectPosition1, s_selectPosition2;
 
 		uint32 m_maxLength;

@@ -8,8 +8,12 @@ namespace Components {
 	public:
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		static std::shared_ptr<IPushable> GetActiveClick() {
+			return s_activeClick.lock();
+		}
+
 		bool IsPressed() const {
-			return m_isClicking;
+			return GetActiveClick().get() == this;
 		}
 
 		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnClickEvent;
@@ -18,7 +22,7 @@ namespace Components {
 		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnReleaseEvent;
 
 	protected:
-		IPushable() : m_isClicking(false), m_lastClick(0) {}
+		IPushable() : m_lastClick(0) {}
 
 		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition) {
 			LOG_DEBUG("%08X: Click triggered.", this);
@@ -41,8 +45,8 @@ namespace Components {
 		}
 
 	private:
-		bool m_isClicking;
 		uint32 m_lastClick;
+		static std::weak_ptr<IPushable> s_activeClick;
 	};
 }
 }

@@ -10,6 +10,7 @@ namespace Components {
 	uint32 EditBox::s_caretTimer = 0;
 	bool EditBox::s_activeSelection = false;
 	bool EditBox::s_swapSelection = false;
+	bool EditBox::s_handleDblClick = false;
 	uint32 EditBox::s_selectPosition1 = 0;
 	uint32 EditBox::s_selectPosition2 = 0;
 
@@ -283,8 +284,8 @@ namespace Components {
 			}
 			break;
 
-		//default:
-		//	return;
+		default:
+			return;
 		}
 
 		sWndProc.LastMessageHandled = true;
@@ -495,24 +496,45 @@ namespace Components {
 	}
 
 	void EditBox::_notifyPushEvent(Utils::Vector2 *pvPosition) {
-		const auto pContent = GetContent();
-		if (pContent != nullptr && pvPosition != nullptr)
-			_placeCaret(pContent->XToCP(static_cast<int32>(pvPosition->x + m_scrollPosition)));
+		s_handleDblClick = !_hasSelection();
 
-		_clearSelection();
-		Focus();
+		const auto pContent = GetContent();
+		if (pContent != nullptr && pvPosition != nullptr) {
+			uint32 cp = pContent->XToCP(static_cast<int32>(pvPosition->x + m_scrollPosition));
+			if (cp != s_caretPosition)
+				s_handleDblClick = false;
+
+			if (IsFocused()) {
+				_placeCaret(cp);
+				_clearSelection();
+			}
+			else {
+				// focus would select everything and move
+				// caret + scroll pos to the end - back it up
+				float scrollPos = m_scrollPosition;
+
+				if (Focus()) {
+					m_scrollPosition = scrollPos;
+					_placeCaret(cp);
+					_selectAll();
+				}
+			}
+		}
 
 		s_activeSelection = true;
 		IPushable::_notifyPushEvent(pvPosition);
 	}
 
 	void EditBox::_notifyDblClickEvent(Utils::Vector2 *pvPosition) {
-		_selectAll();
+		if (s_handleDblClick)
+			_selectAll();
+
 		s_activeSelection = true;
 		IPushable::_notifyDblClickEvent(pvPosition);
 	}
 
 	void EditBox::_notifyReleaseEvent(Utils::Vector2 *pvPosition) {
+		s_handleDblClick = true;
 		s_activeSelection = false;
 		IPushable::_notifyReleaseEvent(pvPosition);
 	}
@@ -522,6 +544,7 @@ namespace Components {
 
 		if (!result) {
 			_resetCaret();
+			_placeCaret(UINT_MAX);
 			_selectAll();
 
 			const auto pBorder = GetBorder();

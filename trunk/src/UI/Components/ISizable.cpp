@@ -41,19 +41,23 @@ namespace Components {
 		Utils::Vector2 vPosition(lParam);
 		IComponent::OnMessageReceived(uMsg, wParam, lParam);
 
-		switch(uMsg)
+		switch (uMsg)
 		{
 		case WM_LBUTTONDOWN:
-			if (!sWndProc.LastMessageHandled) {
+			if (!sWndProc.LastMessageHandled &&
+				!IsSizing() && PtInSizerRect(vPosition)) {
+				const auto activeSizer = GetActiveSizer();
+				if (activeSizer != nullptr)
+					activeSizer->_notifyResizeEndEvent(&vPosition);
+
 				Utils::Vector2 vSize = GetScreenPosition();
 				vSize.x += GetWidth();
 				vSize.y += GetHeight();
 
-				if (!IsSizing() && PtInSizerRect(vPosition) &&
-					!_notifyResizeStartEvent(&vPosition))
+				if (!_notifyResizeStartEvent(&vPosition))
 					StartSizing(vSize - vPosition);
 
-				sWndProc.LastMessageHandled |= IsSizing();
+				sWndProc.LastMessageHandled = true;
 			}
 			break;
 
@@ -69,8 +73,8 @@ namespace Components {
 			break;
 
 		case WM_MOUSEMOVE:
-			if (!sWndProc.LastMessageHandled &&
-				IsSizing() && GetInterface()->ClipStack.PtInClipArea(vPosition)) {
+			if (!sWndProc.LastMessageHandled && IsSizing() &&
+				GetInterface()->ClipStack.PtInClipArea(vPosition)) {
 				Utils::Vector2 vSize = vPosition - GetScreenPosition() + s_sizeVector;
 				Utils::Vector2 vMinSize = GetMinSize();
 
@@ -102,7 +106,9 @@ namespace Components {
 			}
 
 			m_isHovered = IsSizing() || (!sWndProc.LastMessageHandled &&
-										 PtInSizerRect(vPosition));
+										 PtInSizerRect(vPosition) &&
+										 GetActiveSizer() == nullptr);
+
 			sWndProc.LastMessageHandled |= m_isHovered;
 			break;
 		};
