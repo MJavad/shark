@@ -404,6 +404,9 @@ namespace Components {
 
 		// calculate how many chars it should insert...
 		const auto& textString = pContent->GetText();
+		if (insertPosition > textString.length())
+			insertPosition = textString.length();
+
 		int32 remainingChars = (m_maxLength - textString.length()) + _getSelectionCount();
 		uint32 insertCount = (remainingChars < 0 ? 0 : remainingChars);
 
@@ -460,10 +463,15 @@ namespace Components {
 		if (pContent == nullptr)
 			return 0; // cannot erase - no label attached
 
-		auto textString = pContent->GetText();
-		int32 remainingChars = textString.length() - erasePosition;
-		uint32 eraseCount = (remainingChars < 0 ? 0 : remainingChars);
-		if (eraseCount > numChars)
+		std::wstring textString = pContent->GetText();
+		int32 eraseCount = textString.length() - erasePosition;
+
+		if (eraseCount < 0) {
+			eraseCount = 0;
+			erasePosition = textString.length();
+		}
+
+		if (eraseCount > signed(numChars))
 			eraseCount = numChars;
 
 		if (eraseCount > 0) {
