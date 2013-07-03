@@ -403,11 +403,11 @@ namespace Components {
 		swText.erase(std::remove_if(swText.begin(), swText.end(), std::iscntrl), swText.end());
 
 		// calculate how many chars it should insert...
-		const auto& textString = pContent->GetText();
-		if (insertPosition > textString.length())
-			insertPosition = textString.length();
+		uint32 contentLength = pContent->GetText().length();
+		if (insertPosition > contentLength)
+			insertPosition = contentLength;
 
-		int32 remainingChars = (m_maxLength - textString.length()) + _getSelectionCount();
+		int32 remainingChars = (m_maxLength - contentLength) + _getSelectionCount();
 		uint32 insertCount = (remainingChars < 0 ? 0 : remainingChars);
 
 		uint32 stringLength = swText.length();
@@ -464,20 +464,16 @@ namespace Components {
 			return 0; // cannot erase - no label attached
 
 		std::wstring textString = pContent->GetText();
-		int32 eraseCount = textString.length() - erasePosition;
+		int32 remainingChars = textString.length() - erasePosition;
+		uint32 eraseCount = (remainingChars < 0 ? 0 : remainingChars);
 
-		if (eraseCount < 0) {
-			eraseCount = 0;
-			erasePosition = textString.length();
-		}
-
-		if (eraseCount > signed(numChars))
+		if (eraseCount > numChars)
 			eraseCount = numChars;
 
 		if (eraseCount > 0) {
 			// if it's a center aligned box we need to adjust the scroll pos a little
 			if ((pContent->GetFormatFlags() & DT_CENTER) == DT_CENTER) {
-				std::wstring eraseText = pContent->GetText().substr(erasePosition, numChars);
+				std::wstring eraseText = pContent->GetText().substr(erasePosition, eraseCount);
 
 				const auto fontProxy = pContent->GetFont();
 				if (fontProxy != nullptr) {
