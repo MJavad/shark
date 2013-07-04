@@ -39,6 +39,7 @@
     <ClInclude Include="src\Misc\Singleton.h" />
     <ClInclude Include="src\Misc\TimerDispatcher.h" />
     <ClInclude Include="src\Misc\TokenManager.h" />
+    <ClInclude Include="src\Misc\TypeTraits.h" />
     <ClInclude Include="src\Misc\Vector.h" />
     <ClInclude Include="src\Misc\stdafx.h" />
     <ClInclude Include="src\UI\ComponentInterface.h" />

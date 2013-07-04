@@ -266,7 +266,7 @@ namespace Utils
 		}
 
 		template <typename T, typename CompT>
-		typename std::enable_if<!std::is_same<void, T>::value, T>::type
+		typename std::enable_if<Not<std::is_same<void, T>::value>::value, T>::type
 			_invoke_impl() const {
 			m_mutex.acquire();
 			auto mDelegates = m_delegates;
@@ -384,7 +384,7 @@ namespace Utils
 		}
 
 		template <typename T, typename CompT>
-		typename std::enable_if<!std::is_same<void, T>::value, T>::type
+		typename std::enable_if<Not<std::is_same<void, T>::value>::value, T>::type
 			_invoke_impl(const A0 &a0) const {
 			m_mutex.acquire();
 			auto mDelegates = m_delegates;
@@ -502,7 +502,7 @@ namespace Utils
 		}
 
 		template <typename T, typename CompT>
-		typename std::enable_if<!std::is_same<void, T>::value, T>::type
+		typename std::enable_if<Not<std::is_same<void, T>::value>::value, T>::type
 			_invoke_impl(const A0 &a0, const A1 &a1) const {
 			m_mutex.acquire();
 			auto mDelegates = m_delegates;
@@ -620,7 +620,7 @@ namespace Utils
 		}
 
 		template <typename T, typename CompT>
-		typename std::enable_if<!std::is_same<void, T>::value, T>::type
+		typename std::enable_if<Not<std::is_same<void, T>::value>::value, T>::type
 			_invoke_impl(const A0 &a0, const A1 &a1, const A2 &a2) const {
 			m_mutex.acquire();
 			auto mDelegates = m_delegates;
@@ -738,7 +738,7 @@ namespace Utils
 		}
 
 		template <typename T, typename CompT>
-		typename std::enable_if<!std::is_same<void, T>::value, T>::type
+		typename std::enable_if<Not<std::is_same<void, T>::value>::value, T>::type
 			_invoke_impl(const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3) const {
 			m_mutex.acquire();
 			auto mDelegates = m_delegates;

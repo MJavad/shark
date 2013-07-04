@@ -220,6 +220,9 @@
     <ClInclude Include="src\Base\FileManager.h">
       <Filter>Headers\Base</Filter>
     </ClInclude>
+    <ClInclude Include="src\Misc\TypeTraits.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
