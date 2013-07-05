@@ -113,6 +113,9 @@ namespace Utils {
 	struct IsPointerHelper<boost::weak_ptr<T>> : std::true_type {};
 
 	template <class T>
+	struct IsPointerHelper<CComPtr<T>> : std::true_type {};
+
+	template <class T>
 	struct IsPointer : IsPointerHelper<typename std::remove_cv<T>::type> {};
 
 
@@ -153,6 +156,11 @@ namespace Utils {
 
 	template <class T>
 	struct RemovePointerHelper<boost::weak_ptr<T>> {
+		typedef T type;
+	};
+
+	template <class T>
+	struct RemovePointerHelper<CComPtr<T>> {
 		typedef T type;
 	};
 
