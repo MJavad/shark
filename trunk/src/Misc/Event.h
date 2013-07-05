@@ -147,7 +147,7 @@ namespace Utils
 		}
 
 		template <typename T, typename CompT>
-		typename std::enable_if<!std::is_same<void, T>::value, T>::type
+		typename std::enable_if<Not<std::is_same<void, T>::value>::value, T>::type
 			_invoke_impl(const Args&... args) const {
 			m_mutex.acquire();
 			auto mDelegates = m_delegates;
