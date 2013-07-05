@@ -30,7 +30,7 @@ namespace Utils {
 
 
 
-	template <class T>
+	template <class>
 	struct IsNumberHelper : std::false_type {};
 
 	template <>
@@ -68,7 +68,7 @@ namespace Utils {
 
 
 
-	template <class T>
+	template <class>
 	struct IsStringHelper : std::false_type {};
 
 	template <>
@@ -88,7 +88,7 @@ namespace Utils {
 
 
 
-	template <class T>
+	template <class>
 	struct IsPointerHelper : std::false_type {};
 
 	template <class T>
