@@ -46,6 +46,8 @@ namespace Components {
 		}
 
 		std::wstring GetCurrentSelection() const;
+		bool CopyToClipboard() const;
+		uint32 PasteFromClipboard();
 
 		Utils::Event<void (const std::shared_ptr<EditBox>&)> OnContentChangedEvent;
 

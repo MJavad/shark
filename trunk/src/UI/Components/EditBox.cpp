@@ -200,6 +200,29 @@ namespace Components {
 			pBorder->SetHeight(fHeight + 2);
 	}
 
+	std::wstring EditBox::GetCurrentSelection() const {
+		std::wstring result;
+		const auto pContent = GetContent();
+		if (pContent != nullptr) {
+			result = pContent->GetText();
+			uint32 selectionStart = min(s_selectPosition1, s_selectPosition2);
+			uint32 selectionEnd = max(s_selectPosition1, s_selectPosition2);
+
+			if (_hasSelection() && selectionEnd <= result.length())
+				result = result.substr(selectionStart, selectionEnd - selectionStart);
+		}
+
+		return result;
+	}
+
+	bool EditBox::CopyToClipboard() const {
+		return Utils::OsClipboardPutString(GetCurrentSelection(), sWndProc.GetHWND());
+	}
+
+	uint32 EditBox::PasteFromClipboard() {
+		return _insertText(Utils::OsClipboardGetString(sWndProc.GetHWND()));
+	}
+
 	void EditBox::_onChar(wchar_t c) {
 		switch (c) {
 		case 0x01: // ctrl + a
@@ -208,14 +231,14 @@ namespace Components {
 
 		case 0x03: // ctrl + c
 		case 0x18: // ctrl + x
-			// set clipboard data
+			CopyToClipboard();
 
 			if (c == 24)
 				_eraseSelection();
 			break;
 
 		case 0x16: // ctrl + v
-			// _insetText(GetClipboardData());
+			PasteFromClipboard();
 			break;
 
 		case 0x7F: // ctrl + back
@@ -284,7 +307,7 @@ namespace Components {
 			}
 			break;
 
-		default:
+		case VK_TAB:
 			return;
 		}
 

@@ -69,6 +69,7 @@ typedef signed char int8;
 #include <codecvt>
 #include <atlbase.h>
 #include <iostream>
+
 #include "TypeTraits.h"
 #include "Mutex.h"
 #include "Color.h"
@@ -81,6 +82,7 @@ typedef signed char int8;
 #include "Heap.h"
 #include "TimerDispatcher.h"
 #include "ThreadGrabber.h"
+#include "Helpers.h"
 #include "Base/Log.h"
 #include "SharkMemory.h"
 
