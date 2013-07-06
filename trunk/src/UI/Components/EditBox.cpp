@@ -424,7 +424,9 @@ namespace Components {
 			return 0; // cannot insert - no label attached
 
 		// remove all characters which cannot be printed (control characters)
-		swText.erase(std::remove_if(swText.begin(), swText.end(), std::iscntrl), swText.end());
+		swText.erase(std::remove_if(swText.begin(), swText.end(), [] (wchar_t c) {
+				return (c >= 0x00 && c < 0x20) || c == 0x7F;
+			}), swText.end());
 
 		// calculate how many chars it should insert...
 		uint32 contentLength = pContent->GetText().length();
