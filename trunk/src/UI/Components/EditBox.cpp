@@ -246,6 +246,15 @@ namespace Components {
 
 			break;
 
+		case VK_BACK:
+			_eraseText(1);
+			break;
+
+		case VK_ESCAPE:
+		case VK_RETURN:
+			Unfocus();
+			break;
+
 		default: {
 			std::wstring swText;
 			swText += c;
@@ -258,17 +267,8 @@ namespace Components {
 
 	void EditBox::_onKeyDown(int key) {
 		switch (key) {
-		case VK_BACK:
-			_eraseText(1);
-			break;
-
 		case VK_DELETE:
 			_eraseText(s_caretPosition, 1);
-			break;
-
-		case VK_ESCAPE:
-		case VK_RETURN:
-			Unfocus();
 			break;
 
 		case VK_LEFT: {

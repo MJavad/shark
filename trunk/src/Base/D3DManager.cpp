@@ -205,11 +205,13 @@ void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		(*itr)->OnMessageReceived(uMsg, wParam, lParam);
 
 	if (!sWndProc.LastMessageHandled &&
-		uMsg == WM_KEYDOWN && wParam == VK_TAB) {
+		(uMsg == WM_KEYDOWN || uMsg == WM_CHAR) &&
+		wParam == VK_TAB) {
 		auto pFocus = UI::Components::IFocusable::GetActiveFocus();
-
 		if (pFocus != nullptr) {
-			pFocus->OnTabPressed(pFocus);
+			if (uMsg == WM_KEYDOWN)
+				pFocus->OnTabPressed(pFocus);
+
 			sWndProc.LastMessageHandled = true;
 		}
 	}
