@@ -200,7 +200,8 @@ namespace Components {
 			pBorder->SetHeight(fHeight + 2);
 	}
 
-	std::wstring EditBox::GetCurrentSelection() const {
+	// If we have a selection it returns the selected text, otherwise it returns everything
+	std::wstring EditBox::GetCurrentText() const {
 		std::wstring result;
 		const auto pContent = GetContent();
 		if (pContent != nullptr) {
@@ -216,7 +217,7 @@ namespace Components {
 	}
 
 	bool EditBox::CopyToClipboard() const {
-		return Utils::OsClipboardPutString(GetCurrentSelection(), sWndProc.GetHWND());
+		return Utils::OsClipboardPutString(GetCurrentText(), sWndProc.GetHWND());
 	}
 
 	uint32 EditBox::PasteFromClipboard() {

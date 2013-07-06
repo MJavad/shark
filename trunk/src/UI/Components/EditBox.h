@@ -45,7 +45,7 @@ namespace Components {
 				m_border->SetUIParent(shared_from_this());
 		}
 
-		std::wstring GetCurrentSelection() const;
+		std::wstring GetCurrentText() const;
 		bool CopyToClipboard() const;
 		uint32 PasteFromClipboard();
 
