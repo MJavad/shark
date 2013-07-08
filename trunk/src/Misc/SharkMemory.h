@@ -5,8 +5,8 @@
 namespace Utils {
 	struct SHookInformation {
 		void* function;
-		void* trampoline;
-		uint32 size;
+		byte* trampoline;
+		ByteBuffer bytes;
 	};
 
 	class SharkMemory {
@@ -46,12 +46,10 @@ namespace Utils {
 		std::map<void*, SHookInformation> m_hooks;
 
 		static bool _dataCompare(const byte *pbData, const byte *pbMask, const char *pszMask);
-		void _detourSuspendThreads(const std::list<std::shared_ptr<Thread>> &threads) const;
-		void _detourResumeThreads(const std::list<std::shared_ptr<Thread>> &threads) const;
+		void _detourResumeThread(const std::shared_ptr<Thread> &thread) const;
 		
-		std::list<std::shared_ptr<Thread>> _threadExecutingInstruction(
-					const std::list<std::shared_ptr<Thread>> &threads,
-					DWORD_PTR dwAddress, DWORD_PTR dwLength) const;
+		void _detourUpdateThread(const std::shared_ptr<Thread> &thread,
+								 const SHookInformation &hookInfo) const;
 	};
 }
 

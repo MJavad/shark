@@ -1,6 +1,5 @@
 #include "Misc/stdafx.h"
 #include "SharkMemory.h"
-#include "../../libs/detours/detours.h"
 
 // This is MLDE32. It can be used to get any x86 instruction's length.
 // Must be in .text or we will get an access violation on execution.
@@ -124,168 +123,134 @@ namespace Utils {
 	}
 
 	bool SharkMemory::DetourFunction(void **ppDelegate, void *pRedirect) {
-		DetourTransactionBegin();
-		DetourUpdateThread(GetCurrentThread());
-		DetourAttach(ppDelegate, pRedirect);
-		if (DetourTransactionCommit() != NO_ERROR)
-			return false;
-
-		SHookInformation hookInfo = {0};
-		hookInfo.function = pRedirect;
-		hookInfo.trampoline = *ppDelegate;
-		m_hooks[*ppDelegate] = hookInfo;
-		return true;
-
-		/*ThreadGrabber threadGrabber;
+		ThreadGrabber threadGrabber;
 		if (!threadGrabber.update(GetCurrentProcessId())) {
-			LOG_DEBUG("Failed to get threads!");
+			LOG_DEBUG("Detour transaction failed: Could not take thread snapshot!");
 			return false;
 		}
 
-		DWORD dwOldProtect = 0;
-		void *pFunction = *ppDelegate;
-		DWORD_PTR dwAddress = reinterpret_cast<DWORD_PTR>(pFunction);
-		bool bSuccess = SetMemoryProtection(dwAddress, 0x20, PAGE_EXECUTE_READWRITE, &dwOldProtect);
+		bool success = false;
+		void *function = *ppDelegate;
+		DWORD_PTR functionOffset = reinterpret_cast<DWORD_PTR>(function);
 
-		if (bSuccess) {
-			uint32 uSize = 0;
-			while (uSize < 5)
-				uSize += GetInstructionSize(dwAddress + uSize);
+		DWORD oldProtection = 0;
+		if (SetMemoryProtection(functionOffset, 0x20, PAGE_EXECUTE_READWRITE, &oldProtection)) {
+			uint32 trampolineSize = 0;
+			uint32 jumpSize = sizeof(DWORD_PTR) + 1;
+			while (trampolineSize < jumpSize)
+				trampolineSize += GetInstructionSize(functionOffset + trampolineSize);
 
 			// allocate a trampoline...
-			byte *pTrampoline = reinterpret_cast<byte*>(m_trampolineHeap.allocate(uSize + 5));
-			DWORD_PTR dwTrampoline = reinterpret_cast<DWORD_PTR>(pTrampoline);
-			bSuccess = (pTrampoline != nullptr);
+			byte *trampoline = m_trampolineHeap.allocate(trampolineSize + jumpSize);
 
-			if (bSuccess) {
-				memcpy(pTrampoline, pFunction, uSize);
-				pTrampoline[uSize] = 0xE9;
-				GetMemory<DWORD_PTR>(dwTrampoline + uSize + 1) = dwAddress - (dwTrampoline + 5);
+			if (trampoline != nullptr) {
+				memcpy(trampoline, function, trampolineSize);
+				trampoline[trampolineSize] = 0xE9;
 
-				*ppDelegate = pTrampoline;
+				DWORD_PTR trampolineOffset = reinterpret_cast<DWORD_PTR>(trampoline);
+				GetMemory<DWORD_PTR>(trampolineOffset + trampolineSize + 1) = functionOffset - (trampolineOffset + jumpSize);
+
 				SHookInformation hookInfo = {0};
-				hookInfo.function = dwAddress;
-				hookInfo.trampoline = pTrampoline;
-				hookInfo.size = uSize;
-				m_hooks[dwTrampoline] = hookInfo;
+				hookInfo.function = function;
+				hookInfo.trampoline = trampoline;
+				hookInfo.bytes.put_array(trampoline, trampolineSize);
+				m_hooks[trampoline] = hookInfo;
 
-				ByteBuffer jump(uSize, 0xCC);
-				jump << byte(0xE9);
-				jump << reinterpret_cast<DWORD_PTR>(pRedirect) - (dwAddress + 5);
-
-				const auto &lstThreads = threadGrabber.threads();
-				std::list<std::shared_ptr<Thread>> lstCriticalThreads(lstThreads);
-				_detourSuspendThreads(lstThreads);
-
-				do {
-					lstCriticalThreads = _threadExecutingInstruction(
-						lstCriticalThreads, dwAddress, uSize);
-
-					for (const auto& thread: lstCriticalThreads) {
-						if (thread->open(thread->access() | THREAD_SUSPEND_RESUME)) {
-							thread->resume();
-							Sleep(rand() % 2); // give him some time to move along... :D
-							thread->suspend();
-
-							LOG_DEBUG("Thread %u is executing 0x%08X. Address is scheduled for patching!", thread->id(), dwAddress);
-						}
-					}
+				// hook chain support - relocate jump far, call far
+				if (trampolineSize > sizeof(DWORD_PTR) &&
+					(trampoline[0] == 0xE8 || trampoline[0] == 0xE9))
+				{
+					DWORD_PTR& relocate = GetMemory<DWORD_PTR>(trampolineOffset + 1);
+					relocate += functionOffset;
+					relocate -= trampolineOffset;
 				}
-				while (!lstCriticalThreads.empty());
 
-				WriteMemory_Safe(dwAddress, jump);
-				_detourResumeThreads(lstThreads);
+				ByteBuffer jump(trampolineSize, 0xCC);
+				jump << byte(0xE9);
+				jump << reinterpret_cast<DWORD_PTR>(pRedirect) - (functionOffset + jumpSize);
+
+				const auto &threads = threadGrabber.threads();
+				for (const auto& thread: threads)
+					_detourUpdateThread(thread, hookInfo);
+
+				*ppDelegate = trampoline;
+				success = WriteMemory_Safe(functionOffset, jump);
+
+				for (const auto& thread: threads)
+					_detourResumeThread(thread);
 			}
 			else
-				LOG_DEBUG("Trampoline heap alloc failed!");
+				LOG_DEBUG("Detour transaction failed: Trampoline heap alloc failed!");
 
-			SetMemoryProtection(dwAddress, 0x20, dwOldProtect);
+			SetMemoryProtection(functionOffset, 0x20, oldProtection);
 		}
 		else
-			LOG_DEBUG("Cannot set code protection!");
+			LOG_DEBUG("Detour transaction failed: Cannot set code protection!");
 
-		return bSuccess;*/
+		return success;
 	}
 
 	bool SharkMemory::RemoveDetour(void **ppDelegate) {
 		auto itr = m_hooks.find(*ppDelegate);
-		if (itr == m_hooks.end())
+		if (itr == m_hooks.end()) {
+			LOG_DEBUG("Could not find a detour registered to this delegate.");
 			return false;
-
-		DetourTransactionBegin();
-		DetourUpdateThread(GetCurrentThread());
-		DetourDetach(ppDelegate, itr->second.function);
-		if (DetourTransactionCommit() == NO_ERROR) {
-			m_hooks.erase(itr);
-			return true;
 		}
 
-		return false;
+		DWORD oldProtection = 0;
+		SHookInformation &hookInfo = itr->second;
+		DWORD_PTR functionOffset = reinterpret_cast<DWORD_PTR>(hookInfo.function);
+		SetMemoryProtection(functionOffset, hookInfo.bytes.size(), PAGE_EXECUTE_READWRITE, &oldProtection);
+		bool success = WriteMemory_Safe(functionOffset, hookInfo.bytes);
+		SetMemoryProtection(functionOffset, hookInfo.bytes.size(), oldProtection);
 
-		/*SHookInformation &hookInfo = itr->second;
-		ByteBuffer bytes(hookInfo.size);
-		bytes.put_array(hookInfo.trampoline, hookInfo.size);
-
-		DWORD dwOldProtect = 0;
-		SetMemoryProtection(hookInfo.function, hookInfo.size, PAGE_EXECUTE_READWRITE, &dwOldProtect);
-		bool bSuccess = WriteMemory_Safe(hookInfo.function, bytes);
-		SetMemoryProtection(hookInfo.function, hookInfo.size, dwOldProtect);
-
-		if (bSuccess) {
-			*ppDelegate = reinterpret_cast<void*>(hookInfo.function);
+		if (success) {
+			*ppDelegate = hookInfo.function;
 			m_trampolineHeap.free(hookInfo.trampoline);
 			m_hooks.erase(itr);
 		}
+		else
+			LOG_DEBUG("Detour transaction failed: Could not remove detour patch (Function: 0x%08X).", hookInfo.function);
 
-		return bSuccess;*/
+		return success;
 	}
 
 	bool SharkMemory::RemoveAllDetours() {
 		bool bSuccess = true;
 		auto mHooks = m_hooks;
 		for (auto& hook: mHooks) {
-			void *pTrampoline = hook.second.trampoline;
-			bSuccess &= RemoveDetour(&pTrampoline);
+			void *trampolineDelegate = hook.second.trampoline;
+			bSuccess &= RemoveDetour(&trampolineDelegate);
 		}
 
 		return bSuccess;
 	}
 
-	void SharkMemory::_detourSuspendThreads(const std::list<std::shared_ptr<Thread>> &threads) const {
-		uint32 curThreadId = GetCurrentThreadId();
-		for (const auto& thread: threads) {
-			if (thread->id() != curThreadId &&
-				thread->open(thread->access() | THREAD_SUSPEND_RESUME))
-				thread->suspend();
-		}
+	void SharkMemory::_detourResumeThread(const std::shared_ptr<Thread> &thread) const {
+		if (thread->id() != GetCurrentThreadId() &&
+			thread->open(thread->access() | THREAD_SUSPEND_RESUME))
+			thread->resume();
 	}
 
-	void SharkMemory::_detourResumeThreads(const std::list<std::shared_ptr<Thread>> &threads) const {
-		uint32 curThreadId = GetCurrentThreadId();
-		for (const auto& thread: threads) {
-			if (thread->id() != curThreadId &&
-				thread->open(thread->access() | THREAD_SUSPEND_RESUME))
-				thread->resume();
-		}
-	}
+	void SharkMemory::_detourUpdateThread(const std::shared_ptr<Thread> &thread,
+										  const SHookInformation &hookInfo) const
+	{
+		if (thread->id() != GetCurrentThreadId() &&
+			thread->open(thread->access() | THREAD_GET_CONTEXT | THREAD_SUSPEND_RESUME)) {
+			thread->suspend();
+			CONTEXT ctx = {0};
+			if (GetThreadContext(thread->handle(), &ctx) == FALSE)
+				return;
 
-	std::list<std::shared_ptr<Thread>> SharkMemory::_threadExecutingInstruction(
-							const std::list<std::shared_ptr<Thread>> &threads,
-							DWORD_PTR dwAddress, DWORD_PTR dwLength) const {
-		uint32 curThreadId = GetCurrentThreadId();
-		std::list<std::shared_ptr<Thread>> lstThreads;
-		for (const auto& thread: threads) {
-			if (thread->id() != curThreadId &&
-				thread->open(thread->access() | THREAD_GET_CONTEXT)) {
-				CONTEXT ctx = {0};
-				if (GetThreadContext(thread->handle(), &ctx) == FALSE)
-					continue;
-
-				if (ctx.Eip >= dwAddress && ctx.Eip < dwAddress + dwLength)
-					lstThreads.push_back(thread);
+			// do we need to relocate the threads instruction pointer to the trampoline?
+			DWORD_PTR functionOffset = reinterpret_cast<DWORD_PTR>(hookInfo.function);
+			if (ctx.Eip >= functionOffset &&
+				ctx.Eip < (functionOffset + hookInfo.bytes.size()))
+			{
+				ctx.Eip -= functionOffset;
+				ctx.Eip += reinterpret_cast<DWORD_PTR>(hookInfo.trampoline);
+				SetThreadContext(thread->handle(), &ctx);
 			}
 		}
-
-		return lstThreads;
 	}
 }

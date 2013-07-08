@@ -17,11 +17,11 @@ namespace Utils
 			HeapDestroy(m_heap);
 		}
 
-		void* allocate(size_t dwSize) const {
-			return HeapAlloc(m_heap, 0, dwSize);
+		byte* allocate(size_t dwSize) const {
+			return reinterpret_cast<byte*>(HeapAlloc(m_heap, 0, dwSize));
 		}
 
-		bool free(void *pMemory) const {
+		bool free(byte *pMemory) const {
 			return HeapFree(m_heap, 0, pMemory) != FALSE;
 		}
 
