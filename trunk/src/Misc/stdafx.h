@@ -4,6 +4,7 @@
 #pragma comment(lib, "d3dx9.lib")
 //#pragma comment(lib, "d3d11.lib") Not present in Windows XP...
 #pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "detours.lib")
 #pragma warning(disable: 4100)
 
 //#define VARIADIC_TEMPLATES_SUPPORTED

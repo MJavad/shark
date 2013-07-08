@@ -1,5 +1,6 @@
 #include "Misc/stdafx.h"
 #include "SharkMemory.h"
+#include "../../libs/detours/detours.h"
 
 // This is MLDE32. It can be used to get any x86 instruction's length.
 // Must be in .text or we will get an access violation on execution.
@@ -122,8 +123,20 @@ namespace Utils {
 		return 0;
 	}
 
-	bool SharkMemory::DetourFunction(void **ppDelegate, const void *pRedirect) {
-		ThreadGrabber threadGrabber;
+	bool SharkMemory::DetourFunction(void **ppDelegate, void *pRedirect) {
+		DetourTransactionBegin();
+		DetourUpdateThread(GetCurrentThread());
+		DetourAttach(ppDelegate, pRedirect);
+		if (DetourTransactionCommit() != NO_ERROR)
+			return false;
+
+		SHookInformation hookInfo = {0};
+		hookInfo.function = pRedirect;
+		hookInfo.trampoline = *ppDelegate;
+		m_hooks[*ppDelegate] = hookInfo;
+		return true;
+
+		/*ThreadGrabber threadGrabber;
 		if (!threadGrabber.update(GetCurrentProcessId())) {
 			LOG_DEBUG("Failed to get threads!");
 			return false;
@@ -191,16 +204,25 @@ namespace Utils {
 		else
 			LOG_DEBUG("Cannot set code protection!");
 
-		return bSuccess;
+		return bSuccess;*/
 	}
 
 	bool SharkMemory::RemoveDetour(void **ppDelegate) {
-		DWORD_PTR dwTrampoline = reinterpret_cast<DWORD_PTR>(*ppDelegate);
-		auto itr = m_hooks.find(dwTrampoline);
+		auto itr = m_hooks.find(*ppDelegate);
 		if (itr == m_hooks.end())
 			return false;
 
-		SHookInformation &hookInfo = itr->second;
+		DetourTransactionBegin();
+		DetourUpdateThread(GetCurrentThread());
+		DetourDetach(ppDelegate, itr->second.function);
+		if (DetourTransactionCommit() == NO_ERROR) {
+			m_hooks.erase(itr);
+			return true;
+		}
+
+		return false;
+
+		/*SHookInformation &hookInfo = itr->second;
 		ByteBuffer bytes(hookInfo.size);
 		bytes.put_array(hookInfo.trampoline, hookInfo.size);
 
@@ -215,7 +237,7 @@ namespace Utils {
 			m_hooks.erase(itr);
 		}
 
-		return bSuccess;
+		return bSuccess;*/
 	}
 
 	bool SharkMemory::RemoveAllDetours() {

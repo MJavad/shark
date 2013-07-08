@@ -34,6 +34,9 @@
     <Filter Include="Headers\UI\Components">
       <UniqueIdentifier>{3d6dd4b4-2095-4f42-b049-6d0254c477b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libs\Detours">
+      <UniqueIdentifier>{ef96b488-368b-4d6f-b48a-db74096f1266}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Misc\stdafx.h">
@@ -226,6 +229,15 @@
     <ClInclude Include="src\Misc\Helpers.h">
       <Filter>Headers\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="libs\detours\detours.h">
+      <Filter>Libs\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\detours\detver.h">
+      <Filter>Libs\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\detours\syelog.h">
+      <Filter>Libs\Detours</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -363,11 +375,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shark.def" />
+    <None Include="libs\detours\detours.pdb">
+      <Filter>Libs\Detours</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="shark.rc" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="shark.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\detours\detours.lib">
+      <Filter>Libs\Detours</Filter>
+    </Library>
+    <Library Include="libs\detours\syelog.lib">
+      <Filter>Libs\Detours</Filter>
+    </Library>
   </ItemGroup>
 </Project>

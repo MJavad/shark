@@ -11,6 +11,7 @@ namespace Components {
 	bool EditBox::s_activeSelection = false;
 	bool EditBox::s_swapSelection = false;
 	bool EditBox::s_handleDblClick = false;
+	bool EditBox::s_pressedOnFocus = false;
 	uint32 EditBox::s_selectPosition1 = 0;
 	uint32 EditBox::s_selectPosition2 = 0;
 
@@ -316,6 +317,7 @@ namespace Components {
 	}
 
 	void EditBox::_onMouseMove(const Utils::Vector2 &vPosition) {
+		s_pressedOnFocus = false;
 		if (s_activeSelection) {
 			const auto pContent = GetContent();
 			if (pContent != nullptr) {
@@ -544,9 +546,11 @@ namespace Components {
 				float scrollPos = m_scrollPosition;
 
 				if (Focus()) {
+					s_pressedOnFocus = true;
 					m_scrollPosition = scrollPos;
+
 					_placeCaret(cp);
-					_selectAll();
+					_clearSelection();
 				}
 			}
 		}
@@ -566,6 +570,12 @@ namespace Components {
 	void EditBox::_notifyReleaseEvent(Utils::Vector2 *pvPosition) {
 		s_handleDblClick = true;
 		s_activeSelection = false;
+
+		if (s_pressedOnFocus) {
+			_selectAll();
+			s_pressedOnFocus = false;
+		}
+
 		IPushable::_notifyReleaseEvent(pvPosition);
 	}
 

@@ -4,8 +4,8 @@
 
 namespace Utils {
 	struct SHookInformation {
-		DWORD_PTR function;
-		byte* trampoline;
+		void* function;
+		void* trampoline;
 		uint32 size;
 	};
 
@@ -37,13 +37,13 @@ namespace Utils {
 			DWORD dwLength, const byte *pbMask, const char *pszMask);
 
 		static uint32 GetInstructionSize(DWORD_PTR dwAddress);
-		bool DetourFunction(void **ppDelegate, const void *pRedirect);
+		bool DetourFunction(void **ppDelegate, void *pRedirect);
 		bool RemoveDetour(void **ppDelegate);
 		bool RemoveAllDetours();
 
 	protected:
 		Heap m_trampolineHeap;
-		std::map<DWORD_PTR, SHookInformation> m_hooks;
+		std::map<void*, SHookInformation> m_hooks;
 
 		static bool _dataCompare(const byte *pbData, const byte *pbMask, const char *pszMask);
 		void _detourSuspendThreads(const std::list<std::shared_ptr<Thread>> &threads) const;
