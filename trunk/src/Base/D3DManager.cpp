@@ -235,7 +235,7 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
 			return pFont;
 	}
 
-	UI::FontDescription fontDesc = {0};
+	UI::FontDescription fontDesc;
 	fontDesc.height = height;
 	fontDesc.width = width;
 	fontDesc.weight = weight;
@@ -277,16 +277,18 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	}
 	
 	UI::TextureDescription texDesc;
-	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.type = UI::TEXTURE_FROM_FILE;
 	texDesc.filePathOrResource = std::move(fileName);
+	texDesc.resourceModule = nullptr;
 	texDesc.width = width;
 	texDesc.height = height;
 	texDesc.mipLevels = 1;
+	texDesc.mipFilter = D3DX_DEFAULT;
 	texDesc.format = D3DFMT_A8R8G8B8;
 	texDesc.pool = D3DPOOL_DEFAULT;
 	texDesc.filter = D3DX_DEFAULT;
-	texDesc.mipFilter = D3DX_DEFAULT;
+	texDesc.colorKey = D3DXCOLOR(0, 0, 0, 0);
+	texDesc.usage = 0;
 
 	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);
@@ -319,17 +321,18 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	}
 
 	UI::TextureDescription texDesc;
-	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.type = UI::TEXTURE_FROM_RESOURCE;
 	texDesc.filePathOrResource = std::move(resourceName);
 	texDesc.resourceModule = module;
 	texDesc.width = width;
 	texDesc.height = height;
 	texDesc.mipLevels = 1;
+	texDesc.mipFilter = D3DX_DEFAULT;
 	texDesc.format = D3DFMT_A8R8G8B8;
 	texDesc.pool = D3DPOOL_DEFAULT;
 	texDesc.filter = D3DX_DEFAULT;
-	texDesc.mipFilter = D3DX_DEFAULT;
+	texDesc.colorKey = D3DXCOLOR(0, 0, 0, 0);
+	texDesc.usage = 0;
 
 	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);
