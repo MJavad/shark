@@ -193,37 +193,37 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 in
 void RenderTarget9::DrawRectangle(const Utils::Vector2 &position,
 								  const std::array<Utils::Vector2, 4> &dimensions,
 								  const std::array<D3DXCOLOR, 4> &gradient,
-								  float fStroke) const
+								  float stroke) const
 {
 	/*float width = GetDimensionWidth(dimensions);
 	float height = GetDimensionHeight(dimensions);
 
 	RHWDiffuseVertex vertices_top[] = {
 		{ position.x, position.y, 0, 1, color },
-		{ position.x + width - fStroke, position.y, 0, 1, color },
-		{ position.x + width - fStroke, position.y + fStroke, 0, 1, color },
-		{ position.x, position.y + fStroke, 0, 1, color }
+		{ position.x + width - stroke, position.y, 0, 1, color },
+		{ position.x + width - stroke, position.y + stroke, 0, 1, color },
+		{ position.x, position.y + stroke, 0, 1, color }
 	};
 
 	RHWDiffuseVertex vertices_bottom[] = {
-		{ position.x + fStroke, position.y + height - fStroke, 0, 1, color },
-		{ position.x + width, position.y + height - fStroke, 0, 1, color },
+		{ position.x + stroke, position.y + height - stroke, 0, 1, color },
+		{ position.x + width, position.y + height - stroke, 0, 1, color },
 		{ position.x + width, position.y + height, 0, 1, color },
-		{ position.x + fStroke, position.y + height, 0, 1, color }
+		{ position.x + stroke, position.y + height, 0, 1, color }
 	};
 
 	RHWDiffuseVertex vertices_left[] = {
-		{ position.x, position.y + fStroke, 0, 1, color },
-		{ position.x + fStroke, position.y + fStroke, 0, 1, color },
-		{ position.x + fStroke, position.y + height, 0, 1, color },
+		{ position.x, position.y + stroke, 0, 1, color },
+		{ position.x + stroke, position.y + stroke, 0, 1, color },
+		{ position.x + stroke, position.y + height, 0, 1, color },
 		{ position.x, position.y + height, 0, 1, color }
 	};
 
 	RHWDiffuseVertex vertices_right[] = {
-		{ position.x + width - fStroke, position.y, 0, 1, color },
+		{ position.x + width - stroke, position.y, 0, 1, color },
 		{ position.x + width, position.y, 0, 1, color },
-		{ position.x + width, position.y + height - fStroke, 0, 1, color },
-		{ position.x + width - fStroke, position.y + height - fStroke, 0, 1, color }
+		{ position.x + width, position.y + height - stroke, 0, 1, color },
+		{ position.x + width - stroke, position.y + height - stroke, 0, 1, color }
 	};
 
 	m_device9->SetFVF(RHWDiffuseVertex::FVF);
@@ -253,7 +253,7 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &position,
 										 const float4 &horizontalRadius,
 										 const float4 &verticalRadius,
 										 const std::array<D3DXCOLOR, 4> &gradient,
-										 float fStroke) const
+										 float stroke) const
 {
 	UIVertex vertices[] = {
 		{ position.x + dimensions[0].x - 2, position.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
@@ -276,7 +276,7 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &position,
 	
 	float width = GetDimensionWidth(dimensions) + 4;
 	float height = GetDimensionHeight(dimensions) + 4;
-	float params1[] = { fStroke, fStroke / width, 0, 0 };
+	float params1[] = { stroke, stroke / width, 0, 0 };
 	m_device9->SetPixelShaderConstantF(4, params1, 1);
 
 	float radius[] = {

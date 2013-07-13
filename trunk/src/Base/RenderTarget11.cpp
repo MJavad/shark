@@ -54,7 +54,7 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget11::GetRenderTargetSurface(uint32 i
 void RenderTarget11::DrawRectangle(const Utils::Vector2 &position,
 								   const std::array<Utils::Vector2, 4> &dimensions,
 								   const std::array<D3DXCOLOR, 4> &gradient,
-								   float fStroke) const
+								   float stroke) const
 {
 	// unimplemented...
 }
@@ -71,7 +71,7 @@ void RenderTarget11::DrawRoundedRectangle(const Utils::Vector2 &position,
 										  const float4 &horizontalRadius,
 										  const float4 &verticalRadius,
 										  const std::array<D3DXCOLOR, 4> &gradient,
-										  float fStroke) const
+										  float stroke) const
 {
 	// unimplemented...
 }

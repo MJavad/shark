@@ -28,7 +28,7 @@ public:
 	virtual void DrawRectangle(const Utils::Vector2 &position,
 		const std::array<Utils::Vector2, 4> &dimensions,
 		const std::array<D3DXCOLOR, 4> &gradient,
-		float fStroke) const;
+		float stroke) const;
 
 	virtual void FillRectangle(const Utils::Vector2 &position,
 		const std::array<Utils::Vector2, 4> &dimensions,
@@ -39,7 +39,7 @@ public:
 		const float4 &horizontalRadius,
 		const float4 &verticalRadius,
 		const std::array<D3DXCOLOR, 4> &gradient,
-		float fStroke) const;
+		float stroke) const;
 
 	virtual void FillRoundedRectangle(const Utils::Vector2 &position,
 		const std::array<Utils::Vector2, 4> &dimensions,
