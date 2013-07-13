@@ -8,16 +8,16 @@ namespace Components {
 	{
 	public:
 		TabControl() : m_activeTab(0) {}
-		static std::shared_ptr<TabControl> Create(float fWidth,
-			float fHeight, D3DXCOLOR dwColor = 0x90000000);
+		static std::shared_ptr<TabControl> Create(float width,
+			float height, D3DXCOLOR dwColor = 0x90000000);
 
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		void AddTabPage(std::shared_ptr<TabPage> pTabPage);
 		void RemoveTabPage(const std::shared_ptr<TabPage> &pTabPage);
 
-		void SetActiveTab(uint32 uIndex);
+		void SetActiveTab(uint32 index);
 
 		uint32 GetActiveTab() const {
 			return m_activeTab;
@@ -27,8 +27,8 @@ namespace Components {
 			return m_tabPages;
 		}
 
-		bool IsValidTabIndex(uint32 uIndex) const {
-			return m_tabPages.size() > uIndex;
+		bool IsValidTabIndex(uint32 index) const {
+			return m_tabPages.size() > index;
 		}
 
 		uint32 GetPageIndex(const std::shared_ptr<const TabPage> &pTabPage) const;

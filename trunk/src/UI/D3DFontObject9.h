@@ -17,11 +17,11 @@ namespace UI {
 				m_d3dxFont->OnResetDevice();
 		}
 
-		virtual void DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring swText,
-			RECT &screenRect, uint32 dwFlags, const D3DXCOLOR &color) const;
+		virtual void DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring textString,
+			RECT &screenRect, uint32 flags, const D3DXCOLOR &color) const;
 
-		virtual RECT GetTextExtent(std::wstring swText, RECT rect, uint32 dwFlags) const {
-			DrawText(nullptr, std::move(swText), rect, dwFlags | DT_CALCRECT, D3DXCOLOR());
+		virtual RECT GetTextExtent(std::wstring textString, RECT rect, uint32 flags) const {
+			DrawText(nullptr, std::move(textString), rect, flags | DT_CALCRECT, D3DXCOLOR());
 			return rect;
 		}
 

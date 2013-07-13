@@ -4,27 +4,27 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<Button> Button::Create(std::wstring swText,
-										   float fWidth,
-										   float fHeight,
-										   float fHorizontalRounding,
-										   float fVerticalRounding)
+	std::shared_ptr<Button> Button::Create(std::wstring textString,
+										   float width,
+										   float height,
+										   float horizontalRounding,
+										   float verticalRounding)
 	{
 		const auto pButton = std::make_shared<Button>();
-		pButton->SetCaption(Label::Create(std::move(swText), DT_VCENTER | DT_CENTER));
+		pButton->SetCaption(Label::Create(std::move(textString), DT_VCENTER | DT_CENTER));
 
-		const auto pBorder = Rectangle::Create(fWidth, fHeight);
+		const auto pBorder = Rectangle::Create(width, height);
 		pBorder->SetColor(0xFF40B0FF);
 		pBorder->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-		pBorder->SetHorizontalRounding(fHorizontalRounding);
-		pBorder->SetVerticalRounding(fVerticalRounding);
+		pBorder->SetHorizontalRounding(horizontalRounding);
+		pBorder->SetVerticalRounding(verticalRounding);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
 
 		pButton->SetBorder(std::move(pBorder));
-		pButton->SetWidth(fWidth);
-		pButton->SetHeight(fHeight);
-		pButton->SetHorizontalRounding(fHorizontalRounding);
-		pButton->SetVerticalRounding(fVerticalRounding);
+		pButton->SetWidth(width);
+		pButton->SetHeight(height);
+		pButton->SetHorizontalRounding(horizontalRounding);
+		pButton->SetVerticalRounding(verticalRounding);
 
 		std::array<D3DXCOLOR, 4> gradient;
 		gradient[0] = 0xFF404040;
@@ -35,21 +35,21 @@ namespace Components {
 		return pButton;
 	}
 
-	void Button::OnRender(uint32 uTimePassed) {
+	void Button::OnRender(uint32 timePassed) {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr && pBorder->GetVisibility())
-			pBorder->OnRender(uTimePassed);
+			pBorder->OnRender(timePassed);
 
 		if (GetRenderRect())
-			Rectangle::OnRender(uTimePassed);
+			Rectangle::OnRender(timePassed);
 		
 		const auto pCaption = GetCaption();
 		if (pCaption != nullptr && pCaption->GetVisibility())
-			pCaption->OnRender(uTimePassed);
+			pCaption->OnRender(timePassed);
 
 		for (const auto &pTexture: GetTextures()) {
 			if (pTexture->GetVisibility())
-				pTexture->OnRender(uTimePassed);
+				pTexture->OnRender(timePassed);
 		}
 	}
 
@@ -86,47 +86,47 @@ namespace Components {
 		IFocusable::OnMessageReceived(uMsg, wParam, lParam);
 	}
 
-	void Button::SetWidth(float fWidth) {
-		Rectangle::SetWidth(fWidth);
+	void Button::SetWidth(float width) {
+		Rectangle::SetWidth(width);
 			
 		const auto pCaption = GetCaption();
 		if (pCaption != nullptr)
-			pCaption->SetWidth(fWidth);
+			pCaption->SetWidth(width);
 
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
-			pBorder->SetWidth(fWidth + 2);
+			pBorder->SetWidth(width + 2);
 	}
 
-	void Button::SetHeight(float fHeight) {
-		Rectangle::SetHeight(fHeight);
+	void Button::SetHeight(float height) {
+		Rectangle::SetHeight(height);
 			
 		const auto pCaption = GetCaption();
 		if (pCaption != nullptr)
-			pCaption->SetHeight(fHeight);
+			pCaption->SetHeight(height);
 
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
-			pBorder->SetHeight(fHeight + 2);
+			pBorder->SetHeight(height + 2);
 	}
 
-	void Button::_notifyPushEvent(Utils::Vector2 *pvPosition) {
+	void Button::_notifyPushEvent(Utils::Vector2 *pPosition) {
 		FadeTo(75, D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.4f));
 		Focus();
 
-		IPushable::_notifyPushEvent(pvPosition);
+		IPushable::_notifyPushEvent(pPosition);
 	}
 
-	void Button::_notifyClickEvent(Utils::Vector2 *pvPosition) {
+	void Button::_notifyClickEvent(Utils::Vector2 *pPosition) {
 		if (IsHovered())
 			FadeTo(100, GetHoverColor());
 
-		IPushable::_notifyClickEvent(pvPosition);
+		IPushable::_notifyClickEvent(pPosition);
 	}
 
-	void Button::_notifyReleaseEvent(Utils::Vector2 *pvPosition) {
+	void Button::_notifyReleaseEvent(Utils::Vector2 *pPosition) {
 		FadeTo(100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		IPushable::_notifyReleaseEvent(pvPosition);
+		IPushable::_notifyReleaseEvent(pPosition);
 	}
 
 	bool Button::_notifyFocusStartEvent() {

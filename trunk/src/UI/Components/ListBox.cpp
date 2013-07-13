@@ -4,25 +4,25 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<ListBox> ListBox::Create(float fWidth, float fHeight) {
+	std::shared_ptr<ListBox> ListBox::Create(float width, float height) {
 		const auto pListBox = std::make_shared<ListBox>();
-		const auto pBorder = Rectangle::Create(fWidth, fHeight);
+		const auto pBorder = Rectangle::Create(width, height);
 		
 		pBorder->SetColor(0x90404040);
 		pListBox->SetBorder(std::move(pBorder));
 
-		pListBox->SetWidth(fWidth);
-		pListBox->SetHeight(fHeight);
+		pListBox->SetWidth(width);
+		pListBox->SetHeight(height);
 		pListBox->SetColor(0x90101010);
 		return pListBox;
 	}
 
-	void ListBox::OnRender(uint32 uTimePassed) {
+	void ListBox::OnRender(uint32 timePassed) {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr && pBorder->GetVisibility())
-			pBorder->OnRender(uTimePassed);
+			pBorder->OnRender(timePassed);
 
-		Rectangle::OnRender(uTimePassed);
+		Rectangle::OnRender(timePassed);
 
 		float fItemOffset = 0.0f;
 		for (const auto &pListBoxEntry: m_entries) {
@@ -30,7 +30,7 @@ namespace Components {
 			fItemOffset += pListBoxEntry->GetHeight() + 1.0f;
 
 			if (pListBoxEntry->GetVisibility())
-				pListBoxEntry->OnRender(uTimePassed);
+				pListBoxEntry->OnRender(timePassed);
 		}
 		
 		const auto pSprite = sD3DMgr.GetSprite();
@@ -52,14 +52,14 @@ namespace Components {
 	}
 
 	void ListBox::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
-		Utils::Vector2 vPosition(lParam);
+		Utils::Vector2 position(lParam);
 
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
 			pBorder->OnMessageReceived(uMsg, wParam, lParam);
 		
 		if (uMsg == WM_LBUTTONDOWN && !sWndProc.LastMessageHandled &&
-			PtInBoundingRect(vPosition))
+			PtInBoundingRect(position))
 			SetSelecting(true);
 
 		float fItemOffset = 0.0f;
@@ -84,23 +84,23 @@ namespace Components {
 		}
 	}
 		
-	void ListBox::SetWidth(float fWidth) {
-		Rectangle::SetWidth(fWidth);
+	void ListBox::SetWidth(float width) {
+		Rectangle::SetWidth(width);
 		
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
-			pBorder->SetWidth(fWidth + 2.0f);
+			pBorder->SetWidth(width + 2.0f);
 
 		for (const auto &pListBoxEntry: m_entries)
-			pListBoxEntry->SetWidth(fWidth);
+			pListBoxEntry->SetWidth(width);
 	}
 
-	void ListBox::SetHeight(float fHeight) {
-		Rectangle::SetHeight(fHeight);
+	void ListBox::SetHeight(float height) {
+		Rectangle::SetHeight(height);
 		
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
-			pBorder->SetHeight(fHeight + 2.0f);
+			pBorder->SetHeight(height + 2.0f);
 	}
 
 	void ListBox::SelectItem(const std::shared_ptr<ListBoxEntry> &pItem) {

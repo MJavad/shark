@@ -15,16 +15,16 @@ namespace Components {
 			return;
 		}
 
-		Utils::Vector2 vPosition(lParam);
+		Utils::Vector2 position(lParam);
 		IComponent::OnMessageReceived(uMsg, wParam, lParam);
 
 		switch(uMsg)
 		{
 		case WM_LBUTTONDOWN:
 			if (!sWndProc.LastMessageHandled) {
-				if (!IsDragged() && PtInBoundingRect(vPosition) &&
-					!_notifyDragStartEvent(&vPosition))
-					StartDrag(vPosition - GetScreenPosition());
+				if (!IsDragged() && PtInBoundingRect(position) &&
+					!_notifyDragStartEvent(&position))
+					StartDrag(position - GetScreenPosition());
 
 				sWndProc.LastMessageHandled |= IsDragged();
 			}
@@ -32,7 +32,7 @@ namespace Components {
 
 		case WM_LBUTTONUP:
 			if (IsDragged()) {
-				if (!_notifyDragEndEvent(&vPosition))
+				if (!_notifyDragEndEvent(&position))
 					ClearDrag();
 
 				sWndProc.LastMessageHandled = true;
@@ -40,14 +40,14 @@ namespace Components {
 			break;
 
 		case WM_MOUSEMOVE:
-			if (IsDragged() && GetInterface()->ClipStack.PtInClipArea(vPosition) &&
-				!_notifyDragMoveEvent(&vPosition)) {
-				vPosition -= s_dragVector;
+			if (IsDragged() && GetInterface()->ClipStack.PtInClipArea(position) &&
+				!_notifyDragMoveEvent(&position)) {
+				position -= s_dragVector;
 				auto pParent = GetUIParent();
 				if (pParent != nullptr)
-					vPosition -= pParent->GetScreenPosition();
+					position -= pParent->GetScreenPosition();
 
-				SetPosition(vPosition);
+				SetPosition(position);
 			}
 
 			sWndProc.LastMessageHandled |= IsDragged();

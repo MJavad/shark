@@ -13,7 +13,7 @@ namespace Components {
 				s_activeSizer.reset();
 		}
 
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		bool IsSizing() const {
@@ -86,18 +86,18 @@ namespace Components {
 	protected:
 		ISizable();
 
-		virtual bool _notifyResizeStartEvent(Utils::Vector2 *pvPosition) {
+		virtual bool _notifyResizeStartEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: ResizeStart triggered.", this);
-			return OnResizeStartEvent(get_this<ISizable>(), pvPosition);
+			return OnResizeStartEvent(get_this<ISizable>(), pPosition);
 		}
 
-		virtual bool _notifyResizeEndEvent(Utils::Vector2 *pvPosition) {
+		virtual bool _notifyResizeEndEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: ResizeEnd triggered.", this);
-			return OnResizeEndEvent(get_this<ISizable>(), pvPosition);
+			return OnResizeEndEvent(get_this<ISizable>(), pPosition);
 		}
 
-		virtual bool _notifyResizeEvent(float fWidth, float fHeight) {
-			return OnResizeEvent(get_this<ISizable>(), fWidth, fHeight);
+		virtual bool _notifyResizeEvent(float width, float height) {
+			return OnResizeEvent(get_this<ISizable>(), width, height);
 		}
 
 	private:

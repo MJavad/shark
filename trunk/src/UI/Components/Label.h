@@ -10,11 +10,11 @@ namespace Components {
 		Label();
 		~Label();
 
-		static std::shared_ptr<Label> Create(std::wstring swText = L"",
+		static std::shared_ptr<Label> Create(std::wstring textString = L"",
 			uint32 dwFormatFlags = DT_NOCLIP | DT_SINGLELINE,
-			float fWidth = 100.0f, float fHeight = 20.0f);
+			float width = 100.0f, float height = 20.0f);
 		
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 
 		void CreateCachedFontBatch();
 		void RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const;
@@ -23,8 +23,8 @@ namespace Components {
 			return m_text;
 		}
 
-		virtual void SetText(std::wstring swText) {
-			m_text = std::move(swText);
+		virtual void SetText(std::wstring textString) {
+			m_text = std::move(textString);
 			FlushFontCache();
 		}
 
@@ -36,13 +36,13 @@ namespace Components {
 			m_color = color;
 		}
 
-		virtual void SetWidth(float fWidth) {
-			IRectComponent::SetWidth(fWidth);
+		virtual void SetWidth(float width) {
+			IRectComponent::SetWidth(width);
 			FlushFontCache();
 		}
 
-		virtual void SetHeight(float fHeight) {
-			IRectComponent::SetHeight(fHeight);
+		virtual void SetHeight(float height) {
+			IRectComponent::SetHeight(height);
 			FlushFontCache();
 		}
 

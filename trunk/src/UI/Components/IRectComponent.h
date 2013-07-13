@@ -10,16 +10,16 @@ namespace Components {
 			return m_width;
 		}
 
-		virtual void SetWidth(float fWidth) {
-			m_width = fWidth;
+		virtual void SetWidth(float width) {
+			m_width = width;
 		}
 
 		virtual float GetHeight() const {
 			return m_height;
 		}
 
-		virtual void SetHeight(float fHeight) {
-			m_height = fHeight;
+		virtual void SetHeight(float height) {
+			m_height = height;
 		}
 
 		bool PtInBoundingRect(const POINT &vPoint) const {

@@ -12,7 +12,7 @@ namespace Components {
 		}
 
 		static std::shared_ptr<Texture> Create(std::shared_ptr<D3DTexture> pTexture);
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 
 		virtual std::shared_ptr<D3DTexture> GetTexture() const {
 			return m_texture;

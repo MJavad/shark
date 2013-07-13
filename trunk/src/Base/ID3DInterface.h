@@ -4,7 +4,7 @@ class ID3DInterface abstract : public std::enable_shared_from_this<ID3DInterface
 {
 public:
 	virtual ~ID3DInterface() {};
-	virtual void OnRender(uint32 uTimePassed) = 0;
+	virtual void OnRender(uint32 timePassed) = 0;
 	virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
 protected:

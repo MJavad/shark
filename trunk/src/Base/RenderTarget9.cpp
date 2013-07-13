@@ -30,39 +30,39 @@ RenderTarget9::RenderTarget9(IDirect3DDevice9 *pDevice) : m_device9(pDevice) {
 		D3DDECL_END()
 	};
 
-	HRESULT hResult = m_device9->CreateVertexDeclaration(vertexElem, &m_vertexTexDecl);
+	HRESULT result = m_device9->CreateVertexDeclaration(vertexElem, &m_vertexTexDecl);
 	m_stateBlock = _createStateBlock(D3DSBT_ALL);
 	m_defaultStateBlock = _createDefaultStateBlock();
 
 	CComPtr<ID3DXBuffer> pVertexMain = nullptr;
-	hResult = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\RoundedRectangle.hlsl").c_str(), nullptr, nullptr, "VertexMain", "vs_3_0", 0, &pVertexMain, nullptr, nullptr);
-	assert(hResult == D3D_OK);
-	hResult = m_device9->CreateVertexShader(reinterpret_cast<DWORD*>(pVertexMain->GetBufferPointer()), &m_roundRectVertex);
-	assert(hResult == D3D_OK);
+	result = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\RoundedRectangle.hlsl").c_str(), nullptr, nullptr, "VertexMain", "vs_3_0", 0, &pVertexMain, nullptr, nullptr);
+	assert(result == D3D_OK);
+	result = m_device9->CreateVertexShader(reinterpret_cast<DWORD*>(pVertexMain->GetBufferPointer()), &m_roundRectVertex);
+	assert(result == D3D_OK);
 
 	CComPtr<ID3DXBuffer> pPixelMainDraw = nullptr;
-	hResult = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\RoundedRectangle.hlsl").c_str(), nullptr, nullptr, "PixelMainDraw", "ps_3_0", 0, &pPixelMainDraw, nullptr, nullptr);
-	assert(hResult == D3D_OK);
-	hResult = m_device9->CreatePixelShader(reinterpret_cast<DWORD*>(pPixelMainDraw->GetBufferPointer()), &m_roundRectDrawPixel);
-	assert(hResult == D3D_OK);
+	result = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\RoundedRectangle.hlsl").c_str(), nullptr, nullptr, "PixelMainDraw", "ps_3_0", 0, &pPixelMainDraw, nullptr, nullptr);
+	assert(result == D3D_OK);
+	result = m_device9->CreatePixelShader(reinterpret_cast<DWORD*>(pPixelMainDraw->GetBufferPointer()), &m_roundRectDrawPixel);
+	assert(result == D3D_OK);
 
 	CComPtr<ID3DXBuffer> pPixelMainFill = nullptr;
-	hResult = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\RoundedRectangle.hlsl").c_str(), nullptr, nullptr, "PixelMainFill", "ps_3_0", 0, &pPixelMainFill, nullptr, nullptr);
-	assert(hResult == D3D_OK);
-	hResult = m_device9->CreatePixelShader(reinterpret_cast<DWORD*>(pPixelMainFill->GetBufferPointer()), &m_roundRectFillPixel);
-	assert(hResult == D3D_OK);
+	result = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\RoundedRectangle.hlsl").c_str(), nullptr, nullptr, "PixelMainFill", "ps_3_0", 0, &pPixelMainFill, nullptr, nullptr);
+	assert(result == D3D_OK);
+	result = m_device9->CreatePixelShader(reinterpret_cast<DWORD*>(pPixelMainFill->GetBufferPointer()), &m_roundRectFillPixel);
+	assert(result == D3D_OK);
 
 	CComPtr<ID3DXBuffer> pVertexMainBlur = nullptr;
-	hResult = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\Blur.hlsl").c_str(), nullptr, nullptr, "VertexMain", "vs_3_0", 0, &pVertexMainBlur, nullptr, nullptr);
-	assert(hResult == D3D_OK);
-	hResult = m_device9->CreateVertexShader(reinterpret_cast<DWORD*>(pVertexMainBlur->GetBufferPointer()), &m_blurVertex);
-	assert(hResult == D3D_OK);
+	result = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\Blur.hlsl").c_str(), nullptr, nullptr, "VertexMain", "vs_3_0", 0, &pVertexMainBlur, nullptr, nullptr);
+	assert(result == D3D_OK);
+	result = m_device9->CreateVertexShader(reinterpret_cast<DWORD*>(pVertexMainBlur->GetBufferPointer()), &m_blurVertex);
+	assert(result == D3D_OK);
 
 	CComPtr<ID3DXBuffer> pPixelMainBlur = nullptr;
-	hResult = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\Blur.hlsl").c_str(), nullptr, nullptr, "PixelMain", "ps_3_0", 0, &pPixelMainBlur, nullptr, nullptr);
-	assert(hResult == D3D_OK);
-	hResult = m_device9->CreatePixelShader(reinterpret_cast<DWORD*>(pPixelMainBlur->GetBufferPointer()), &m_blurPixel);
-	assert(hResult == D3D_OK);
+	result = D3DXCompileShaderFromFileW(std::wstring(sFileMgr.GetModuleDirectory() + L"\\Blur.hlsl").c_str(), nullptr, nullptr, "PixelMain", "ps_3_0", 0, &pPixelMainBlur, nullptr, nullptr);
+	assert(result == D3D_OK);
+	result = m_device9->CreatePixelShader(reinterpret_cast<DWORD*>(pPixelMainBlur->GetBufferPointer()), &m_blurPixel);
+	assert(result == D3D_OK);
 }
 
 void RenderTarget9::BeginUI() {
@@ -100,10 +100,10 @@ bool RenderTarget9::GetSurfaceRect(RECT *pRect) const {
 		D3DSURFACE_DESC surfaceDesc;
 		IDirect3DSurface9 *pRenderTarget = nullptr;
 		if (m_device9->GetRenderTarget(0, &pRenderTarget) == D3D_OK) {
-			HRESULT hResult = pRenderTarget->GetDesc(&surfaceDesc);
+			HRESULT result = pRenderTarget->GetDesc(&surfaceDesc);
 			pRenderTarget->Release();
 
-			if (hResult == D3D_OK) {
+			if (result == D3D_OK) {
 				pRect->right = surfaceDesc.Width;
 				pRect->bottom = surfaceDesc.Height;
 				return true;
@@ -130,42 +130,41 @@ void RenderTarget9::SetClippingArea(const RECT *pRect) const {
 		m_device9->SetScissorRect(pRect);
 }
 
-std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 uWidth, uint32 uHeight) const
+std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 width, uint32 height) const
 {
 	CComPtr<IDirect3DTexture9> pTexture = nullptr;
-	HRESULT hResult = D3DXCreateTexture(m_device9, uWidth, uHeight, 1,
+	HRESULT result = D3DXCreateTexture(m_device9, width, height, 1,
 		D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pTexture);
-	if (hResult != D3D_OK)
+	if (result != D3D_OK)
 		return nullptr;
 
 	auto pTextureObject = std::make_shared<UI::D3DTextureObject9>(pTexture);
 	return std::make_shared<UI::D3DTexture>(pTextureObject);
 }
 
-std::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32 uWidth, uint32 uHeight) const
+std::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32 width, uint32 height) const
 {
 	CComPtr<IDirect3DSurface9> pBackBuffer = nullptr;
-	HRESULT hResult = m_device9->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-	if (hResult != D3D_OK)
+	HRESULT result = m_device9->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
+	if (result != D3D_OK)
 		return nullptr;
 
 	D3DSURFACE_DESC backBufferDesc;
-	hResult = pBackBuffer->GetDesc(&backBufferDesc);
-	if (hResult != D3D_OK)
+	result = pBackBuffer->GetDesc(&backBufferDesc);
+	if (result != D3D_OK)
 		return nullptr;
 
 	CComPtr<IDirect3DSurface9> pSurface = nullptr;
-	hResult = m_device9->CreateRenderTarget(uWidth, uHeight, backBufferDesc.Format,
+	result = m_device9->CreateRenderTarget(width, height, backBufferDesc.Format,
 		backBufferDesc.MultiSampleType, backBufferDesc.MultiSampleQuality, FALSE, &pSurface, nullptr);
-	if (hResult != D3D_OK)
+	if (result != D3D_OK)
 		return nullptr;
 
 	return std::make_shared<UI::D3DSurface9>(pSurface);
 }
 
 void RenderTarget9::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DSurface> &pSurface,
-										   uint32 uIndex,
-										   bool bClear)
+										   uint32 index, bool shouldClear)
 {
 	CComPtr<IDirect3DSurface9> pOldSurface = nullptr;
 	auto pSurfaceObject = std::dynamic_pointer_cast<const UI::D3DSurface9>(pSurface);
@@ -173,58 +172,58 @@ void RenderTarget9::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DS
 	if (pSurfaceObject != nullptr) {
 		auto pSurface9 = pSurfaceObject->GetSurface9();
 		if (pSurface9 != nullptr) {
-			m_device9->SetRenderTarget(uIndex, pSurface9);
+			m_device9->SetRenderTarget(index, pSurface9);
 			
-			if (bClear)
+			if (shouldClear)
 				m_device9->Clear(0, nullptr, D3DCLEAR_TARGET, 0, 0.0f, 0);
 		}
 	}
 }
 
-std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 uIndex) const
+std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 index) const
 {
 	CComPtr<IDirect3DSurface9> pSurface = nullptr;
-	HRESULT hResult = m_device9->GetRenderTarget(uIndex, &pSurface);
-	if (hResult != D3D_OK)
+	HRESULT result = m_device9->GetRenderTarget(index, &pSurface);
+	if (result != D3D_OK)
 		return nullptr;
 
 	return std::make_shared<UI::D3DSurface9>(pSurface);
 }
 
-void RenderTarget9::DrawRectangle(const Utils::Vector2 &vPosition,
+void RenderTarget9::DrawRectangle(const Utils::Vector2 &position,
 								  const std::array<Utils::Vector2, 4> &dimensions,
 								  const std::array<D3DXCOLOR, 4> &gradient,
 								  float fStroke) const
 {
-	/*float fWidth = GetDimensionWidth(dimensions);
-	float fHeight = GetDimensionHeight(dimensions);
+	/*float width = GetDimensionWidth(dimensions);
+	float height = GetDimensionHeight(dimensions);
 
 	RHWDiffuseVertex vertices_top[] = {
-		{ vPosition.x, vPosition.y, 0, 1, color },
-		{ vPosition.x + fWidth - fStroke, vPosition.y, 0, 1, color },
-		{ vPosition.x + fWidth - fStroke, vPosition.y + fStroke, 0, 1, color },
-		{ vPosition.x, vPosition.y + fStroke, 0, 1, color }
+		{ position.x, position.y, 0, 1, color },
+		{ position.x + width - fStroke, position.y, 0, 1, color },
+		{ position.x + width - fStroke, position.y + fStroke, 0, 1, color },
+		{ position.x, position.y + fStroke, 0, 1, color }
 	};
 
 	RHWDiffuseVertex vertices_bottom[] = {
-		{ vPosition.x + fStroke, vPosition.y + fHeight - fStroke, 0, 1, color },
-		{ vPosition.x + fWidth, vPosition.y + fHeight - fStroke, 0, 1, color },
-		{ vPosition.x + fWidth, vPosition.y + fHeight, 0, 1, color },
-		{ vPosition.x + fStroke, vPosition.y + fHeight, 0, 1, color }
+		{ position.x + fStroke, position.y + height - fStroke, 0, 1, color },
+		{ position.x + width, position.y + height - fStroke, 0, 1, color },
+		{ position.x + width, position.y + height, 0, 1, color },
+		{ position.x + fStroke, position.y + height, 0, 1, color }
 	};
 
 	RHWDiffuseVertex vertices_left[] = {
-		{ vPosition.x, vPosition.y + fStroke, 0, 1, color },
-		{ vPosition.x + fStroke, vPosition.y + fStroke, 0, 1, color },
-		{ vPosition.x + fStroke, vPosition.y + fHeight, 0, 1, color },
-		{ vPosition.x, vPosition.y + fHeight, 0, 1, color }
+		{ position.x, position.y + fStroke, 0, 1, color },
+		{ position.x + fStroke, position.y + fStroke, 0, 1, color },
+		{ position.x + fStroke, position.y + height, 0, 1, color },
+		{ position.x, position.y + height, 0, 1, color }
 	};
 
 	RHWDiffuseVertex vertices_right[] = {
-		{ vPosition.x + fWidth - fStroke, vPosition.y, 0, 1, color },
-		{ vPosition.x + fWidth, vPosition.y, 0, 1, color },
-		{ vPosition.x + fWidth, vPosition.y + fHeight - fStroke, 0, 1, color },
-		{ vPosition.x + fWidth - fStroke, vPosition.y + fHeight - fStroke, 0, 1, color }
+		{ position.x + width - fStroke, position.y, 0, 1, color },
+		{ position.x + width, position.y, 0, 1, color },
+		{ position.x + width, position.y + height - fStroke, 0, 1, color },
+		{ position.x + width - fStroke, position.y + height - fStroke, 0, 1, color }
 	};
 
 	m_device9->SetFVF(RHWDiffuseVertex::FVF);
@@ -234,33 +233,33 @@ void RenderTarget9::DrawRectangle(const Utils::Vector2 &vPosition,
 	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices_right, sizeof(RHWDiffuseVertex));*/
 }
 
-void RenderTarget9::FillRectangle(const Utils::Vector2 &vPosition,
+void RenderTarget9::FillRectangle(const Utils::Vector2 &position,
 								  const std::array<Utils::Vector2, 4> &dimensions,
 								  const std::array<D3DXCOLOR, 4> &gradient) const
 {
 	RHWDiffuseVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, gradient[0] },
-		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, gradient[1] },
-		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, gradient[2] },
-		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 1, gradient[3] }
+		{ position.x + dimensions[0].x, position.y + dimensions[0].y, 0, 1, gradient[0] },
+		{ position.x + dimensions[1].x, position.y + dimensions[1].y, 0, 1, gradient[1] },
+		{ position.x + dimensions[2].x, position.y + dimensions[2].y, 0, 1, gradient[2] },
+		{ position.x + dimensions[3].x, position.y + dimensions[3].y, 0, 1, gradient[3] }
 	};
 
 	m_device9->SetFVF(RHWDiffuseVertex::FVF);
 	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RHWDiffuseVertex));
 }
 
-void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &vPosition,
+void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &position,
 										 const std::array<Utils::Vector2, 4> &dimensions,
-										 const float4 &fHorizRadius,
-										 const float4 &fVertRadius,
+										 const float4 &horizontalRadius,
+										 const float4 &verticalRadius,
 										 const std::array<D3DXCOLOR, 4> &gradient,
 										 float fStroke) const
 {
 	UIVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
-		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
-		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
-		{ vPosition.x + dimensions[3].x - 1, vPosition.y + dimensions[3].y + 2, 0, 0, 1, gradient[3] }
+		{ position.x + dimensions[0].x - 2, position.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
+		{ position.x + dimensions[1].x + 2, position.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
+		{ position.x + dimensions[2].x + 2, position.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
+		{ position.x + dimensions[3].x - 1, position.y + dimensions[3].y + 2, 0, 0, 1, gradient[3] }
 	};
 
 	m_device9->SetVertexShader(m_roundRectVertex);
@@ -268,29 +267,29 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &vPosition,
 
 	D3DVIEWPORT9 viewPort = {0};
 	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = static_cast<float>(viewPort.Width);
-	float fScreenHeight = static_cast<float>(viewPort.Height);
+	float screenWidth = static_cast<float>(viewPort.Width);
+	float screenHeight = static_cast<float>(viewPort.Height);
 	
 	D3DXMATRIX orthoProj;
-	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
+	D3DXMatrixOrthoLH(&orthoProj, screenWidth, screenHeight, viewPort.MinZ, viewPort.MaxZ);
 	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
 	
-	float fWidth = GetDimensionWidth(dimensions) + 4;
-	float fHeight = GetDimensionHeight(dimensions) + 4;
-	float params1[] = { fStroke, fStroke / fWidth, 0, 0 };
+	float width = GetDimensionWidth(dimensions) + 4;
+	float height = GetDimensionHeight(dimensions) + 4;
+	float params1[] = { fStroke, fStroke / width, 0, 0 };
 	m_device9->SetPixelShaderConstantF(4, params1, 1);
 
 	float radius[] = {
-		fHorizRadius._1, fHorizRadius._2,
-		fHorizRadius._3, fHorizRadius._4,
+		horizontalRadius._1, horizontalRadius._2,
+		horizontalRadius._3, horizontalRadius._4,
 
-		fVertRadius._1,  fVertRadius._2,
-		fVertRadius._3,  fVertRadius._4
+		verticalRadius._1,  verticalRadius._2,
+		verticalRadius._3,  verticalRadius._4
 	};
 
 	m_device9->SetPixelShaderConstantF(6, radius, 2);
 
-	float params2[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
+	float params2[] = { width, height, screenWidth, screenHeight };
 	m_device9->SetPixelShaderConstantF(5, params2, 1);
 	m_device9->SetVertexShaderConstantF(5, params2, 1);
 
@@ -301,17 +300,17 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &vPosition,
 	m_device9->SetPixelShader(nullptr);
 }
 
-void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition,
+void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &position,
 										 const std::array<Utils::Vector2, 4> &dimensions,
-										 const float4 &fHorizRadius,
-										 const float4 &fVertRadius,
+										 const float4 &horizontalRadius,
+										 const float4 &verticalRadius,
 										 const std::array<D3DXCOLOR, 4> &gradient) const
 {
 	UIVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x - 2, vPosition.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
-		{ vPosition.x + dimensions[1].x + 2, vPosition.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
-		{ vPosition.x + dimensions[2].x + 2, vPosition.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
-		{ vPosition.x + dimensions[3].x - 2, vPosition.y + dimensions[3].y + 2, 0, 0, 1, gradient[3] }
+		{ position.x + dimensions[0].x - 2, position.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
+		{ position.x + dimensions[1].x + 2, position.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
+		{ position.x + dimensions[2].x + 2, position.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
+		{ position.x + dimensions[3].x - 2, position.y + dimensions[3].y + 2, 0, 0, 1, gradient[3] }
 	};
 
 	m_device9->SetVertexShader(m_roundRectVertex);
@@ -319,29 +318,29 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition,
 
 	D3DVIEWPORT9 viewPort = {0};
 	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = static_cast<float>(viewPort.Width);
-	float fScreenHeight = static_cast<float>(viewPort.Height);
+	float screenWidth = static_cast<float>(viewPort.Width);
+	float screenHeight = static_cast<float>(viewPort.Height);
 	
 	D3DXMATRIX orthoProj;
-	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
+	D3DXMatrixOrthoLH(&orthoProj, screenWidth, screenHeight, viewPort.MinZ, viewPort.MaxZ);
 	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
 	
-	float fWidth = GetDimensionWidth(dimensions) + 4;
-	float fHeight = GetDimensionHeight(dimensions) + 4;
-	float params1[] = { 1.0f, 1.0f / fWidth, 0, 0 };
+	float width = GetDimensionWidth(dimensions) + 4;
+	float height = GetDimensionHeight(dimensions) + 4;
+	float params1[] = { 1.0f, 1.0f / width, 0, 0 };
 	m_device9->SetPixelShaderConstantF(4, params1, 1);
 
 	float radius[] = {
-		fHorizRadius._1, fHorizRadius._2,
-		fHorizRadius._3, fHorizRadius._4,
+		horizontalRadius._1, horizontalRadius._2,
+		horizontalRadius._3, horizontalRadius._4,
 
-		fVertRadius._1,  fVertRadius._2,
-		fVertRadius._3,  fVertRadius._4
+		verticalRadius._1,  verticalRadius._2,
+		verticalRadius._3,  verticalRadius._4
 	};
 
 	m_device9->SetPixelShaderConstantF(6, radius, 2);
 
-	float params2[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
+	float params2[] = { width, height, screenWidth, screenHeight };
 	m_device9->SetPixelShaderConstantF(5, params2, 1);
 	m_device9->SetVertexShaderConstantF(5, params2, 1);
 
@@ -352,16 +351,16 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &vPosition,
 	m_device9->SetPixelShader(nullptr);
 }
 
-void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition,
+void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
 									  std::shared_ptr<const UI::D3DTexture> pTexture,
 									  const std::array<Utils::Vector2, 4> &dimensions,
 									  const std::array<D3DXCOLOR, 4> &gradient) const
 {
 	UIVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 0, 0, gradient[0] },
-		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, 0, gradient[1] },
-		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, 1, gradient[2] },
-		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 0, 1, gradient[3] }
+		{ position.x + dimensions[0].x, position.y + dimensions[0].y, 0, 0, 0, gradient[0] },
+		{ position.x + dimensions[1].x, position.y + dimensions[1].y, 0, 1, 0, gradient[1] },
+		{ position.x + dimensions[2].x, position.y + dimensions[2].y, 0, 1, 1, gradient[2] },
+		{ position.x + dimensions[3].x, position.y + dimensions[3].y, 0, 0, 1, gradient[3] }
 	};
 
 	const auto textureObject = std::dynamic_pointer_cast
@@ -375,16 +374,16 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition,
 
 	D3DVIEWPORT9 viewPort = {0};
 	m_device9->GetViewport(&viewPort);
-	float fScreenWidth = static_cast<float>(viewPort.Width);
-	float fScreenHeight = static_cast<float>(viewPort.Height);
+	float screenWidth = static_cast<float>(viewPort.Width);
+	float screenHeight = static_cast<float>(viewPort.Height);
 	
 	D3DXMATRIX orthoProj;
-	D3DXMatrixOrthoLH(&orthoProj, fScreenWidth, fScreenHeight, viewPort.MinZ, viewPort.MaxZ);
+	D3DXMatrixOrthoLH(&orthoProj, screenWidth, screenHeight, viewPort.MinZ, viewPort.MaxZ);
 	m_device9->SetVertexShaderConstantF(0, orthoProj, 4);
 
-	float fWidth = GetDimensionWidth(dimensions);
-	float fHeight = GetDimensionHeight(dimensions);
-	float params[] = { fWidth, fHeight, fScreenWidth, fScreenHeight };
+	float width = GetDimensionWidth(dimensions);
+	float height = GetDimensionHeight(dimensions);
+	float params[] = { width, height, screenWidth, screenHeight };
 	m_device9->SetPixelShaderConstantF(4, params, 1);
 	m_device9->SetVertexShaderConstantF(4, params, 1);
 
@@ -396,16 +395,16 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &vPosition,
 	m_device9->SetTexture(0, nullptr);
 }
 
-void RenderTarget9::DrawSprite(const Utils::Vector2 &vPosition,
+void RenderTarget9::DrawSprite(const Utils::Vector2 &position,
 							   std::shared_ptr<const UI::D3DTexture> pTexture,
 							   const std::array<Utils::Vector2, 4> &dimensions,
 							   const std::array<D3DXCOLOR, 4> &gradient) const
 {
 	RHWDiffuseTextureVertex vertices[] = {
-		{ vPosition.x + dimensions[0].x, vPosition.y + dimensions[0].y, 0, 1, gradient[0], 0, 0 },
-		{ vPosition.x + dimensions[1].x, vPosition.y + dimensions[1].y, 0, 1, gradient[1], 1, 0 },
-		{ vPosition.x + dimensions[2].x, vPosition.y + dimensions[2].y, 0, 1, gradient[2], 1, 1 },
-		{ vPosition.x + dimensions[3].x, vPosition.y + dimensions[3].y, 0, 1, gradient[3], 0, 1 }
+		{ position.x + dimensions[0].x, position.y + dimensions[0].y, 0, 1, gradient[0], 0, 0 },
+		{ position.x + dimensions[1].x, position.y + dimensions[1].y, 0, 1, gradient[1], 1, 0 },
+		{ position.x + dimensions[2].x, position.y + dimensions[2].y, 0, 1, gradient[2], 1, 1 },
+		{ position.x + dimensions[3].x, position.y + dimensions[3].y, 0, 1, gradient[3], 0, 1 }
 	};
 
 	const auto textureObject = std::dynamic_pointer_cast
@@ -595,8 +594,8 @@ const SStateBlockRecord<D3DTEXTURESTAGESTATETYPE> RenderTarget9::m_textureStageN
 
 CComPtr<IDirect3DStateBlock9> RenderTarget9::_createStateBlock(D3DSTATEBLOCKTYPE type) const {
 	CComPtr<IDirect3DStateBlock9> pStateBlock = nullptr;
-	HRESULT hResult = m_device9->CreateStateBlock(type, &pStateBlock);
-	assert(hResult == D3D_OK);
+	HRESULT result = m_device9->CreateStateBlock(type, &pStateBlock);
+	assert(result == D3D_OK);
 	return pStateBlock;
 }
 

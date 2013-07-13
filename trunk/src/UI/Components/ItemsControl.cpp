@@ -48,13 +48,13 @@ namespace Components {
 		return true;
 	}
 
-	void ItemsControl::OnRender(uint32 uTimePassed) {
+	void ItemsControl::OnRender(uint32 timePassed) {
 		// render from back to front
 		for (auto itr = m_children.crbegin(),
 			end = m_children.crend(); itr != end; ++itr) {
 			const auto &pComponent = *itr;
 			if (pComponent->GetVisibility())
-				pComponent->OnRender(uTimePassed);
+				pComponent->OnRender(timePassed);
 		}
 	}
 

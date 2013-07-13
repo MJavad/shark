@@ -17,9 +17,9 @@ namespace UI {
 				m_d3dxSprite->OnResetDevice();
 		}
 
-		virtual void Begin(uint32 dwFlags) {
+		virtual void Begin(uint32 flags) {
 			if (m_d3dxSprite != nullptr)
-				m_d3dxSprite->Begin(dwFlags);
+				m_d3dxSprite->Begin(flags);
 		}
 
 		virtual void Draw(const std::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,

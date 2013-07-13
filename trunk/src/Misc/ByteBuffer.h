@@ -6,9 +6,9 @@ namespace Utils {
 		ByteBuffer() :
 			m_storage(), m_rpos(0), m_wpos(0) {}
 
-		ByteBuffer(size_t uSize, byte bData = 0) :
+		ByteBuffer(size_t size, byte data = 0) :
 			m_storage(), m_rpos(0), m_wpos(0) {
-			m_storage.resize(uSize, bData);
+			m_storage.resize(size, data);
 		}
 
 		ByteBuffer(ByteBuffer &&other) :
@@ -34,20 +34,20 @@ namespace Utils {
 		}
 
 		template <typename T>
-		ByteBuffer& operator << (const T &tData) {
-			put(tData);
+		ByteBuffer& operator << (const T &data) {
+			put(data);
 			return *this;
 		}
 
 		template <typename T>
-		ByteBuffer& operator >> (T &tData) {
-			tData = get<T>();
+		ByteBuffer& operator >> (T &data) {
+			data = get<T>();
 			return *this;
 		}
 
 		template <typename T>
-		const ByteBuffer& operator >> (T &tData) const {
-			tData = get<T>();
+		const ByteBuffer& operator >> (T &data) const {
+			data = get<T>();
 			return *this;
 		}
 
@@ -67,8 +67,8 @@ namespace Utils {
 			return m_storage;
 		}
 
-		byte& operator [] (const uint32 &uPos) {
-			return m_storage[uPos];
+		byte& operator [] (const uint32 &pos) {
+			return m_storage[pos];
 		}
 
 		size_t size() const {
@@ -106,47 +106,47 @@ namespace Utils {
 			m_wpos = 0;
 		}
 
-		void resize(size_t uSize, byte bData = 0) {
-			m_storage.resize(uSize, bData);
-			if (m_rpos > uSize)
-				m_rpos = uSize;
-			if (m_wpos > uSize)
-				m_wpos = uSize;
+		void resize(size_t size, byte data = 0) {
+			m_storage.resize(size, data);
+			if (m_rpos > size)
+				m_rpos = size;
+			if (m_wpos > size)
+				m_wpos = size;
 		}
 
-		void reserve(size_t uSize) {
-			m_storage.reserve(uSize);
+		void reserve(size_t size) {
+			m_storage.reserve(size);
 		}
 
-		void put_array(const byte *pbData, size_t uSize) {
-			put_array(pbData, uSize, m_rpos);
-			m_rpos += uSize;
+		void put_array(const byte *data, size_t size) {
+			put_array(data, size, m_rpos);
+			m_rpos += size;
 		}
 
-		void put_array(const byte *pbData, size_t uSize, uint32 uPos);
-		void erase(uint32 uPos, size_t uSize);
+		void put_array(const byte *data, size_t size, uint32 pos);
+		void erase(uint32 pos, size_t size);
 
 		template <size_t _Size>
-		void put_array_s(const byte (&bData)[_Size]) {
-			put_array(bData, _Size);
+		void put_array_s(const byte (&data)[_Size]) {
+			put_array(data, _Size);
 		}
 
 		template <size_t _Size>
-		void put_array_s(const byte (&bData)[_Size], uint32 uPos) {
-			put_array(bData, _Size, uPos);
+		void put_array_s(const byte (&data)[_Size], uint32 pos) {
+			put_array(data, _Size, pos);
 		}
 
 		template <typename T>
-		void put(const T &tData) {
-			put(tData, m_wpos);
+		void put(const T &data) {
+			put(data, m_wpos);
 			m_wpos += sizeof(T);
 		}
 
 		template <typename T>
-		void put(const T &tData, const uint32 &uPos) {
-			if (m_storage.size() < uPos + sizeof(T))
-				m_storage.resize(uPos + sizeof(T));
-			*reinterpret_cast<T*>(&m_storage[uPos]) = tData;
+		void put(const T &data, const uint32 &pos) {
+			if (m_storage.size() < pos + sizeof(T))
+				m_storage.resize(pos + sizeof(T));
+			*reinterpret_cast<T*>(&m_storage[pos]) = data;
 		}
 
 		template <typename T>
@@ -164,27 +164,27 @@ namespace Utils {
 		}
 
 		template <typename T>
-		T& get(const uint32 &uPos) {
-			if (m_storage.size() >= uPos + sizeof(T))
-				return *reinterpret_cast<T*>(&m_storage[uPos]);
+		T& get(const uint32 &pos) {
+			if (m_storage.size() >= pos + sizeof(T))
+				return *reinterpret_cast<T*>(&m_storage[pos]);
 			throw std::out_of_range("[ByteBuffer] Bad get: Storage access violation.");
 		}
 
 		template <typename T>
-		const T& get(const uint32 &uPos) const {
-			if (m_storage.size() >= uPos + sizeof(T))
-				return *reinterpret_cast<const T*>(&m_storage[uPos]);
+		const T& get(const uint32 &pos) const {
+			if (m_storage.size() >= pos + sizeof(T))
+				return *reinterpret_cast<const T*>(&m_storage[pos]);
 			throw std::out_of_range("[ByteBuffer] Bad get: Storage access violation.");
 		}
 
 		template<>
-		void put(const ByteBuffer &tData) {
-			put_array(tData.data(), tData.size());
+		void put(const ByteBuffer &data) {
+			put_array(data.data(), data.size());
 		}
 
 		template<>
-		void put(const ByteBuffer &tData, const uint32 &uPos) {
-			put_array(tData.data(), tData.size(), uPos);
+		void put(const ByteBuffer &data, const uint32 &pos) {
+			put_array(data.data(), data.size(), pos);
 		}
 
 	protected:

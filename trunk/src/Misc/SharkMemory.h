@@ -19,24 +19,24 @@ namespace Utils {
 		}
 
 		void Initialize();
-		static DWORD_PTR Allocate(uint32 uSize, DWORD dwProtection = PAGE_EXECUTE_READWRITE);
-		static bool Free(DWORD_PTR dwAddress);
+		static DWORD_PTR Allocate(uint32 size, DWORD dwProtection = PAGE_EXECUTE_READWRITE);
+		static bool Free(DWORD_PTR address);
 
-		static bool SetMemoryProtection(DWORD_PTR dwAddress, uint32 uSize,
+		static bool SetMemoryProtection(DWORD_PTR address, uint32 size,
 			DWORD dwNewProtect, DWORD *pOldProtect = nullptr);
 
-		static bool WriteMemory_Safe(DWORD_PTR dwAddress, const ByteBuffer &bytes);
-		static ByteBuffer ReadMemory_Safe(DWORD_PTR dwAddress, uint32 uSize);
+		static bool WriteMemory_Safe(DWORD_PTR address, const ByteBuffer &bytes);
+		static ByteBuffer ReadMemory_Safe(DWORD_PTR address, uint32 size);
 
 		template <typename T>
-		static T& GetMemory(DWORD_PTR dwAddress) {
-			return *reinterpret_cast<T*>(dwAddress);
+		static T& GetMemory(DWORD_PTR address) {
+			return *reinterpret_cast<T*>(address);
 		}
 
 		static DWORD_PTR FindMemoryPattern(DWORD_PTR dwStartAddress,
 			DWORD dwLength, const byte *pbMask, const char *pszMask);
 
-		static uint32 GetInstructionSize(DWORD_PTR dwAddress);
+		static uint32 GetInstructionSize(DWORD_PTR address);
 		bool DetourFunction(void **ppDelegate, void *pRedirect);
 		bool RemoveDetour(void **ppDelegate);
 		bool RemoveAllDetours();
@@ -45,7 +45,7 @@ namespace Utils {
 		Heap m_trampolineHeap;
 		std::map<void*, SHookInformation> m_hooks;
 
-		static bool _dataCompare(const byte *pbData, const byte *pbMask, const char *pszMask);
+		static bool _dataCompare(const byte *pdata, const byte *pbMask, const char *pszMask);
 		void _detourResumeThread(const std::shared_ptr<Thread> &thread) const;
 		
 		void _detourUpdateThread(const std::shared_ptr<Thread> &thread,

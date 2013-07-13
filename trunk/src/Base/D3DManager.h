@@ -44,14 +44,14 @@ public:
 	std::list<std::shared_ptr<ID3DInterface>> GetInterfaces() const { return m_interfaces; }
 	std::shared_ptr<UI::ID3DSprite> GetSprite() const { return m_sprite; }
 
-	std::shared_ptr<UI::D3DFont> GetFont(std::wstring swFontName, uint32 uHeight,
-		uint32 uWidth = 0, uint32 uWeight = FW_NORMAL, bool bItalic = false);
+	std::shared_ptr<UI::D3DFont> GetFont(std::wstring fontName, uint32 height,
+		uint32 width = 0, uint32 weight = FW_NORMAL, bool italic = false);
 
-	std::shared_ptr<UI::D3DTexture> GetTextureFromFile(std::wstring swFileName,
-		uint32 uWidth = D3DX_DEFAULT_NONPOW2, uint32 uHeight = D3DX_DEFAULT_NONPOW2);
+	std::shared_ptr<UI::D3DTexture> GetTextureFromFile(std::wstring fileName,
+		uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
 
-	std::shared_ptr<UI::D3DTexture> GetTextureFromResource(std::wstring swResourceName,
-		HMODULE hModule, uint32 uWidth = D3DX_DEFAULT_NONPOW2, uint32 uHeight = D3DX_DEFAULT_NONPOW2);
+	std::shared_ptr<UI::D3DTexture> GetTextureFromResource(std::wstring resourceName,
+		HMODULE module, uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
 
 	Utils::Event<void (uint32)> OnUpdateEvent;
 	Utils::Event<void ()> OnDeviceLostEvent;

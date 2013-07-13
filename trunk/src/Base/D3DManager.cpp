@@ -217,10 +217,10 @@ void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 }
 
-std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
-	uint32 uHeight, uint32 uWidth, uint32 uWeight, bool bItalic)
+std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
+	uint32 height, uint32 width, uint32 weight, bool italic)
 {
-	size_t dwFontFace = std::hash<std::wstring>()(swFontName);
+	size_t dwFontFace = std::hash<std::wstring>()(fontName);
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
 		if (itr->expired()) {
 			itr = m_fonts.erase(itr);
@@ -230,22 +230,22 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
 		const auto pFont = (itr++)->lock();
 		const auto &fontDesc = pFont->GetDescription();
 		if (std::hash<std::wstring>()(fontDesc.faceName) == dwFontFace &&
-			fontDesc.height == uHeight && fontDesc.width == uWidth &&
-			fontDesc.weight == uWeight && fontDesc.italic == bItalic)
+			fontDesc.height == height && fontDesc.width == width &&
+			fontDesc.weight == weight && fontDesc.italic == italic)
 			return pFont;
 	}
 
 	UI::FontDescription fontDesc = {0};
-	fontDesc.height = uHeight;
-	fontDesc.width = uWidth;
-	fontDesc.weight = uWeight;
-	fontDesc.italic = bItalic;
+	fontDesc.height = height;
+	fontDesc.width = width;
+	fontDesc.weight = weight;
+	fontDesc.italic = italic;
 	fontDesc.mipLevels = 1;
 	fontDesc.charSet = DEFAULT_CHARSET;
 	fontDesc.outputPrecision = OUT_TT_PRECIS;
 	fontDesc.quality = ANTIALIASED_QUALITY;
 	fontDesc.pitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	fontDesc.faceName = std::move(swFontName);
+	fontDesc.faceName = std::move(fontName);
 
 	auto pFont = std::make_shared<UI::D3DFont>(fontDesc);
 	m_fonts.push_back(pFont);
@@ -258,9 +258,9 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
 }
 
 std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
-	std::wstring swFileName, uint32 uWidth, uint32 uHeight)
+	std::wstring fileName, uint32 width, uint32 height)
 {
-	size_t dwFileName = std::hash<std::wstring>()(swFileName);
+	size_t dwFileName = std::hash<std::wstring>()(fileName);
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
 		if (itr->expired()) {
 			itr = m_textures.erase(itr);
@@ -271,17 +271,17 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 		const auto &texDesc = pTexture->GetDescription();
 		if (texDesc.type == UI::TEXTURE_FROM_FILE &&
 			std::hash<std::wstring>()(texDesc.filePathOrResource) == dwFileName &&
-			texDesc.width == uWidth &&
-			texDesc.height == uHeight)
+			texDesc.width == width &&
+			texDesc.height == height)
 			return pTexture;
 	}
 	
 	UI::TextureDescription texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.type = UI::TEXTURE_FROM_FILE;
-	texDesc.filePathOrResource = std::move(swFileName);
-	texDesc.width = uWidth;
-	texDesc.height = uHeight;
+	texDesc.filePathOrResource = std::move(fileName);
+	texDesc.width = width;
+	texDesc.height = height;
 	texDesc.mipLevels = 1;
 	texDesc.format = D3DFMT_A8R8G8B8;
 	texDesc.pool = D3DPOOL_DEFAULT;
@@ -299,9 +299,9 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 }
 
 std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
-	std::wstring swResourceName, HMODULE hModule, uint32 uWidth, uint32 uHeight)
+	std::wstring resourceName, HMODULE module, uint32 width, uint32 height)
 {
-	size_t dwResourceName = std::hash<std::wstring>()(swResourceName);
+	size_t dwResourceName = std::hash<std::wstring>()(resourceName);
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
 		if (itr->expired()) {
 			itr = m_textures.erase(itr);
@@ -312,19 +312,19 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 		const auto &texDesc = pTexture->GetDescription();
 		if (texDesc.type == UI::TEXTURE_FROM_RESOURCE &&
 			std::hash<std::wstring>()(texDesc.filePathOrResource) == dwResourceName &&
-			texDesc.resourceModule == hModule &&
-			texDesc.width == uWidth &&
-			texDesc.height == uHeight)
+			texDesc.resourceModule == module &&
+			texDesc.width == width &&
+			texDesc.height == height)
 			return pTexture;
 	}
 
 	UI::TextureDescription texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.type = UI::TEXTURE_FROM_RESOURCE;
-	texDesc.filePathOrResource = std::move(swResourceName);
-	texDesc.resourceModule = hModule;
-	texDesc.width = uWidth;
-	texDesc.height = uHeight;
+	texDesc.filePathOrResource = std::move(resourceName);
+	texDesc.resourceModule = module;
+	texDesc.width = width;
+	texDesc.height = height;
 	texDesc.mipLevels = 1;
 	texDesc.format = D3DFMT_A8R8G8B8;
 	texDesc.pool = D3DPOOL_DEFAULT;

@@ -15,21 +15,21 @@ namespace Components {
 		sD3DMgr.OnDeviceChangedEvent -= m_changeDevice;
 	}
 
-	std::shared_ptr<Label> Label::Create(std::wstring swText,
+	std::shared_ptr<Label> Label::Create(std::wstring textString,
 										 uint32 dwFormatFlags,
-										 float fWidth,
-										 float fHeight)
+										 float width,
+										 float height)
 	{
 		const auto pLabel = std::make_shared<Label>();
-		pLabel->SetText(std::move(swText));
-		pLabel->SetWidth(fWidth);
-		pLabel->SetHeight(fHeight);
+		pLabel->SetText(std::move(textString));
+		pLabel->SetWidth(width);
+		pLabel->SetHeight(height);
 		pLabel->SetFormatFlags(dwFormatFlags);
 		pLabel->SetFont(sD3DMgr.GetFont(L"Segoe UI", 15));
 		return pLabel;
 	}
 
-	void Label::OnRender(uint32 uTimePassed) {
+	void Label::OnRender(uint32 timePassed) {
 		const auto pSprite = sD3DMgr.GetSprite();
 
 		if (!GetUseCache()) {
@@ -37,7 +37,7 @@ namespace Components {
 
 			if (pFont != nullptr && pFont->GetObject() != nullptr) {
 				RECT screenRect = GetFullRect();
-				std::wstring swText = GetText();
+				std::wstring textString = GetText();
 				uint32 dwFormatFlags = GetFormatFlags();
 				const auto pObject = pFont->GetObject();
 
@@ -48,11 +48,11 @@ namespace Components {
 					RECT shadowRect = screenRect;
 					Utils::Vector2 vShadow = GetShadowDirection();
 					OffsetRect(&shadowRect, (int) vShadow.x, (int) vShadow.y);
-					pObject->DrawText(pSprite, swText, shadowRect, dwFormatFlags,
+					pObject->DrawText(pSprite, textString, shadowRect, dwFormatFlags,
 						CalculateAbsoluteColor(0x70000000));
 				}
 
-				pObject->DrawText(pSprite, swText, screenRect, dwFormatFlags,
+				pObject->DrawText(pSprite, textString, screenRect, dwFormatFlags,
 					CalculateAbsoluteColor(GetColor()));
 
 				if (pSprite != nullptr)
@@ -77,24 +77,24 @@ namespace Components {
 		if (pFont == nullptr || pFont->GetObject() == nullptr)
 			return;
 
-		const auto swText = GetText();
+		const auto textString = GetText();
 		const auto pFontObject = pFont->GetObject();
 
 		RECT textExtent = {0};
 		textExtent.right = static_cast<LONG>(GetWidth());
 		textExtent.bottom = static_cast<LONG>(GetHeight());
-		textExtent = pFontObject->GetTextExtent(swText, textExtent, GetFormatFlags());
+		textExtent = pFontObject->GetTextExtent(textString, textExtent, GetFormatFlags());
 
 		m_textIndent.x = static_cast<float>(textExtent.left);
 		m_textIndent.y = static_cast<float>(textExtent.top);
 
-		LONG uWidth = textExtent.right - textExtent.left;
-		LONG uHeight = textExtent.bottom - textExtent.top;
+		LONG width = textExtent.right - textExtent.left;
+		LONG height = textExtent.bottom - textExtent.top;
 
 		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 		const auto pOldSurface = pRenderTarget->GetRenderTargetSurface();
 
-		m_fontCache = pRenderTarget->CreateRenderTargetTexture(uWidth, uHeight);
+		m_fontCache = pRenderTarget->CreateRenderTargetTexture(width, height);
 		if (m_fontCache == nullptr)
 			throw std::runtime_error("Could not create font cache!");
 
@@ -102,14 +102,14 @@ namespace Components {
 		pRenderTarget->SetRenderTargetSurface(pSurface, 0, true);
 
 		RECT fontRect = {0};
-		fontRect.right = uWidth;
-		fontRect.bottom = uHeight;
+		fontRect.right = width;
+		fontRect.bottom = height;
 
 		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr)
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 
-		pFontObject->DrawText(pSprite, swText, fontRect, DT_NOCLIP, 0xFFFFFFFF);
+		pFontObject->DrawText(pSprite, textString, fontRect, DT_NOCLIP, 0xFFFFFFFF);
 
 		if (pSprite != nullptr)
 			pSprite->End();
@@ -127,8 +127,8 @@ namespace Components {
 					CalculateAbsoluteColor(0x70000000));
 			}
 
-			Utils::Vector3 vPosition = vScreen;
-			pSprite->Draw(m_fontCache, nullptr, nullptr, &vPosition,
+			Utils::Vector3 position = vScreen;
+			pSprite->Draw(m_fontCache, nullptr, nullptr, &position,
 				CalculateAbsoluteColor(GetColor()));
 		}
 	}

@@ -7,9 +7,9 @@ namespace Components {
 	class TabPage : public Button
 	{
 	public:
-		static std::shared_ptr<TabPage> Create(std::wstring swText, float fWidth, float fHeight);
-		virtual void OnRender(uint32 uTimePassed);
-		void RenderChildren(uint32 uTimePassed);
+		static std::shared_ptr<TabPage> Create(std::wstring textString, float width, float height);
+		virtual void OnRender(uint32 timePassed);
+		void RenderChildren(uint32 timePassed);
 
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void SendMessageToChildren(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -27,8 +27,8 @@ namespace Components {
 		}
 
 	protected:
-		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition);
-		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyPushEvent(Utils::Vector2 *pPosition);
+		virtual void _notifyClickEvent(Utils::Vector2 *pPosition);
 
 		virtual bool _notifyFocusStartEvent() {
 			FadeTo(200, GetHoverColor());

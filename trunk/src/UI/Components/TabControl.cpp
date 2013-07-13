@@ -4,36 +4,36 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<TabControl> TabControl::Create(float fWidth,
-												   float fHeight,
+	std::shared_ptr<TabControl> TabControl::Create(float width,
+												   float height,
 												   D3DXCOLOR dwColor)
 	{
 		const auto pTabControl = std::make_shared<TabControl>();
-		pTabControl->SetWidth(fWidth);
-		pTabControl->SetHeight(fHeight);
+		pTabControl->SetWidth(width);
+		pTabControl->SetHeight(height);
 		pTabControl->SetColor(dwColor);
 		return pTabControl;
 	}
 
-	void TabControl::OnRender(uint32 uTimePassed) {
+	void TabControl::OnRender(uint32 timePassed) {
 		bool validActiveTab = IsValidTabIndex(m_activeTab);
-		Utils::Vector2 vPosition = GetPosition();
-		SetPosition(vPosition + Utils::Vector2(0.0f, 20.0f));
+		Utils::Vector2 position = GetPosition();
+		SetPosition(position + Utils::Vector2(0.0f, 20.0f));
 		SetChildOffset(Utils::Vector2(0.0f, 0.0f));
-		Rectangle::OnRender(uTimePassed);
+		Rectangle::OnRender(timePassed);
 
 		GetInterface()->ClipStack.SetRect(GetFullRect(), [&] {
 			for (const auto& pTabPage : m_tabPages) {
 				if (pTabPage->GetVisibility()) {
 					D3DXCOLOR previousColor = pTabPage->GetColorMod();
 					pTabPage->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-					pTabPage->RenderChildren(uTimePassed);
+					pTabPage->RenderChildren(timePassed);
 					pTabPage->SetColorMod(previousColor);
 				}
 			}
 		});
 
-		SetPosition(vPosition);
+		SetPosition(position);
 		float fCurrentOffset = 0.0f;
 		float fActiveTabOffset = 0.0f;
 		for (const auto &pTabPage: m_tabPages)
@@ -48,7 +48,7 @@ namespace Components {
 			fCurrentOffset -= (pTabPage->GetWidth() - 2);
 			if (!validActiveTab || pTabPage != m_tabPages[m_activeTab]) {
 				SetChildOffset(Utils::Vector2(fCurrentOffset + 2, 0.0f));
-				pTabPage->OnRender(uTimePassed);
+				pTabPage->OnRender(timePassed);
 			}
 			else
 				fActiveTabOffset = (fCurrentOffset + 2);
@@ -63,7 +63,7 @@ namespace Components {
 
 		pActiveTab->SetColorMod(highlightColor);
 		SetChildOffset(Utils::Vector2(fActiveTabOffset, 0.0f));
-		pActiveTab->OnRender(uTimePassed);
+		pActiveTab->OnRender(timePassed);
 		pActiveTab->SetColorMod(previousColor);
 	}
 
@@ -83,8 +83,8 @@ namespace Components {
 			fCurrentOffset += (pTabPage->GetWidth() + 2);
 		}
 
-		Utils::Vector2 vPosition = GetPosition();
-		SetPosition(vPosition + Utils::Vector2(0.0f, 20.0f));
+		Utils::Vector2 position = GetPosition();
+		SetPosition(position + Utils::Vector2(0.0f, 20.0f));
 		SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 
 		if (IsValidTabIndex(m_activeTab)) {
@@ -94,7 +94,7 @@ namespace Components {
 			pInterface->ClipStack.Pop();
 		}
 
-		SetPosition(vPosition);
+		SetPosition(position);
 
 		// If we are invisible, restore the original handled state
 		if (!GetVisibility())
@@ -129,9 +129,9 @@ namespace Components {
 			m_activeTab = (numTabs < 1 ? 0 : numTabs - 1);
 	}
 
-	void TabControl::SetActiveTab(uint32 uIndex) {
-		if (m_activeTab == uIndex ||
-			!IsValidTabIndex(uIndex))
+	void TabControl::SetActiveTab(uint32 index) {
+		if (m_activeTab == index ||
+			!IsValidTabIndex(index))
 			return;
 
 		if (IsValidTabIndex(m_activeTab)) {
@@ -140,19 +140,19 @@ namespace Components {
 				pContent->Hide(150);
 		}
 
-		m_activeTab = uIndex;
+		m_activeTab = index;
 		const auto pContent = m_tabPages[m_activeTab]->GetContent();
 		if (pContent != nullptr)
 			pContent->Show(150);
 	}
 
 	uint32 TabControl::GetPageIndex(const std::shared_ptr<const TabPage> &pTabPage) const {
-		uint32 uIndex = 0;
+		uint32 index = 0;
 		for (const auto &pCurrentPage: m_tabPages) {
 			if (pCurrentPage == pTabPage)
-				return uIndex;
+				return index;
 
-			++uIndex;
+			++index;
 		}
 
 		return UINT_MAX;

@@ -8,15 +8,15 @@ namespace Utils
 		Thread(uint32 id) : m_threadId(id),
 			m_currentAccess(0) {}
 
-		bool open(DWORD dwAccess) {
-			if ((m_currentAccess & dwAccess) == dwAccess)
+		bool open(DWORD access) {
+			if ((m_currentAccess & access) == access)
 				return true;
 
-			HANDLE hThread = OpenThread(dwAccess, FALSE, m_threadId);
+			HANDLE hThread = OpenThread(access, FALSE, m_threadId);
 			if (hThread != nullptr) {
 				close();
 				m_threadHandle = hThread;
-				m_currentAccess = dwAccess;
+				m_currentAccess = access;
 			}
 
 			return hThread != nullptr;

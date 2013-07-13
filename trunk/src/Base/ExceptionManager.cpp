@@ -166,16 +166,16 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 	else if (pInfo->ExceptionRecord->ExceptionCode == EXCEPTION_MSVC &&
 			 pInfo->ExceptionRecord->NumberParameters > 2) {
-		ULONG_PTR dwBaseObj = pInfo->ExceptionRecord->ExceptionInformation[1];
+		ULONG_PTR baseObj = pInfo->ExceptionRecord->ExceptionInformation[1];
 		_ThrowInfo *pThrowInfo = reinterpret_cast<_ThrowInfo*>(pInfo->ExceptionRecord->ExceptionInformation[2]);
 
-		if (dwBaseObj != 0 && pThrowInfo != nullptr &&
+		if (baseObj != 0 && pThrowInfo != nullptr &&
 			pThrowInfo->pCatchableTypeArray != nullptr)
 		{
 			msgStrm << L"Extended information:\r\n";
-			static const std::type_info& stdExInfo = typeid(std::exception);
-			static const std::type_info& stdStringInfo = typeid(std::string);
-			static const std::type_info& stdWStringInfo = typeid(std::wstring);
+			static const std::type_info& exceptionInfo = typeid(std::exception);
+			static const std::type_info& stringInfo = typeid(std::string);
+			static const std::type_info& wstringInfo = typeid(std::wstring);
 			static const std::type_info& charInfo = typeid(char*);
 			static const std::type_info& wcharInfo = typeid(wchar_t*);
 
@@ -187,12 +187,12 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 				// Get the object for each catchable type inside the catchable type array...
 				_CatchableType *pCatchableType = pTypeArray->arrayOfCatchableTypes[i];
 				std::type_info *pTypeInfo = reinterpret_cast<std::type_info*>(pCatchableType->pType);
-				void *pmDisp = reinterpret_cast<void*>(dwBaseObj + pCatchableType->thisDisplacement.mdisp);
+				void *pmDisp = reinterpret_cast<void*>(baseObj + pCatchableType->thisDisplacement.mdisp);
 
 				if (i == 0)
 					pBaseType = pTypeInfo;
 
-				if (*pTypeInfo == stdExInfo) {
+				if (*pTypeInfo == exceptionInfo) {
 					std::string sTypeName(pBaseType->name());
 					msgStrm << L"Type: " << std::wstring(sTypeName.begin(), sTypeName.end()) << L"\r\n";
 
@@ -205,7 +205,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 					break;
 				}
 
-				if (*pTypeInfo == stdStringInfo) {
+				if (*pTypeInfo == stringInfo) {
 					msgStrm << L"Type: class std::string\r\n";
 
 					std::string *pString = reinterpret_cast<std::string*>(pmDisp);
@@ -214,7 +214,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 					break;
 				}
 
-				if (*pTypeInfo == stdWStringInfo) {
+				if (*pTypeInfo == wstringInfo) {
 					msgStrm << L"Type: class std::wstring\r\n";
 
 					std::wstring *pString = reinterpret_cast<std::wstring*>(pmDisp);

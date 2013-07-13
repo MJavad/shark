@@ -9,7 +9,7 @@ namespace UI {
 	public:
 		void Initialize();
 		std::shared_ptr<Components::Frame> CreateBasicFrame(std::wstring swTitle,
-			float fWidth, float fHeight, const D3DXCOLOR &color) const;
+			float width, float height, const D3DXCOLOR &color) const;
 
 		std::shared_ptr<ComponentInterface> GetInterface() const { return m_interface; }
 

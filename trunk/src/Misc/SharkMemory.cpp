@@ -66,42 +66,42 @@ namespace Utils {
 
 	}
 
-	inline DWORD_PTR SharkMemory::Allocate(uint32 uSize, DWORD dwProtection) {
-		return reinterpret_cast<DWORD_PTR>(VirtualAlloc(nullptr, uSize, MEM_COMMIT | MEM_RESERVE, dwProtection));
+	inline DWORD_PTR SharkMemory::Allocate(uint32 size, DWORD dwProtection) {
+		return reinterpret_cast<DWORD_PTR>(VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, dwProtection));
 	}
 
-	inline bool SharkMemory::Free(DWORD_PTR dwAddress) {
-		HRESULT hResult = VirtualFree(reinterpret_cast<LPVOID>(dwAddress), 0, MEM_RELEASE);
-		return hResult != FALSE;
+	inline bool SharkMemory::Free(DWORD_PTR address) {
+		HRESULT result = VirtualFree(reinterpret_cast<LPVOID>(address), 0, MEM_RELEASE);
+		return result != FALSE;
 	}
 
-	inline bool SharkMemory::SetMemoryProtection(DWORD_PTR dwAddress, uint32 uSize,
+	inline bool SharkMemory::SetMemoryProtection(DWORD_PTR address, uint32 size,
 												 DWORD dwNewProtect, DWORD *pOldProtect) {
-		HRESULT hResult = VirtualProtect(reinterpret_cast<LPVOID>(dwAddress), uSize, dwNewProtect, pOldProtect);
-		return hResult != FALSE;
+		HRESULT result = VirtualProtect(reinterpret_cast<LPVOID>(address), size, dwNewProtect, pOldProtect);
+		return result != FALSE;
 	}
 
-	inline bool SharkMemory::WriteMemory_Safe(DWORD_PTR dwAddress, const ByteBuffer &bytes) {
+	inline bool SharkMemory::WriteMemory_Safe(DWORD_PTR address, const ByteBuffer &bytes) {
 		SIZE_T dwSize = bytes.size();
-		SIZE_T dwBytesWritten = 0;
-		HRESULT hResult = WriteProcessMemory(GetCurrentProcess(),
-			reinterpret_cast<LPVOID>(dwAddress), bytes.data(), dwSize, &dwBytesWritten);
+		SIZE_T bytesWritten = 0;
+		HRESULT result = WriteProcessMemory(GetCurrentProcess(),
+			reinterpret_cast<LPVOID>(address), bytes.data(), dwSize, &bytesWritten);
 
-		return (hResult != FALSE && dwBytesWritten == dwSize);
+		return (result != FALSE && bytesWritten == dwSize);
 	}
 	
-	inline ByteBuffer SharkMemory::ReadMemory_Safe(DWORD_PTR dwAddress, uint32 uSize) {
-		ByteBuffer buffer(uSize);
-		SIZE_T dwBytesRead = 0;
-		ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(dwAddress),
-			buffer.data(), uSize, &dwBytesRead);
+	inline ByteBuffer SharkMemory::ReadMemory_Safe(DWORD_PTR address, uint32 size) {
+		ByteBuffer buffer(size);
+		SIZE_T bytesRead = 0;
+		ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(address),
+			buffer.data(), size, &bytesRead);
 
-		buffer.resize(dwBytesRead);
+		buffer.resize(bytesRead);
 		return buffer;
 	}
 
-	inline uint32 SharkMemory::GetInstructionSize(DWORD_PTR dwAddress) {
-		return reinterpret_cast<uint32 (__cdecl*) (DWORD_PTR)>(&MLDE32[0]) (dwAddress);
+	inline uint32 SharkMemory::GetInstructionSize(DWORD_PTR address) {
+		return reinterpret_cast<uint32 (__cdecl*) (DWORD_PTR)>(&MLDE32[0]) (address);
 	}
 
 	bool SharkMemory::_dataCompare(const byte *pbData, const byte *pbMask, const char *pszMask) {

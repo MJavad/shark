@@ -138,8 +138,8 @@ namespace UI {
 		sD3DMgr.PushInterface(mainInterface);
 	}
 
-	std::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float fWidth, float fHeight, const D3DXCOLOR &color) const {
-		const auto pFrame = Frame::Create(fWidth, fHeight);
+	std::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float width, float height, const D3DXCOLOR &color) const {
+		const auto pFrame = Frame::Create(width, height);
 		pFrame->SetMinSize(Utils::Vector2(140.0f, 50.0f));
 		pFrame->SetMaxSize(Utils::Vector2(900.0f, 700.0f));
 
@@ -147,7 +147,7 @@ namespace UI {
 		frameRoundings._1 = 14.0f;
 		frameRoundings._2 = 14.0f;
 
-		const auto pBackground = Rectangle::Create(fWidth, fHeight);
+		const auto pBackground = Rectangle::Create(width, height);
 		pBackground->SetDropShadow(true);
 		pBackground->SetColor(color);
 		pBackground->SetVerticalRoundings(frameRoundings);
@@ -160,35 +160,35 @@ namespace UI {
 		gradient[2] = 0x50101010;
 		gradient[3] = 0x50101010;
 
-		const auto pHeaderBar = Rectangle::Create(fWidth, 25.0f);
+		const auto pHeaderBar = Rectangle::Create(width, 25.0f);
 		pHeaderBar->SetGradientColors(std::move(gradient));
 		pHeaderBar->SetVerticalRoundings(frameRoundings);
 		pHeaderBar->SetHorizontalRoundings(frameRoundings);
 		pFrame->PushChild(pHeaderBar);
 
-		const auto pWindowTitle = Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER, fWidth);
+		const auto pWindowTitle = Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER, width);
 		pWindowTitle->SetPosition(Utils::Vector2(0.0f, 5.0f));
 		pWindowTitle->SetColor(0x90FFFFFF);
 		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, 0, FW_BOLD));
 		pFrame->PushChild(pWindowTitle);
 
-		const auto pBackgroundLineTop = Rectangle::Create(fWidth, 1.0f);
+		const auto pBackgroundLineTop = Rectangle::Create(width, 1.0f);
 		pBackgroundLineTop->SetPosition(Utils::Vector2(0.0f, 29.0f));
 		pBackgroundLineTop->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineTop);
 
-		const auto pBackgroundLineLeft = Rectangle::Create(1.0f, fHeight - 31.0f);
+		const auto pBackgroundLineLeft = Rectangle::Create(1.0f, height - 31.0f);
 		pBackgroundLineLeft->SetPosition(Utils::Vector2(0.0f, 30.0f));
 		pBackgroundLineLeft->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineLeft);
 
-		const auto pBackgroundLineBottom = Rectangle::Create(fWidth - 1.0f, 1.0f);
-		pBackgroundLineBottom->SetPosition(Utils::Vector2(0.0f, fHeight - 1.0f));
+		const auto pBackgroundLineBottom = Rectangle::Create(width - 1.0f, 1.0f);
+		pBackgroundLineBottom->SetPosition(Utils::Vector2(0.0f, height - 1.0f));
 		pBackgroundLineBottom->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineBottom);
 
-		const auto pBackgroundLineRight = Rectangle::Create(1.0f, fHeight - 31.0f);
-		pBackgroundLineRight->SetPosition(Utils::Vector2(fWidth - 1.0f, 30.0f));
+		const auto pBackgroundLineRight = Rectangle::Create(1.0f, height - 31.0f);
+		pBackgroundLineRight->SetPosition(Utils::Vector2(width - 1.0f, 30.0f));
 		pBackgroundLineRight->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineRight);
 
@@ -199,7 +199,7 @@ namespace UI {
 		pCloseButtonTextureHover->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 
 		const auto pCloseButton = std::make_shared<Button>();
-		pCloseButton->SetPosition(Utils::Vector2(fWidth - 27.0f, 2.0f));
+		pCloseButton->SetPosition(Utils::Vector2(width - 27.0f, 2.0f));
 		pCloseButton->SetRenderRect(false);
 		pCloseButton->SetWidth(23);
 		pCloseButton->SetHeight(23);
@@ -238,28 +238,28 @@ namespace UI {
 
 		pFrame->OnResizeEvent += [pBackground, pWindowTitle, pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight, pCloseButton]
-			(const std::shared_ptr<ISizable>&, float fWidth, float fHeight) {
-				pBackground->SetWidth(fWidth);
-				pBackground->SetHeight(fHeight);
-				pWindowTitle->SetWidth(fWidth);
-				pHeaderBar->SetWidth(fWidth);
-				pBackgroundLineTop->SetWidth(fWidth);
-				pBackgroundLineLeft->SetHeight(fHeight - 31.0f);
-				pBackgroundLineBottom->SetWidth(fWidth - 1.0f);
-				pBackgroundLineRight->SetHeight(fHeight - 31.0f);
-				pBackgroundLineRight->SetPosition(Utils::Vector2(fWidth - 1.0f, 30.0f));
-				pBackgroundLineBottom->SetPosition(Utils::Vector2(0.0f, fHeight - 1.0f));
-				pCloseButton->SetPosition(Utils::Vector2(fWidth - 27.0f, 2.0f));
+			(const std::shared_ptr<ISizable>&, float width, float height) {
+				pBackground->SetWidth(width);
+				pBackground->SetHeight(height);
+				pWindowTitle->SetWidth(width);
+				pHeaderBar->SetWidth(width);
+				pBackgroundLineTop->SetWidth(width);
+				pBackgroundLineLeft->SetHeight(height - 31.0f);
+				pBackgroundLineBottom->SetWidth(width - 1.0f);
+				pBackgroundLineRight->SetHeight(height - 31.0f);
+				pBackgroundLineRight->SetPosition(Utils::Vector2(width - 1.0f, 30.0f));
+				pBackgroundLineBottom->SetPosition(Utils::Vector2(0.0f, height - 1.0f));
+				pCloseButton->SetPosition(Utils::Vector2(width - 27.0f, 2.0f));
 
 				RECT screenRect = {0};
 				const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 				if (pRenderTarget != nullptr &&
 					pRenderTarget->GetSurfaceRect(&screenRect)) {
-					Utils::Vector2 vPosition = pBackground->GetScreenPosition();
+					Utils::Vector2 position = pBackground->GetScreenPosition();
 
 					Utils::Vector2 vNormalized;
-					vNormalized.x = (((vPosition.x + pBackground->GetWidth() / 2.0f) * 2.0f) / screenRect.right - 1.0f) * -12.0f;
-					vNormalized.y = (((vPosition.y + pBackground->GetHeight() / 2.0f) * 2.0f) / screenRect.bottom - 1.0f) * -12.0f;
+					vNormalized.x = (((position.x + pBackground->GetWidth() / 2.0f) * 2.0f) / screenRect.right - 1.0f) * -12.0f;
+					vNormalized.y = (((position.y + pBackground->GetHeight() / 2.0f) * 2.0f) / screenRect.bottom - 1.0f) * -12.0f;
 					pBackground->SetShadowDirection(vNormalized);
 				}
 
@@ -272,11 +272,11 @@ namespace UI {
 				const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 				if (pRenderTarget != nullptr &&
 					pRenderTarget->GetSurfaceRect(&screenRect)) {
-					Utils::Vector2 vPosition = pBackground->GetScreenPosition();
+					Utils::Vector2 position = pBackground->GetScreenPosition();
 
 					Utils::Vector2 vNormalized;
-					vNormalized.x = (((vPosition.x + pBackground->GetWidth() / 2.0f) * 2.0f) / screenRect.right - 1.0f) * -12.0f;
-					vNormalized.y = (((vPosition.y + pBackground->GetHeight() / 2.0f) * 2.0f) / screenRect.bottom - 1.0f) * -12.0f;
+					vNormalized.x = (((position.x + pBackground->GetWidth() / 2.0f) * 2.0f) / screenRect.right - 1.0f) * -12.0f;
+					vNormalized.y = (((position.y + pBackground->GetHeight() / 2.0f) * 2.0f) / screenRect.bottom - 1.0f) * -12.0f;
 					pBackground->SetShadowDirection(vNormalized);
 				}
 			};

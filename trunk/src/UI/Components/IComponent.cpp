@@ -22,7 +22,7 @@ namespace Components {
 		LOG_DEBUG("%08X: Component destroyed.", this);
 	}
 
-	void IComponent::OnUpdate(uint32 uTimePassed) {
+	void IComponent::OnUpdate(uint32 timePassed) {
 		if (m_fadeActive) {
 			if (m_fadeTimePassed < m_fadeTime) {
 				float fadeTime = static_cast<float>(m_fadeTime);
@@ -36,7 +36,7 @@ namespace Components {
 			}
 
 			m_isVisible = (m_colorMod.a > 0.0f);
-			m_fadeTimePassed += uTimePassed;
+			m_fadeTimePassed += timePassed;
 		}
 	}
 

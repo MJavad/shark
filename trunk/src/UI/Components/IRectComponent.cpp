@@ -5,11 +5,11 @@ namespace UI {
 namespace Components {
 	RECT IRectComponent::GetFullRect() const {
 		RECT fullRect = {0};
-		Utils::Vector2 vPosition = GetScreenPosition();
-		fullRect.left = static_cast<LONG>(vPosition.x);
-		fullRect.right = static_cast<LONG>(vPosition.x + GetWidth());
-		fullRect.top = static_cast<LONG>(vPosition.y);
-		fullRect.bottom = static_cast<LONG>(vPosition.y + GetHeight());
+		Utils::Vector2 position = GetScreenPosition();
+		fullRect.left = static_cast<LONG>(position.x);
+		fullRect.right = static_cast<LONG>(position.x + GetWidth());
+		fullRect.top = static_cast<LONG>(position.y);
+		fullRect.bottom = static_cast<LONG>(position.y + GetHeight());
 		return fullRect;
 	}
 

@@ -14,19 +14,19 @@ namespace Components {
 	public:
 		Button() : m_renderRect(true) {}
 
-		static std::shared_ptr<Button> Create(std::wstring swText = L"",
-			float fWidth = 100.0f, float fHeight = 20.0f,
-			float fHorizontalRounding = 6.0f, float fVerticalRounding = 3.0f);
+		static std::shared_ptr<Button> Create(std::wstring textString = L"",
+			float width = 100.0f, float height = 20.0f,
+			float horizontalRounding = 6.0f, float verticalRounding = 3.0f);
 
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
 			return IFocusable::OnTabPressed(pComponent);
 		}
 		
-		virtual void SetWidth(float fWidth);
-		virtual void SetHeight(float fHeight);
+		virtual void SetWidth(float width);
+		virtual void SetHeight(float height);
 
 		virtual std::shared_ptr<Label> GetCaption() const {
 			return m_caption;
@@ -70,9 +70,9 @@ namespace Components {
 		}
 
 	protected:
-		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition);
-		virtual void _notifyClickEvent(Utils::Vector2 *pvPosition);
-		virtual void _notifyReleaseEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyPushEvent(Utils::Vector2 *pPosition);
+		virtual void _notifyClickEvent(Utils::Vector2 *pPosition);
+		virtual void _notifyReleaseEvent(Utils::Vector2 *pPosition);
 
 		virtual bool _notifyHoverStartEvent() {
 			return IHoverable::_notifyHoverStartEvent() || IsPressed();

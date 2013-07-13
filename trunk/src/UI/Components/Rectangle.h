@@ -10,9 +10,9 @@ namespace Components {
 		Rectangle();
 		~Rectangle();
 
-		static std::shared_ptr<Rectangle> Create(float fWidth, float fHeight);
+		static std::shared_ptr<Rectangle> Create(float width, float height);
 
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 
 		virtual float4 GetHorizontalRoundings() const {
 			return m_horizRoundings;
@@ -32,20 +32,20 @@ namespace Components {
 			m_vertRoundings = roundings;
 		}
 
-		virtual void SetHorizontalRounding(float fHorizontalRounding) {
+		virtual void SetHorizontalRounding(float horizontalRounding) {
 			FlushShadowTexture();
-			m_horizRoundings._1 = fHorizontalRounding;
-			m_horizRoundings._2 = fHorizontalRounding;
-			m_horizRoundings._3 = fHorizontalRounding;
-			m_horizRoundings._4 = fHorizontalRounding;
+			m_horizRoundings._1 = horizontalRounding;
+			m_horizRoundings._2 = horizontalRounding;
+			m_horizRoundings._3 = horizontalRounding;
+			m_horizRoundings._4 = horizontalRounding;
 		}
 
-		virtual void SetVerticalRounding(float fVerticalRounding) {
+		virtual void SetVerticalRounding(float verticalRounding) {
 			FlushShadowTexture();
-			m_vertRoundings._1 = fVerticalRounding;
-			m_vertRoundings._2 = fVerticalRounding;
-			m_vertRoundings._3 = fVerticalRounding;
-			m_vertRoundings._4 = fVerticalRounding;
+			m_vertRoundings._1 = verticalRounding;
+			m_vertRoundings._2 = verticalRounding;
+			m_vertRoundings._3 = verticalRounding;
+			m_vertRoundings._4 = verticalRounding;
 		}
 
 		virtual void SetColor(const D3DXCOLOR &color) {
@@ -86,18 +86,18 @@ namespace Components {
 			return m_dimensions;
 		}
 
-		virtual void SetWidth(float fWidth) {
+		virtual void SetWidth(float width) {
 			FlushShadowTexture();
-			IRectComponent::SetWidth(fWidth);
-			m_dimensions[0].x = 0; m_dimensions[1].x = fWidth;
-			m_dimensions[3].x = 0; m_dimensions[2].x = fWidth;
+			IRectComponent::SetWidth(width);
+			m_dimensions[0].x = 0; m_dimensions[1].x = width;
+			m_dimensions[3].x = 0; m_dimensions[2].x = width;
 		}
 
-		virtual void SetHeight(float fHeight) {
+		virtual void SetHeight(float height) {
 			FlushShadowTexture();
-			IRectComponent::SetHeight(fHeight);
-			m_dimensions[0].y = 0; m_dimensions[3].y = fHeight;
-			m_dimensions[1].y = 0; m_dimensions[2].y = fHeight;
+			IRectComponent::SetHeight(height);
+			m_dimensions[0].y = 0; m_dimensions[3].y = height;
+			m_dimensions[1].y = 0; m_dimensions[2].y = height;
 		}
 
 		void CreateShadowTexture();

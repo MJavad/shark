@@ -14,18 +14,18 @@ namespace Components {
 		m_resizeTextureHover = sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\resizer_hover.png");
 	}
 
-	void ISizable::OnRender(uint32 uTimePassed) {
+	void ISizable::OnRender(uint32 timePassed) {
 		if (!m_isGripVisible)
 			return;
 
 		RECT sizerRect = GetSizerRect();
-		Utils::Vector3 vPosition(float(sizerRect.left), float(sizerRect.top));
+		Utils::Vector3 position(float(sizerRect.left), float(sizerRect.top));
 
 		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 			pSprite->Draw(m_isHovered ? m_resizeTextureHover : m_resizeTexture, nullptr,
-				nullptr, &vPosition, CalculateAbsoluteColor(0xFFFFFFFF));
+				nullptr, &position, CalculateAbsoluteColor(0xFFFFFFFF));
 			pSprite->End();
 		}
 	}
@@ -38,24 +38,24 @@ namespace Components {
 			return;
 		}
 
-		Utils::Vector2 vPosition(lParam);
+		Utils::Vector2 position(lParam);
 		IComponent::OnMessageReceived(uMsg, wParam, lParam);
 
 		switch (uMsg)
 		{
 		case WM_LBUTTONDOWN:
 			if (!sWndProc.LastMessageHandled &&
-				!IsSizing() && PtInSizerRect(vPosition)) {
+				!IsSizing() && PtInSizerRect(position)) {
 				const auto activeSizer = GetActiveSizer();
 				if (activeSizer != nullptr)
-					activeSizer->_notifyResizeEndEvent(&vPosition);
+					activeSizer->_notifyResizeEndEvent(&position);
 
 				Utils::Vector2 vSize = GetScreenPosition();
 				vSize.x += GetWidth();
 				vSize.y += GetHeight();
 
-				if (!_notifyResizeStartEvent(&vPosition))
-					StartSizing(vSize - vPosition);
+				if (!_notifyResizeStartEvent(&position))
+					StartSizing(vSize - position);
 
 				sWndProc.LastMessageHandled = true;
 			}
@@ -63,9 +63,9 @@ namespace Components {
 
 		case WM_LBUTTONUP:
 			if (IsSizing()) {
-				if (!_notifyResizeEndEvent(&vPosition)) {
+				if (!_notifyResizeEndEvent(&position)) {
 					ResetActiveSizer();
-					m_isHovered = PtInSizerRect(vPosition);
+					m_isHovered = PtInSizerRect(position);
 				}
 
 				sWndProc.LastMessageHandled = true;
@@ -74,8 +74,8 @@ namespace Components {
 
 		case WM_MOUSEMOVE:
 			if (!sWndProc.LastMessageHandled && IsSizing() &&
-				GetInterface()->ClipStack.PtInClipArea(vPosition)) {
-				Utils::Vector2 vSize = vPosition - GetScreenPosition() + s_sizeVector;
+				GetInterface()->ClipStack.PtInClipArea(position)) {
+				Utils::Vector2 vSize = position - GetScreenPosition() + s_sizeVector;
 				Utils::Vector2 vMinSize = GetMinSize();
 
 				if (GetSizeLimited()) {
@@ -106,7 +106,7 @@ namespace Components {
 			}
 
 			m_isHovered = IsSizing() || (!sWndProc.LastMessageHandled &&
-										 PtInSizerRect(vPosition) &&
+										 PtInSizerRect(position) &&
 										 GetActiveSizer() == nullptr);
 
 			sWndProc.LastMessageHandled |= m_isHovered;

@@ -11,14 +11,14 @@ namespace Components {
 	public:
 		ListBoxEntry() : m_isSelected(false) {}
 		
-		static std::shared_ptr<ListBoxEntry> Create(std::wstring swText = std::wstring());
+		static std::shared_ptr<ListBoxEntry> Create(std::wstring textString = std::wstring());
 
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 		void RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const;
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
-		virtual void SetWidth(float fWidth);
-		virtual void SetHeight(float fHeight);
+		virtual void SetWidth(float width);
+		virtual void SetHeight(float height);
 		
 		virtual void SetColor(const D3DXCOLOR &color) {
 			Rectangle::SetColor(color);

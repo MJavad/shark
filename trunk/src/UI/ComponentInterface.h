@@ -11,7 +11,7 @@ namespace Components { class IComponent; }
 	public:
 		ComponentInterface() : Visible(true) {}
 
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		bool PushControl(std::shared_ptr<Components::IComponent> pControl);

@@ -10,7 +10,7 @@ namespace Components {
 		return pControl;
 	}
 
-	void Texture::OnRender(uint32 uTimePassed) {
+	void Texture::OnRender(uint32 timePassed) {
 		const auto pTexture = GetTexture();
 		if (pTexture == nullptr)
 			return;

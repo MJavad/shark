@@ -12,13 +12,13 @@ namespace Components {
 			return;
 		}
 
-		Utils::Vector2 vPosition(lParam);
+		Utils::Vector2 position(lParam);
 		IComponent::OnMessageReceived(uMsg, wParam, lParam);
 
 		switch(uMsg)
 		{
 			case WM_MOUSEMOVE: {
-				bool bInRect = PtInBoundingRect(vPosition);
+				bool bInRect = PtInBoundingRect(position);
 				if (!m_isHovered && (!sWndProc.LastMessageHandled && bInRect) &&
 					!_notifyHoverStartEvent())
 					StartHover();

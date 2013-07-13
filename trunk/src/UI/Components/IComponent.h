@@ -10,7 +10,7 @@ namespace Components {
 	public:
 		virtual ~IComponent();
 
-		virtual void OnRender(uint32 uTimePassed) = 0;
+		virtual void OnRender(uint32 timePassed) = 0;
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {}
 
 		std::list<std::shared_ptr<IComponent>> GetUIHierarchy();
@@ -42,8 +42,8 @@ namespace Components {
 			return m_position;
 		}
 
-		virtual void SetPosition(const Utils::Vector2 &vPosition) {
-			m_position = vPosition;
+		virtual void SetPosition(const Utils::Vector2 &position) {
+			m_position = position;
 		}
 
 		virtual Utils::Vector2 GetChildOffset() const {
@@ -91,11 +91,11 @@ namespace Components {
 			return false;
 		}
 
-		virtual void OnParentSizeChanged(float fWidth, float fHeight) {}
+		virtual void OnParentSizeChanged(float width, float height) {}
 
 	protected:
 		IComponent();
-		virtual void OnUpdate(uint32 uTimePassed);
+		virtual void OnUpdate(uint32 timePassed);
 
 		template <typename T>
 		std::shared_ptr<T> get_this() {

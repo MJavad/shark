@@ -4,7 +4,7 @@
 #include "Base/WndProc.h"
 
 namespace UI {
-	void ComponentInterface::OnRender(uint32 uTimePassed) {
+	void ComponentInterface::OnRender(uint32 timePassed) {
 		if (!Visible)
 			return;
 
@@ -13,7 +13,7 @@ namespace UI {
 			end = m_components.crend(); itr != end; ++itr) {
 			const auto &pComponent = *itr;
 			if (pComponent->GetVisibility())
-				pComponent->OnRender(uTimePassed);
+				pComponent->OnRender(timePassed);
 		}
 	}
 

@@ -6,10 +6,10 @@ namespace Components {
 	class IMovable abstract : public virtual IComponent
 	{
 	public:
-		virtual void OnUpdate(uint32 uTimePassed);
+		virtual void OnUpdate(uint32 timePassed);
 
 		void StopMove() { m_moveActive = false; }
-		void MoveTo(uint32 uMoveTime, const Utils::Vector2 &vPosition);
+		void MoveTo(uint32 uMoveTime, const Utils::Vector2 &position);
 		void UndoMove();
 
 	protected:

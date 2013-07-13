@@ -16,32 +16,32 @@ namespace Components {
 	uint32 EditBox::s_selectPosition2 = 0;
 
 	std::shared_ptr<EditBox> EditBox::Create(bool centerAlign,
-											 float fWidth,
-											 float fHeight,
-											 float fHorizontalRounding,
-											 float fVerticalRounding)
+											 float width,
+											 float height,
+											 float horizontalRounding,
+											 float verticalRounding)
 	{
 		uint32 alignFlags = DT_VCENTER | DT_SINGLELINE;
 		if (centerAlign)
 			alignFlags |= DT_CENTER;
 
 		// label is indented by 5 px.
-		const auto pLabel = Label::Create(L"", alignFlags, max(fWidth - 10.0f, 0.0f), fHeight);
+		const auto pLabel = Label::Create(L"", alignFlags, max(width - 10.0f, 0.0f), height);
 		pLabel->SetPosition(Utils::Vector2(5.0f, 0.0f));
 
-		const auto pBorder = Rectangle::Create(fWidth, fHeight);
+		const auto pBorder = Rectangle::Create(width, height);
 		pBorder->SetColor(0x90B0B0B0);
-		pBorder->SetHorizontalRounding(fHorizontalRounding);
-		pBorder->SetVerticalRounding(fVerticalRounding);
+		pBorder->SetHorizontalRounding(horizontalRounding);
+		pBorder->SetVerticalRounding(verticalRounding);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
 
 		const auto pEditBox = std::make_shared<EditBox>();
 		pEditBox->SetContent(std::move(pLabel));
 		pEditBox->SetBorder(std::move(pBorder));
-		pEditBox->SetWidth(fWidth);
-		pEditBox->SetHeight(fHeight);
-		pEditBox->SetHorizontalRounding(fHorizontalRounding);
-		pEditBox->SetVerticalRounding(fVerticalRounding);
+		pEditBox->SetWidth(width);
+		pEditBox->SetHeight(height);
+		pEditBox->SetHorizontalRounding(horizontalRounding);
+		pEditBox->SetVerticalRounding(verticalRounding);
 
 		std::array<D3DXCOLOR, 4> gradient;
 		gradient[0] = 0xFF303030;
@@ -52,12 +52,12 @@ namespace Components {
 		return pEditBox;
 	}
 
-	void EditBox::OnRender(uint32 uTimePassed) {
+	void EditBox::OnRender(uint32 timePassed) {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr && pBorder->GetVisibility())
-			pBorder->OnRender(uTimePassed);
+			pBorder->OnRender(timePassed);
 
-		Rectangle::OnRender(uTimePassed);
+		Rectangle::OnRender(timePassed);
 
 		const auto pContent = GetContent();
 		if (pContent == nullptr)
@@ -83,7 +83,7 @@ namespace Components {
 
 		// text is scrolled left -> -m_scrollPosition
 		SetChildOffset(Utils::Vector2(-m_scrollPosition, 0.0f));
-		pContent->OnRender(uTimePassed);
+		pContent->OnRender(timePassed);
 
 		// caret is only drawn if the editbox has focus
 		if (IsFocused()) {
@@ -182,30 +182,30 @@ namespace Components {
 		IFocusable::OnMessageReceived(uMsg, wParam, lParam);
 	}
 
-	void EditBox::SetWidth(float fWidth) {
-		Rectangle::SetWidth(fWidth);
+	void EditBox::SetWidth(float width) {
+		Rectangle::SetWidth(width);
 
 		const auto pContent = GetContent();
 		if (pContent != nullptr) {
 			float indent = pContent->GetPosition().x;
-			pContent->SetWidth(max(fWidth - indent * 2.0f, 0.0f));
+			pContent->SetWidth(max(width - indent * 2.0f, 0.0f));
 		}
 
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
-			pBorder->SetWidth(fWidth + 2);
+			pBorder->SetWidth(width + 2);
 	}
 
-	void EditBox::SetHeight(float fHeight) {
-		Rectangle::SetHeight(fHeight);
+	void EditBox::SetHeight(float height) {
+		Rectangle::SetHeight(height);
 
 		const auto pContent = GetContent();
 		if (pContent != nullptr)
-			pContent->SetHeight(fHeight);
+			pContent->SetHeight(height);
 
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
-			pBorder->SetHeight(fHeight + 2);
+			pBorder->SetHeight(height + 2);
 	}
 
 	// If we have a selection it returns the selected text, otherwise it returns everything
@@ -270,9 +270,9 @@ namespace Components {
 			break;
 
 		default: {
-			std::wstring swText;
-			swText += c;
-			_insertText(std::move(swText));
+			std::wstring textString;
+			textString += c;
+			_insertText(std::move(textString));
 			}
 		}
 
@@ -342,12 +342,12 @@ namespace Components {
 		sWndProc.LastMessageHandled = true;
 	}
 
-	void EditBox::_onMouseMove(const Utils::Vector2 &vPosition) {
+	void EditBox::_onMouseMove(const Utils::Vector2 &position) {
 		s_pressedOnFocus = false;
 		if (s_activeSelection) {
 			const auto pContent = GetContent();
 			if (pContent != nullptr) {
-				int32 positionOffset = static_cast<int32>(vPosition.x + m_scrollPosition);
+				int32 positionOffset = static_cast<int32>(position.x + m_scrollPosition);
 				_placeCaret(pContent->XToCP(positionOffset), true);
 			}
 
@@ -437,24 +437,24 @@ namespace Components {
 		_scrollTo(s_caretPosition);
 	}
 
-	uint32 EditBox::_insertText(std::wstring swText) {
+	uint32 EditBox::_insertText(std::wstring textString) {
 		uint32 writePosition = _getWritePosition();
-		uint32 insertCount = _insertText(writePosition, std::move(swText));
+		uint32 insertCount = _insertText(writePosition, std::move(textString));
 		if (insertCount != 0)
 			_placeCaret(writePosition + insertCount);
 
 		return insertCount;
 	}
 
-	uint32 EditBox::_insertText(uint32 insertPosition, std::wstring swText) {
+	uint32 EditBox::_insertText(uint32 insertPosition, std::wstring textString) {
 		const auto pContent = GetContent();
 		if (pContent == nullptr)
 			return 0; // cannot insert - no label attached
 
 		// remove all characters which cannot be printed (control characters)
-		swText.erase(std::remove_if(swText.begin(), swText.end(), [] (wchar_t c) {
+		textString.erase(std::remove_if(textString.begin(), textString.end(), [] (wchar_t c) {
 				return (c >= 0x00 && c < 0x20) || c == 0x7F;
-			}), swText.end());
+			}), textString.end());
 
 		// calculate how many chars it should insert...
 		uint32 contentLength = pContent->GetText().length();
@@ -464,7 +464,7 @@ namespace Components {
 		int32 remainingChars = (m_maxLength - contentLength) + _getSelectionCount();
 		uint32 insertCount = (remainingChars < 0 ? 0 : remainingChars);
 
-		uint32 stringLength = swText.length();
+		uint32 stringLength = textString.length();
 		if (insertCount > stringLength)
 			insertCount = stringLength;
 
@@ -473,7 +473,7 @@ namespace Components {
 			_eraseSelection();
 
 			auto currentText = pContent->GetText();
-			currentText.insert(insertPosition, swText, 0, insertCount);
+			currentText.insert(insertPosition, textString, 0, insertCount);
 			pContent->SetText(std::move(currentText));
 			_notifyContentChangedEvent();
 		}
@@ -553,12 +553,12 @@ namespace Components {
 		return eraseCount;
 	}
 
-	void EditBox::_notifyPushEvent(Utils::Vector2 *pvPosition) {
+	void EditBox::_notifyPushEvent(Utils::Vector2 *pPosition) {
 		s_handleDblClick = !_hasSelection();
 
 		const auto pContent = GetContent();
-		if (pContent != nullptr && pvPosition != nullptr) {
-			uint32 cp = pContent->XToCP(static_cast<int32>(pvPosition->x + m_scrollPosition));
+		if (pContent != nullptr && pPosition != nullptr) {
+			uint32 cp = pContent->XToCP(static_cast<int32>(pPosition->x + m_scrollPosition));
 			if (cp != s_caretPosition)
 				s_handleDblClick = false;
 
@@ -582,10 +582,10 @@ namespace Components {
 		}
 
 		s_activeSelection = true;
-		IPushable::_notifyPushEvent(pvPosition);
+		IPushable::_notifyPushEvent(pPosition);
 	}
 
-	void EditBox::_notifyDblClickEvent(Utils::Vector2 *pvPosition) {
+	void EditBox::_notifyDblClickEvent(Utils::Vector2 *pPosition) {
 		const auto pContent = GetContent();
 		if (s_handleDblClick && pContent != nullptr) {
 			s_swapSelection = true;
@@ -595,10 +595,10 @@ namespace Components {
 		}
 
 		s_activeSelection = true;
-		IPushable::_notifyDblClickEvent(pvPosition);
+		IPushable::_notifyDblClickEvent(pPosition);
 	}
 
-	void EditBox::_notifyReleaseEvent(Utils::Vector2 *pvPosition) {
+	void EditBox::_notifyReleaseEvent(Utils::Vector2 *pPosition) {
 		s_handleDblClick = true;
 		s_activeSelection = false;
 
@@ -607,7 +607,7 @@ namespace Components {
 			s_pressedOnFocus = false;
 		}
 
-		IPushable::_notifyReleaseEvent(pvPosition);
+		IPushable::_notifyReleaseEvent(pPosition);
 	}
 
 	bool EditBox::_notifyFocusStartEvent() {

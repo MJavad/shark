@@ -18,10 +18,10 @@ namespace Components {
 		sD3DMgr.OnDeviceChangedEvent -= m_changeDevice;
 	}
 
-	std::shared_ptr<Rectangle> Rectangle::Create(float fWidth, float fHeight) {
+	std::shared_ptr<Rectangle> Rectangle::Create(float width, float height) {
 		const auto pRectangle = std::make_shared<Rectangle>();
-		pRectangle->SetWidth(fWidth);
-		pRectangle->SetHeight(fHeight);
+		pRectangle->SetWidth(width);
+		pRectangle->SetHeight(height);
 		return pRectangle;
 	}
 
@@ -32,9 +32,9 @@ namespace Components {
 		IRectComponent::SetHeight(IRenderTarget::GetDimensionHeight(m_dimensions));
 	}
 
-	void Rectangle::OnRender(uint32 uTimePassed) {
+	void Rectangle::OnRender(uint32 timePassed) {
 		const auto dimensions = GetDimensions();
-		Utils::Vector2 vPosition = GetScreenPosition();
+		Utils::Vector2 position = GetScreenPosition();
 		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 
 		if (GetDropShadow()) {
@@ -61,7 +61,7 @@ namespace Components {
 			gradient.fill(CalculateAbsoluteColor(0xAA000000));
 
 			pRenderTarget->DrawBlurredSprite(
-				vPosition + m_shadowDirection,
+				position + m_shadowDirection,
 				m_shadowTexture,
 				dimensions,
 				gradient);
@@ -71,9 +71,9 @@ namespace Components {
 
 			const auto pSprite = sD3DMgr.GetSprite();
 			if (pSprite != nullptr) {
-				Utils::Vector3 vPosition3 = vPosition;
+				Utils::Vector3 position3 = position;
 				pSprite->Begin(D3DXSPRITE_ALPHABLEND);
-				pSprite->Draw(m_shadowTexture, nullptr, nullptr, &vPosition3, CalculateAbsoluteColor(0xFFFFFFFF));
+				pSprite->Draw(m_shadowTexture, nullptr, nullptr, &position3, CalculateAbsoluteColor(0xFFFFFFFF));
 				pSprite->End();
 			}
 		}
@@ -88,14 +88,14 @@ namespace Components {
 				 (horizRounding._4 != 0.0f && vertRounding._4 != 0.0f)))
 			{
 				pRenderTarget->FillRoundedRectangle(
-					vPosition,
+					position,
 					dimensions,
 					horizRounding,
 					vertRounding,
 					gradient);
 			}
 			else
-				pRenderTarget->FillRectangle(vPosition, dimensions, gradient);
+				pRenderTarget->FillRectangle(position, dimensions, gradient);
 		}
 	}
 
@@ -103,9 +103,9 @@ namespace Components {
 		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 		const auto pOldSurface = pRenderTarget->GetRenderTargetSurface();
 
-		uint32 uWidth = static_cast<uint32>(GetWidth());
-		uint32 uHeight = static_cast<uint32>(GetHeight());
-		m_shadowTexture = pRenderTarget->CreateRenderTargetTexture(uWidth, uHeight);
+		uint32 width = static_cast<uint32>(GetWidth());
+		uint32 height = static_cast<uint32>(GetHeight());
+		m_shadowTexture = pRenderTarget->CreateRenderTargetTexture(width, height);
 
 		if (m_shadowTexture == nullptr)
 			throw std::runtime_error("Could not create shadow texture!");

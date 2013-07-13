@@ -6,34 +6,34 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<Frame> Frame::Create(float fWidth, float fHeight) {
+	std::shared_ptr<Frame> Frame::Create(float width, float height) {
 		const auto pFrame = std::make_shared<Frame>();
-		pFrame->SetWidth(fWidth);
-		pFrame->SetHeight(fHeight);
+		pFrame->SetWidth(width);
+		pFrame->SetHeight(height);
 		return pFrame;
 	}
 
-	void Frame::OnRender(uint32 uTimePassed) {
+	void Frame::OnRender(uint32 timePassed) {
 		GetInterface()->ClipStack.SetRect(GetFullRect(), [&]() {
-			ItemsControl::OnRender(uTimePassed);
+			ItemsControl::OnRender(timePassed);
 		});
 
 		if (m_sizable)
-			ISizable::OnRender(uTimePassed);
+			ISizable::OnRender(timePassed);
 	}
 
-	void Frame::SetWidth(float fWidth) {
-		ISizable::SetWidth(fWidth);
-		float fHeight = GetHeight();
+	void Frame::SetWidth(float width) {
+		ISizable::SetWidth(width);
+		float height = GetHeight();
 		for (const auto &pChild: GetChildren())
-			pChild->OnParentSizeChanged(fWidth, fHeight);
+			pChild->OnParentSizeChanged(width, height);
 	}
 
-	void Frame::SetHeight(float fHeight) {
-		ISizable::SetHeight(fHeight);
-		float fWidth = GetWidth();
+	void Frame::SetHeight(float height) {
+		ISizable::SetHeight(height);
+		float width = GetWidth();
 		for (const auto &pChild: GetChildren())
-			pChild->OnParentSizeChanged(fWidth, fHeight);
+			pChild->OnParentSizeChanged(width, height);
 	}
 
 	void Frame::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -58,10 +58,10 @@ namespace Components {
 			case WM_LBUTTONDOWN:
 			case WM_RBUTTONDOWN: {
 				if (!bHandled && GetVisibility()) {
-					Utils::Vector2 vPosition = Utils::Vector2(lParam);
+					Utils::Vector2 position = Utils::Vector2(lParam);
 
 					if (sWndProc.LastMessageHandled ||
-						(uMsg != WM_CHAR && PtInBoundingRect(vPosition))) {
+						(uMsg != WM_CHAR && PtInBoundingRect(position))) {
 						const auto pParent = GetUIParent();
 						const auto pClientInterface = GetClientInterface();
 
@@ -91,8 +91,8 @@ namespace Components {
 			break;
 
 			case WM_MOUSEMOVE: {
-				Utils::Vector2 vPosition = Utils::Vector2(lParam);
-				if (GetVisibility() && PtInBoundingRect(vPosition))
+				Utils::Vector2 position = Utils::Vector2(lParam);
+				if (GetVisibility() && PtInBoundingRect(position))
 					sWndProc.LastMessageHandled = true;
 			}
 			break;

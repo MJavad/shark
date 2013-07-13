@@ -6,7 +6,7 @@ namespace Components {
 	class ItemsControl : public virtual IComponent
 	{
 	public:
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		bool PushChild(std::shared_ptr<IComponent> pControl);

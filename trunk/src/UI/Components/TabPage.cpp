@@ -5,16 +5,16 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<TabPage> TabPage::Create(std::wstring swText, float fWidth, float fHeight) {
+	std::shared_ptr<TabPage> TabPage::Create(std::wstring textString, float width, float height) {
 		const auto pTabPage = std::make_shared<TabPage>();
 		pTabPage->SetContent(std::make_shared<ItemsControl>());
-		pTabPage->SetCaption(Label::Create(std::move(swText), DT_CENTER | DT_VCENTER, fWidth, fHeight));
+		pTabPage->SetCaption(Label::Create(std::move(textString), DT_CENTER | DT_VCENTER, width, height));
 
 		std::array<Utils::Vector2, 4> dimensions;
 		dimensions[0].x = 5.0f;            dimensions[0].y = 0.0f;
-		dimensions[1].x = fWidth - 5.0f;   dimensions[1].y = 0.0f;
-		dimensions[2].x = fWidth;          dimensions[2].y = fHeight;
-		dimensions[3].x = 0.0f;            dimensions[3].y = fHeight;
+		dimensions[1].x = width - 5.0f;   dimensions[1].y = 0.0f;
+		dimensions[2].x = width;          dimensions[2].y = height;
+		dimensions[3].x = 0.0f;            dimensions[3].y = height;
 		pTabPage->SetDimensions(std::move(dimensions));
 
 		float4 verticalRoundings = {0};
@@ -35,9 +35,9 @@ namespace Components {
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
 
 		dimensions[0].x = 5.0f;            dimensions[0].y = 0.0f;
-		dimensions[1].x = fWidth - 3.0f;   dimensions[1].y = 0.0f;
-		dimensions[2].x = fWidth + 2.0f;   dimensions[2].y = fHeight;
-		dimensions[3].x = 0.0f;            dimensions[3].y = fHeight;
+		dimensions[1].x = width - 3.0f;   dimensions[1].y = 0.0f;
+		dimensions[2].x = width + 2.0f;   dimensions[2].y = height;
+		dimensions[3].x = 0.0f;            dimensions[3].y = height;
 		pBorder->SetDimensions(std::move(dimensions));
 		pTabPage->SetBorder(std::move(pBorder));
 
@@ -50,18 +50,18 @@ namespace Components {
 		return pTabPage;
 	}
 
-	void TabPage::OnRender(uint32 uTimePassed) {
+	void TabPage::OnRender(uint32 timePassed) {
 		const auto pBorder = GetBorder();
 		if (pBorder != nullptr)
-			pBorder->OnRender(uTimePassed);
+			pBorder->OnRender(timePassed);
 
-		Button::OnRender(uTimePassed);
+		Button::OnRender(timePassed);
 	}
 
-	void TabPage::RenderChildren(uint32 uTimePassed) {
+	void TabPage::RenderChildren(uint32 timePassed) {
 		const auto pContent = GetContent();
 		if (pContent != nullptr && pContent->GetVisibility())
-			pContent->OnRender(uTimePassed);
+			pContent->OnRender(timePassed);
 	}
 
 	void TabPage::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -111,24 +111,24 @@ namespace Components {
 		return !IsFocused() && Focus();
 	}
 
-	void TabPage::_notifyPushEvent(Utils::Vector2 *pvPosition) {
+	void TabPage::_notifyPushEvent(Utils::Vector2 *pPosition) {
 		const auto pParent = std::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
-			uint32 uIndex = pParent->GetPageIndex(get_this<TabPage>());
-			pParent->SetActiveTab(uIndex);
+			uint32 index = pParent->GetPageIndex(get_this<TabPage>());
+			pParent->SetActiveTab(index);
 		}
 
-		Button::_notifyPushEvent(pvPosition);
+		Button::_notifyPushEvent(pPosition);
 	}
 
-	void TabPage::_notifyClickEvent(Utils::Vector2 *pvPosition) {
+	void TabPage::_notifyClickEvent(Utils::Vector2 *pPosition) {
 		const auto pParent = std::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
-			uint32 uIndex = pParent->GetPageIndex(get_this<TabPage>());
-			pParent->SetActiveTab(uIndex);
+			uint32 index = pParent->GetPageIndex(get_this<TabPage>());
+			pParent->SetActiveTab(index);
 		}
 
-		Button::_notifyClickEvent(pvPosition);
+		Button::_notifyClickEvent(pPosition);
 	}
 }
 }

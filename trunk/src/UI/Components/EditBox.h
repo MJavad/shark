@@ -12,18 +12,18 @@ namespace Components {
 		EditBox() : m_scrollPosition(0.0f), m_maxLength(80) {}
 
 		static std::shared_ptr<EditBox> Create(bool centerAlign = false,
-			float fWidth = 200.0f, float fHeight = 25.0f,
-			float fHorizontalRounding = 6.0f, float fVerticalRounding = 3.0f);
+			float width = 200.0f, float height = 25.0f,
+			float horizontalRounding = 6.0f, float verticalRounding = 3.0f);
 
-		virtual void OnRender(uint32 uTimePassed);
+		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
 			return IFocusable::OnTabPressed(pComponent);
 		}
 
-		virtual void SetWidth(float fWidth);
-		virtual void SetHeight(float fHeight);
+		virtual void SetWidth(float width);
+		virtual void SetHeight(float height);
 
 		virtual std::shared_ptr<Label> GetContent() const {
 			return m_content;
@@ -52,9 +52,9 @@ namespace Components {
 		Utils::Event<void (const std::shared_ptr<EditBox>&)> OnContentChangedEvent;
 
 	protected:
-		virtual void _notifyPushEvent(Utils::Vector2 *pvPosition);
-		virtual void _notifyDblClickEvent(Utils::Vector2 *pvPosition);
-		virtual void _notifyReleaseEvent(Utils::Vector2 *pvPosition);
+		virtual void _notifyPushEvent(Utils::Vector2 *pPosition);
+		virtual void _notifyDblClickEvent(Utils::Vector2 *pPosition);
+		virtual void _notifyReleaseEvent(Utils::Vector2 *pPosition);
 
 		virtual bool _notifyFocusStartEvent();
 		virtual void _notifyFocusEndEvent();
@@ -82,7 +82,7 @@ namespace Components {
 
 		void _onChar(wchar_t c);
 		void _onKeyDown(int key);
-		void _onMouseMove(const Utils::Vector2 &vPosition);
+		void _onMouseMove(const Utils::Vector2 &position);
 
 		static void _resetCaret() {
 			s_renderCaret = true;
@@ -135,8 +135,8 @@ namespace Components {
 		bool _scrollTo(uint32 position);
 		void _placeCaret(uint32 position, bool select = false);
 
-		uint32 _insertText(std::wstring swText);
-		uint32 _insertText(uint32 insertPosition, std::wstring swText);
+		uint32 _insertText(std::wstring textString);
+		uint32 _insertText(uint32 insertPosition, std::wstring textString);
 
 		uint32 _eraseText(uint32 numChars);
 		uint32 _eraseText(uint32 erasePosition, uint32 numChars);

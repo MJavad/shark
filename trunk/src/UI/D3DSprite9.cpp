@@ -4,8 +4,8 @@
 
 namespace UI {
 	D3DSprite9::D3DSprite9(IDirect3DDevice9 *pDevice) {
-		HRESULT hResult = D3DXCreateSprite(pDevice, &m_d3dxSprite);
-		if (hResult != D3D_OK)
+		HRESULT result = D3DXCreateSprite(pDevice, &m_d3dxSprite);
+		if (result != D3D_OK)
 			throw std::runtime_error("Could not create sprite object!");
 	}
 
