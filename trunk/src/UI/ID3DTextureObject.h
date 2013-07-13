@@ -2,23 +2,23 @@
 #include "ID3DSurface.h"
 
 namespace UI {
-	enum eTextureType {
+	enum TextureType {
 		TEXTURE_FROM_FILE,
 		TEXTURE_FROM_RESOURCE
 	};
 
-	struct STextureDesc {
-		eTextureType TextureType;
-		std::wstring FilePathOrResource;
-		HMODULE ResourceModule;
-		uint32 Width, Height;
-		uint32 MipLevels;
-		uint32 Usage;
-		D3DFORMAT Format;
-		D3DPOOL Pool;
-		uint32 Filter;
-		uint32 MipFilter;
-		D3DXCOLOR ColorKey;
+	struct TextureDescription {
+		TextureType type;
+		std::wstring filePathOrResource;
+		HMODULE resourceModule;
+		uint32 width, height;
+		uint32 mipLevels;
+		uint32 usage;
+		D3DFORMAT format;
+		D3DPOOL pool;
+		uint32 filter;
+		uint32 mipFilter;
+		D3DXCOLOR colorKey;
 	};
 
 	class ID3DTextureObject abstract

@@ -3,22 +3,22 @@
 #include "D3DSurface9.h"
 
 namespace UI {
-	D3DTextureObject9::D3DTextureObject9(IDirect3DDevice9 *pDevice, const STextureDesc &textureDesc) {
+	D3DTextureObject9::D3DTextureObject9(IDirect3DDevice9 *pDevice, const TextureDescription &textureDesc) {
 		HRESULT hResult = S_FALSE;
-		switch(textureDesc.TextureType)
+		switch(textureDesc.type)
 		{
 		case TEXTURE_FROM_FILE:
-			hResult = D3DXCreateTextureFromFileExW(pDevice, textureDesc.FilePathOrResource.c_str(),
-				textureDesc.Width, textureDesc.Height, textureDesc.MipLevels, textureDesc.Usage,
-				textureDesc.Format, textureDesc.Pool, textureDesc.Filter, textureDesc.MipFilter,
-				textureDesc.ColorKey, nullptr, nullptr, &m_d3dTexture9);
+			hResult = D3DXCreateTextureFromFileExW(pDevice, textureDesc.filePathOrResource.c_str(),
+				textureDesc.width, textureDesc.height, textureDesc.mipLevels, textureDesc.usage,
+				textureDesc.format, textureDesc.pool, textureDesc.filter, textureDesc.mipFilter,
+				textureDesc.colorKey, nullptr, nullptr, &m_d3dTexture9);
 			break;
 
 		case TEXTURE_FROM_RESOURCE:
-			hResult = D3DXCreateTextureFromResourceExW(pDevice, textureDesc.ResourceModule,
-				textureDesc.FilePathOrResource.c_str(), textureDesc.Width, textureDesc.Height,
-				textureDesc.MipLevels, textureDesc.Usage, textureDesc.Format, textureDesc.Pool,
-				textureDesc.Filter, textureDesc.MipFilter, textureDesc.ColorKey, nullptr,
+			hResult = D3DXCreateTextureFromResourceExW(pDevice, textureDesc.resourceModule,
+				textureDesc.filePathOrResource.c_str(), textureDesc.width, textureDesc.height,
+				textureDesc.mipLevels, textureDesc.usage, textureDesc.format, textureDesc.pool,
+				textureDesc.filter, textureDesc.mipFilter, textureDesc.colorKey, nullptr,
 				nullptr, &m_d3dTexture9);
 			break;
 		}

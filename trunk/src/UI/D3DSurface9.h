@@ -11,6 +11,12 @@ namespace UI {
 			return m_surface9;
 		}
 
+		virtual HDC GetDC() const {
+			HDC hDC = nullptr;
+			m_surface9->GetDC(&hDC);
+			return hDC;
+		}
+
 	protected:
 		CComPtr<IDirect3DSurface9> m_surface9;
 	};

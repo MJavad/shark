@@ -2,17 +2,17 @@
 #include "ID3DSprite.h"
 
 namespace UI {
-	struct SFontDesc {
-		uint32 Height;
-		uint32 Width;
-		uint32 Weight;
-		uint32 MipLevels;
-		bool Italic;
-		uint8 CharSet;
-		uint8 OutputPrecision;
-		uint8 Quality;
-		uint8 PitchAndFamily;
-		std::wstring FaceName;
+	struct FontDescription {
+		uint32 height;
+		uint32 width;
+		uint32 weight;
+		uint32 mipLevels;
+		bool italic;
+		uint8 charSet;
+		uint8 outputPrecision;
+		uint8 quality;
+		uint8 pitchAndFamily;
+		std::wstring faceName;
 	};
 
 	class ID3DFontObject abstract

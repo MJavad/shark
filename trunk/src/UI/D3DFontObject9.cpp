@@ -3,11 +3,11 @@
 #include "D3DSprite9.h"
 
 namespace UI {
-	D3DFontObject9::D3DFontObject9(IDirect3DDevice9 *pDevice, const SFontDesc &fontDesc) {
-		HRESULT hResult = D3DXCreateFontW(pDevice, fontDesc.Height,
-			fontDesc.Width, fontDesc.Weight, fontDesc.MipLevels, fontDesc.Italic,
-			fontDesc.CharSet, fontDesc.OutputPrecision, fontDesc.Quality,
-			fontDesc.PitchAndFamily, fontDesc.FaceName.c_str(), &m_d3dxFont);
+	D3DFontObject9::D3DFontObject9(IDirect3DDevice9 *pDevice, const FontDescription &fontDesc) {
+		HRESULT hResult = D3DXCreateFontW(pDevice, fontDesc.height,
+			fontDesc.width, fontDesc.weight, fontDesc.mipLevels, fontDesc.italic,
+			fontDesc.charSet, fontDesc.outputPrecision, fontDesc.quality,
+			fontDesc.pitchAndFamily, fontDesc.faceName.c_str(), &m_d3dxFont);
 
 		assert(hResult == D3D_OK);
 	}

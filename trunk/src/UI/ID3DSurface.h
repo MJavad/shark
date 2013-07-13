@@ -5,5 +5,6 @@ namespace UI {
 	{
 	public:
 		virtual ~ID3DSurface() {}
+		virtual HDC GetDC() const = 0;
 	};
 }

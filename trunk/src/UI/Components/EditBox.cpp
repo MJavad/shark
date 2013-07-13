@@ -71,16 +71,17 @@ namespace Components {
 		clipArea.right -= static_cast<LONG>(textOffset.x);
 		clipArea.bottom -= static_cast<LONG>(textOffset.y);
 
-		if (clipArea.left >= clipArea.right &&
+		// check if clipping area is valid
+		if (clipArea.left >= clipArea.right ||
 			clipArea.top >= clipArea.bottom)
-			return; // invalid clipping area :(
+			return;
 
-		// render label & caret with clipping
+		// label and selection is indent clipped
 		const auto pInterface = GetInterface();
 		pInterface->ClipStack.Push(clipArea);
 		pInterface->ClipStack.Apply();
 
-		// the text is scrolled left: -scrollpos
+		// text is scrolled left -> -m_scrollPosition
 		SetChildOffset(Utils::Vector2(-m_scrollPosition, 0.0f));
 		pContent->OnRender(uTimePassed);
 
@@ -92,7 +93,7 @@ namespace Components {
 
 			const auto pFont = pContent->GetFont();
 			if (pFont != nullptr)
-				textHeight = static_cast<float>(pFont->GetDescription().Height);
+				textHeight = static_cast<float>(pFont->GetDescription().height);
 
 			Utils::Vector2 vScreen = GetScreenPosition();
 			const auto pRenderTarget = sD3DMgr.GetRenderTarget();
@@ -128,6 +129,12 @@ namespace Components {
 				Utils::Vector2 vCaret;
 				vCaret.x = static_cast<float>(pContent->CPToX(s_caretPosition));
 				vCaret.y = vScreen.y + (controlHeight / 2.0f - textHeight / 2.0f);
+
+				// increase clipping area by 3 px, so the caret can render at the end
+				clipArea.right += 3;
+				pInterface->ClipStack.Pop();
+				pInterface->ClipStack.Push(clipArea);
+				pInterface->ClipStack.Apply();
 
 				// caret and text have equal colors
 				std::array<D3DXCOLOR, 4> gradient;
@@ -243,8 +250,14 @@ namespace Components {
 			PasteFromClipboard();
 			break;
 
-		case 0x7F: // ctrl + back
-
+		case 0x7F: { // ctrl + back
+			const auto pContent = GetContent();
+			if (pContent != nullptr) {
+				const auto& textString = pContent->GetText();
+				uint32 startOfWord = Utils::FindStartOfWord(textString, s_caretPosition);
+				_eraseText(s_caretPosition - startOfWord);
+			}
+			}
 			break;
 
 		case VK_BACK:
@@ -273,8 +286,15 @@ namespace Components {
 			break;
 
 		case VK_LEFT: {
-			int32 position = s_caretPosition - 1;
-			_placeCaret(position < 0 ? 0 : position, true);
+			if ((GetKeyState(VK_CONTROL) & 0x8000) != 0x8000) {
+				int32 position = s_caretPosition - 1;
+				_placeCaret(position < 0 ? 0 : position, true);
+			}
+			else {
+				const auto pContent = GetContent();
+				if (pContent != nullptr)
+					_placeCaret(Utils::FindStartOfWord(pContent->GetText(), s_caretPosition), true);
+			}
 
 			if ((GetKeyState(VK_SHIFT) & 0x8000) != 0x8000)
 				_clearSelection();
@@ -282,7 +302,13 @@ namespace Components {
 			break;
 
 		case VK_RIGHT: {
-			_placeCaret(s_caretPosition + 1, true);
+			if ((GetKeyState(VK_CONTROL) & 0x8000) != 0x8000)
+				_placeCaret(s_caretPosition + 1, true);
+			else {
+				const auto pContent = GetContent();
+				if (pContent != nullptr)
+					_placeCaret(Utils::FindEndOfWord(pContent->GetText(), s_caretPosition), true);
+			}
 
 			if ((GetKeyState(VK_SHIFT) & 0x8000) != 0x8000)
 				_clearSelection();
@@ -560,8 +586,13 @@ namespace Components {
 	}
 
 	void EditBox::_notifyDblClickEvent(Utils::Vector2 *pvPosition) {
-		if (s_handleDblClick)
-			_selectAll();
+		const auto pContent = GetContent();
+		if (s_handleDblClick && pContent != nullptr) {
+			s_swapSelection = true;
+
+			Utils::GetWordPositions(pContent->GetText(), s_caretPosition,
+				&s_selectPosition1, &s_selectPosition2);
+		}
 
 		s_activeSelection = true;
 		IPushable::_notifyDblClickEvent(pvPosition);

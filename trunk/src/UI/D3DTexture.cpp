@@ -10,7 +10,7 @@ namespace UI {
 	}
 
 	void D3DTexture::OnResetDevice() {
-		if (m_textureDesc.Pool == D3DPOOL_DEFAULT) {
+		if (m_textureDesc.pool == D3DPOOL_DEFAULT) {
 			if (m_hasDescription)
 				m_textureObject = std::make_shared<D3DTextureObject9>(sD3DMgr.GetDevice9(), m_textureDesc);
 			else

@@ -46,4 +46,53 @@ namespace Utils {
 
 		return success;
 	}
+
+	/* Strings Util */
+	const wchar_t BreakingChars[] = L" -+*/\\'\"´`$€%@&()[]{}.:,;|<>!?=#^°~\a\b\t\n\r";
+
+	uint32 FindStartOfWord(const std::wstring &string, uint32 position) {
+		if (position == 0)
+			return 0;
+
+		uint32 start = string.find_last_of(BreakingChars, position - 1);
+		if (start == position - 1)
+			start = string.find_last_not_of(BreakingChars, position - 1);
+
+		return (start != std::string::npos ? start + 1 : 0);
+	}
+
+	uint32 FindEndOfWord(const std::wstring &string, uint32 position) {
+		uint32 end = string.find_first_of(BreakingChars, position);
+		if (end == position)
+			end = string.find_first_not_of(BreakingChars, position);
+
+		return (end != std::string::npos ? end : string.length());
+	}
+
+	void GetWordPositions(const std::wstring &string, uint32 position, uint32 *start, uint32 *end) {
+		if (start != nullptr && end != nullptr) {
+			*start = string.find_last_of(BreakingChars, position);
+			*end = string.find_first_of(BreakingChars, position);
+
+			if (*start == *end) {
+				*start = string.find_last_not_of(BreakingChars, position);
+				*end = string.find_first_not_of(BreakingChars, position);
+			}
+
+			if (*start != std::string::npos)
+				++(*start);
+			else
+				*start = 0;
+
+			if (*end == std::string::npos)
+				*end = string.length();
+		}
+	}
+
+	std::wstring GetWordAt(const std::wstring &string, uint32 position) {
+		uint32 wordStart = 0;
+		uint32 wordEnd = 0;
+		GetWordPositions(string, position, &wordStart, &wordEnd);
+		return string.substr(wordStart, wordEnd - wordStart);
+	}
 }

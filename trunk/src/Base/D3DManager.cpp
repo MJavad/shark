@@ -229,23 +229,23 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
 
 		const auto pFont = (itr++)->lock();
 		const auto &fontDesc = pFont->GetDescription();
-		if (std::hash<std::wstring>()(fontDesc.FaceName) == dwFontFace &&
-			fontDesc.Height == uHeight && fontDesc.Width == uWidth &&
-			fontDesc.Weight == uWeight && fontDesc.Italic == bItalic)
+		if (std::hash<std::wstring>()(fontDesc.faceName) == dwFontFace &&
+			fontDesc.height == uHeight && fontDesc.width == uWidth &&
+			fontDesc.weight == uWeight && fontDesc.italic == bItalic)
 			return pFont;
 	}
 
-	UI::SFontDesc fontDesc = {0};
-	fontDesc.Height = uHeight;
-	fontDesc.Width = uWidth;
-	fontDesc.Weight = uWeight;
-	fontDesc.Italic = bItalic;
-	fontDesc.MipLevels = 1;
-	fontDesc.CharSet = DEFAULT_CHARSET;
-	fontDesc.OutputPrecision = OUT_TT_PRECIS;
-	fontDesc.Quality = ANTIALIASED_QUALITY;
-	fontDesc.PitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	fontDesc.FaceName = std::move(swFontName);
+	UI::FontDescription fontDesc = {0};
+	fontDesc.height = uHeight;
+	fontDesc.width = uWidth;
+	fontDesc.weight = uWeight;
+	fontDesc.italic = bItalic;
+	fontDesc.mipLevels = 1;
+	fontDesc.charSet = DEFAULT_CHARSET;
+	fontDesc.outputPrecision = OUT_TT_PRECIS;
+	fontDesc.quality = ANTIALIASED_QUALITY;
+	fontDesc.pitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	fontDesc.faceName = std::move(swFontName);
 
 	auto pFont = std::make_shared<UI::D3DFont>(fontDesc);
 	m_fonts.push_back(pFont);
@@ -253,7 +253,7 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring swFontName,
 	if (m_device9 != nullptr)
 		pFont->SetDevice(m_device9);
 
-	LOG_DEBUG(L"Font '%s' created!", fontDesc.FaceName.c_str());
+	LOG_DEBUG(L"Font '%s' created!", fontDesc.faceName.c_str());
 	return pFont;
 }
 
@@ -269,24 +269,24 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 
 		const auto pTexture = (itr++)->lock();
 		const auto &texDesc = pTexture->GetDescription();
-		if (texDesc.TextureType == UI::TEXTURE_FROM_FILE &&
-			std::hash<std::wstring>()(texDesc.FilePathOrResource) == dwFileName &&
-			texDesc.Width == uWidth &&
-			texDesc.Height == uHeight)
+		if (texDesc.type == UI::TEXTURE_FROM_FILE &&
+			std::hash<std::wstring>()(texDesc.filePathOrResource) == dwFileName &&
+			texDesc.width == uWidth &&
+			texDesc.height == uHeight)
 			return pTexture;
 	}
 	
-	UI::STextureDesc texDesc;
+	UI::TextureDescription texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
-	texDesc.TextureType = UI::TEXTURE_FROM_FILE;
-	texDesc.FilePathOrResource = std::move(swFileName);
-	texDesc.Width = uWidth;
-	texDesc.Height = uHeight;
-	texDesc.MipLevels = 1;
-	texDesc.Format = D3DFMT_A8R8G8B8;
-	texDesc.Pool = D3DPOOL_DEFAULT;
-	texDesc.Filter = D3DX_DEFAULT;
-	texDesc.MipFilter = D3DX_DEFAULT;
+	texDesc.type = UI::TEXTURE_FROM_FILE;
+	texDesc.filePathOrResource = std::move(swFileName);
+	texDesc.width = uWidth;
+	texDesc.height = uHeight;
+	texDesc.mipLevels = 1;
+	texDesc.format = D3DFMT_A8R8G8B8;
+	texDesc.pool = D3DPOOL_DEFAULT;
+	texDesc.filter = D3DX_DEFAULT;
+	texDesc.mipFilter = D3DX_DEFAULT;
 
 	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);
@@ -294,7 +294,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	if (m_device9 != nullptr)
 		pTexture->SetDevice(m_device9);
 
-	LOG_DEBUG(L"Texture from file '%s' created!", texDesc.FilePathOrResource.c_str());
+	LOG_DEBUG(L"Texture from file '%s' created!", texDesc.filePathOrResource.c_str());
 	return pTexture;
 }
 
@@ -310,26 +310,26 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 
 		const auto pTexture = (itr++)->lock();
 		const auto &texDesc = pTexture->GetDescription();
-		if (texDesc.TextureType == UI::TEXTURE_FROM_RESOURCE &&
-			std::hash<std::wstring>()(texDesc.FilePathOrResource) == dwResourceName &&
-			texDesc.ResourceModule == hModule &&
-			texDesc.Width == uWidth &&
-			texDesc.Height == uHeight)
+		if (texDesc.type == UI::TEXTURE_FROM_RESOURCE &&
+			std::hash<std::wstring>()(texDesc.filePathOrResource) == dwResourceName &&
+			texDesc.resourceModule == hModule &&
+			texDesc.width == uWidth &&
+			texDesc.height == uHeight)
 			return pTexture;
 	}
 
-	UI::STextureDesc texDesc;
+	UI::TextureDescription texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
-	texDesc.TextureType = UI::TEXTURE_FROM_RESOURCE;
-	texDesc.FilePathOrResource = std::move(swResourceName);
-	texDesc.ResourceModule = hModule;
-	texDesc.Width = uWidth;
-	texDesc.Height = uHeight;
-	texDesc.MipLevels = 1;
-	texDesc.Format = D3DFMT_A8R8G8B8;
-	texDesc.Pool = D3DPOOL_DEFAULT;
-	texDesc.Filter = D3DX_DEFAULT;
-	texDesc.MipFilter = D3DX_DEFAULT;
+	texDesc.type = UI::TEXTURE_FROM_RESOURCE;
+	texDesc.filePathOrResource = std::move(swResourceName);
+	texDesc.resourceModule = hModule;
+	texDesc.width = uWidth;
+	texDesc.height = uHeight;
+	texDesc.mipLevels = 1;
+	texDesc.format = D3DFMT_A8R8G8B8;
+	texDesc.pool = D3DPOOL_DEFAULT;
+	texDesc.filter = D3DX_DEFAULT;
+	texDesc.mipFilter = D3DX_DEFAULT;
 
 	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);
@@ -337,6 +337,6 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	if (m_device9 != nullptr)
 		pTexture->SetDevice(m_device9);
 
-	LOG_DEBUG(L"Texture from resource '%s' created!", texDesc.FilePathOrResource.c_str());
+	LOG_DEBUG(L"Texture from resource '%s' created!", texDesc.filePathOrResource.c_str());
 	return pTexture;
 }

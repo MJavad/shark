@@ -5,7 +5,7 @@ namespace UI {
 	class D3DFontObject9 : public ID3DFontObject
 	{
 	public:
-		D3DFontObject9(IDirect3DDevice9 *pDevice, const SFontDesc &fontDesc);
+		D3DFontObject9(IDirect3DDevice9 *pDevice, const FontDescription &fontDesc);
 
 		virtual void OnLostDevice() const {
 			if (m_d3dxFont != nullptr)
