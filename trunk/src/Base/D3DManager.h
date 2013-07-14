@@ -47,11 +47,11 @@ public:
 	std::shared_ptr<UI::D3DFont> GetFont(std::wstring fontName, uint32 height,
 		uint32 width = 0, uint32 weight = FW_NORMAL, bool italic = false);
 
-	std::shared_ptr<UI::D3DTexture> GetTextureFromFile(std::wstring fileName,
+	std::shared_ptr<UI::D3DTexture> GetTextureFromFile(const std::wstring &fileName,
 		uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
 
-	std::shared_ptr<UI::D3DTexture> GetTextureFromResource(std::wstring resourceName,
-		HMODULE module, uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
+	std::shared_ptr<UI::D3DTexture> GetTextureFromResource(uint32 resourceId, HMODULE module = nullptr,
+		uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
 
 	Utils::Event<void (uint32)> OnUpdateEvent;
 	Utils::Event<void ()> OnDeviceLostEvent;

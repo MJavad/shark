@@ -4,12 +4,10 @@
 
 namespace UI {
 	D3DFontObject9::D3DFontObject9(IDirect3DDevice9 *pDevice, const FontDescription &fontDesc) {
-		HRESULT result = D3DXCreateFontW(pDevice, fontDesc.height,
+		Utils::ThrowIfFailed(D3DXCreateFontW(pDevice, fontDesc.height,
 			fontDesc.width, fontDesc.weight, fontDesc.mipLevels, fontDesc.italic,
 			fontDesc.charSet, fontDesc.outputPrecision, fontDesc.quality,
-			fontDesc.pitchAndFamily, fontDesc.faceName.c_str(), &m_d3dxFont);
-
-		assert(result == D3D_OK);
+			fontDesc.pitchAndFamily, fontDesc.faceName.c_str(), &m_d3dxFont));
 	}
 
 	void D3DFontObject9::DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring textString,

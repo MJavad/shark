@@ -2,6 +2,7 @@
 #include "D3DManager.h"
 #include "Log.h"
 #include "WndProc.h"
+#include "Engine.h"
 #include "RenderTarget9.h"
 #include "RenderTarget11.h"
 #include "UI/D3DSprite9.h"
@@ -258,9 +259,9 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
 }
 
 std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
-	std::wstring fileName, uint32 width, uint32 height)
+	const std::wstring &fileName, uint32 width, uint32 height)
 {
-	size_t dwFileName = std::hash<std::wstring>()(fileName);
+	size_t fileNameHash = std::hash<std::wstring>()(fileName);
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
 		if (itr->expired()) {
 			itr = m_textures.erase(itr);
@@ -270,7 +271,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 		const auto pTexture = (itr++)->lock();
 		const auto &texDesc = pTexture->GetDescription();
 		if (texDesc.type == UI::TEXTURE_FROM_FILE &&
-			std::hash<std::wstring>()(texDesc.filePathOrResource) == dwFileName &&
+			std::hash<std::wstring>()(texDesc.filePath) == fileNameHash &&
 			texDesc.width == width &&
 			texDesc.height == height)
 			return pTexture;
@@ -278,7 +279,8 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	
 	UI::TextureDescription texDesc;
 	texDesc.type = UI::TEXTURE_FROM_FILE;
-	texDesc.filePathOrResource = std::move(fileName);
+	texDesc.filePath = fileName;
+	texDesc.resourceId = 0;
 	texDesc.resourceModule = nullptr;
 	texDesc.width = width;
 	texDesc.height = height;
@@ -296,14 +298,16 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	if (m_device9 != nullptr)
 		pTexture->SetDevice(m_device9);
 
-	LOG_DEBUG(L"Texture from file '%s' created!", texDesc.filePathOrResource.c_str());
+	LOG_DEBUG(L"Texture from file '%s' created!", texDesc.filePath.c_str());
 	return pTexture;
 }
 
 std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
-	std::wstring resourceName, HMODULE module, uint32 width, uint32 height)
+	uint32 resourceId, HMODULE module, uint32 width, uint32 height)
 {
-	size_t dwResourceName = std::hash<std::wstring>()(resourceName);
+	if (module == nullptr)
+		module = sEngine.GetInstance();
+
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
 		if (itr->expired()) {
 			itr = m_textures.erase(itr);
@@ -313,7 +317,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 		const auto pTexture = (itr++)->lock();
 		const auto &texDesc = pTexture->GetDescription();
 		if (texDesc.type == UI::TEXTURE_FROM_RESOURCE &&
-			std::hash<std::wstring>()(texDesc.filePathOrResource) == dwResourceName &&
+			texDesc.resourceId == resourceId &&
 			texDesc.resourceModule == module &&
 			texDesc.width == width &&
 			texDesc.height == height)
@@ -322,7 +326,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 
 	UI::TextureDescription texDesc;
 	texDesc.type = UI::TEXTURE_FROM_RESOURCE;
-	texDesc.filePathOrResource = std::move(resourceName);
+	texDesc.resourceId = resourceId;
 	texDesc.resourceModule = module;
 	texDesc.width = width;
 	texDesc.height = height;
@@ -340,6 +344,6 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	if (m_device9 != nullptr)
 		pTexture->SetDevice(m_device9);
 
-	LOG_DEBUG(L"Texture from resource '%s' created!", texDesc.filePathOrResource.c_str());
+	LOG_DEBUG(L"Texture from resource %u created!", texDesc.resourceId);
 	return pTexture;
 }

@@ -1,4 +1,5 @@
 #include "Misc/stdafx.h"
+#include "../resource.h"
 #include "GUIManager.h"
 #include "Base/D3DManager.h"
 #include "Base/Detours.h"
@@ -192,8 +193,8 @@ namespace UI {
 		pBackgroundLineRight->SetColor(0x90303030);
 		pFrame->PushChild(pBackgroundLineRight);
 
-		const auto pCloseButtonTexture = Texture::Create(sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\close.png"));
-		const auto pCloseButtonTextureHover = Texture::Create(sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\close_hover.png"));
+		const auto pCloseButtonTexture = Texture::Create(sD3DMgr.GetTextureFromResource(IDB_CLOSE_PNG));
+		const auto pCloseButtonTextureHover = Texture::Create(sD3DMgr.GetTextureFromResource(IDB_CLOSE_HOVER_PNG));
 
 		pCloseButtonTextureHover->SetVisibility(false);
 		pCloseButtonTextureHover->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));

@@ -70,14 +70,14 @@ protected:
 	static const SStateBlockRecord<D3DTEXTURESTAGESTATETYPE> m_textureStage1StateTable[];
 	static const SStateBlockRecord<D3DTEXTURESTAGESTATETYPE> m_textureStageNStateTable[];
 
-	// Vertex Declaration
-	CComPtr<IDirect3DVertexDeclaration9> m_vertexTexDecl;
+	// UI Shader
+	CComPtr<IDirect3DVertexShader9> m_uiVertexShader;
+	CComPtr<IDirect3DVertexDeclaration9> m_uiVertexShaderDecl;
 
 	// Rounded Rectangle Shaders
-	CComPtr<IDirect3DVertexShader9> m_roundRectVertex;
-	CComPtr<IDirect3DPixelShader9> m_roundRectDrawPixel, m_roundRectFillPixel;
+	CComPtr<IDirect3DPixelShader9> m_drawRoundedRectangleShader;
+	CComPtr<IDirect3DPixelShader9> m_fillRoundedRectangleShader;
 
 	// Blur Shaders
-	CComPtr<IDirect3DVertexShader9> m_blurVertex;
-	CComPtr<IDirect3DPixelShader9> m_blurPixel;
+	CComPtr<IDirect3DPixelShader9> m_blurShader;
 };

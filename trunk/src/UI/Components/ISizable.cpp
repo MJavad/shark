@@ -1,4 +1,5 @@
 #include "Misc/stdafx.h"
+#include "../../../resource.h"
 #include "ISizable.h"
 #include "Base/WndProc.h"
 #include "Base/D3DManager.h"
@@ -10,8 +11,8 @@ namespace Components {
 	Utils::Vector2 ISizable::s_sizeVector;
 
 	ISizable::ISizable() : m_isGripVisible(true), m_isHovered(false), m_isSizeLimited(false) {
-		m_resizeTexture = sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\resizer.png");
-		m_resizeTextureHover = sD3DMgr.GetTextureFromFile(sFileMgr.GetModuleDirectory() + L"\\resizer_hover.png");
+		m_resizeTexture = sD3DMgr.GetTextureFromResource(IDB_RESIZER_PNG);
+		m_resizeTextureHover = sD3DMgr.GetTextureFromResource(IDB_RESIZER_HOVER_PNG);
 	}
 
 	void ISizable::OnRender(uint32 timePassed) {

@@ -95,4 +95,9 @@ namespace Utils {
 		GetWordPositions(string, position, &wordStart, &wordEnd);
 		return string.substr(wordStart, wordEnd - wordStart);
 	}
+
+	void ThrowIfFailed(HRESULT hResult) {
+		if (FAILED(hResult))
+			throw std::runtime_error("Windows operation failed. Bad HRESULT.");
+	}
 }

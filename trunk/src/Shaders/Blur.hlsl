@@ -1,5 +1,4 @@
-float4x4 orthoMatrix : register(c0);
-float4 params : register(c4);
+float4 g_textureSize : register(c0);
 
 texture foregroundTexture;
 sampler2D foreground = sampler_state {
@@ -32,89 +31,73 @@ static const float BlurWeights[13] = {
 	0.002216,
 };
 
+float4 sinusInterpolate(float4 src, float4 dst, float pct) {
+	float sinval = sin(pct * 3.1415926 / 2.0f);
+	return sinval * dst + (1 - sinval) * src;
+}
+
 struct PixelShaderInput {
 	float4 position : POSITION0;
 	float2 texCoord : TEXCOORD0;
 	float4 color : TEXCOORD1;
 };
 
-struct VertexShaderInput {
-	float3 position : POSITION0;
-	float2 texCoord : TEXCOORD0;
-	float4 color : COLOR0;
-};
-
-void VertexMain(in VertexShaderInput input, out PixelShaderInput output) {
-	output.position = mul(float4(input.position.xy, 0, 1), orthoMatrix);
-	output.position.x -= 1.0f;
-	output.position.y = 1.0f - output.position.y;
-
-	output.texCoord = input.texCoord;
-	output.texCoord.xy += 1.0f / (params.zw * 2.0f);
-
-	output.color = input.color;
-}
-
-float4 sinusInterpolate(float4 src, float4 dst, float pct) {
-	float sinval = sin(pct * 3.1415926 / 2.0f);
-	return sinval * dst + (1 - sinval) * src;
-}
-
+// shader entry point
 void PixelMain(in PixelShaderInput input, out float4 color : COLOR0) {
 	color = 0;
 	float2 samp = input.texCoord;
 
 	for (int i = 0; i < 13; i++) {
-		samp.x = input.texCoord.x + PixelKernel[i] * (1 / params.x);
-		samp.y = input.texCoord.y + PixelKernel[i] * (1 / params.y);
+		samp.x = input.texCoord.x + PixelKernel[i] * (1 / g_textureSize.x);
+		samp.y = input.texCoord.y + PixelKernel[i] * (1 / g_textureSize.y);
 		color += tex2D(foreground, samp.xy) * BlurWeights[i];
 	}
 
-	float2 position = input.texCoord * params.xy;
+	float2 position = input.texCoord * g_textureSize.xy;
 	if (position.x < BorderDiff ||
 		position.y < BorderDiff ||
-		params.x - position.x < BorderDiff ||
-		params.y - position.y < BorderDiff)
+		g_textureSize.x - position.x < BorderDiff ||
+		g_textureSize.y - position.y < BorderDiff)
 	{
 		float numPixels = 0;
 		for (float curDiff = 1; curDiff < BorderDiff; ++curDiff) {
 			samp = input.texCoord;
-			samp.x -= (curDiff / params.x);
+			samp.x -= (curDiff / g_textureSize.x);
 			numPixels += step(0, samp.x) * step(samp.x, 1);
 
 			samp = input.texCoord;
-			samp.x += (curDiff / params.x);
+			samp.x += (curDiff / g_textureSize.x);
 			numPixels += step(0, samp.x) * step(samp.x, 1);
 
 			samp = input.texCoord;
-			samp.y -= (curDiff / params.y);
+			samp.y -= (curDiff / g_textureSize.y);
 			numPixels += step(0, samp.y) * step(samp.y, 1);
 
 			samp = input.texCoord;
-			samp.y += (curDiff / params.y);
+			samp.y += (curDiff / g_textureSize.y);
 			numPixels += step(0, samp.y) * step(samp.y, 1);
 
 			samp = input.texCoord;
-			samp.x -= (curDiff / params.x);
-			samp.y -= (curDiff / params.y);
+			samp.x -= (curDiff / g_textureSize.x);
+			samp.y -= (curDiff / g_textureSize.y);
 			numPixels += step(0, samp.x) * step(samp.x, 1) *
 						 step(0, samp.y) * step(samp.y, 1);
 
 			samp = input.texCoord;
-			samp.x += (curDiff / params.x);
-			samp.y -= (curDiff / params.y);
+			samp.x += (curDiff / g_textureSize.x);
+			samp.y -= (curDiff / g_textureSize.y);
 			numPixels += step(0, samp.x) * step(samp.x, 1) *
 						 step(0, samp.y) * step(samp.y, 1);
 
 			samp = input.texCoord;
-			samp.x += (curDiff / params.x);
-			samp.y += (curDiff / params.y);
+			samp.x += (curDiff / g_textureSize.x);
+			samp.y += (curDiff / g_textureSize.y);
 			numPixels += step(0, samp.x) * step(samp.x, 1) *
 						 step(0, samp.y) * step(samp.y, 1);
 
 			samp = input.texCoord;
-			samp.x -= (curDiff / params.x);
-			samp.y += (curDiff / params.y);
+			samp.x -= (curDiff / g_textureSize.x);
+			samp.y += (curDiff / g_textureSize.y);
 			numPixels += step(0, samp.x) * step(samp.x, 1) *
 						 step(0, samp.y) * step(samp.y, 1);
 

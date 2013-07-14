@@ -8,7 +8,7 @@ namespace UI {
 		switch(textureDesc.type)
 		{
 		case TEXTURE_FROM_FILE:
-			result = D3DXCreateTextureFromFileExW(pDevice, textureDesc.filePathOrResource.c_str(),
+			result = D3DXCreateTextureFromFileExW(pDevice, textureDesc.filePath.c_str(),
 				textureDesc.width, textureDesc.height, textureDesc.mipLevels, textureDesc.usage,
 				textureDesc.format, textureDesc.pool, textureDesc.filter, textureDesc.mipFilter,
 				textureDesc.colorKey, nullptr, nullptr, &m_d3dTexture9);
@@ -16,14 +16,14 @@ namespace UI {
 
 		case TEXTURE_FROM_RESOURCE:
 			result = D3DXCreateTextureFromResourceExW(pDevice, textureDesc.resourceModule,
-				textureDesc.filePathOrResource.c_str(), textureDesc.width, textureDesc.height,
+				MAKEINTRESOURCE(textureDesc.resourceId), textureDesc.width, textureDesc.height,
 				textureDesc.mipLevels, textureDesc.usage, textureDesc.format, textureDesc.pool,
 				textureDesc.filter, textureDesc.mipFilter, textureDesc.colorKey, nullptr,
 				nullptr, &m_d3dTexture9);
 			break;
 		}
 
-		assert(result == D3D_OK);
+		Utils::ThrowIfFailed(result);
 	}
 
 	std::shared_ptr<ID3DSurface> D3DTextureObject9::QuerySurface(uint32 uLevel) const {
