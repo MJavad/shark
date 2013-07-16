@@ -136,6 +136,7 @@ namespace Components {
 
 	uint32 Label::XToCP(int32 x) const {
 		uint32 currentPos = 0;
+		int32 distFromStart = 0;
 		std::wstring text = GetText();
 		uint32 textLength = text.length();
 		uint32 flags = GetFormatFlags();
@@ -143,9 +144,10 @@ namespace Components {
 
 		if (pFont != nullptr && pFont->GetObject() != nullptr) {
 			const auto pObject = pFont->GetObject();
-			int32 distFromStart = static_cast<int32>(GetScreenPosition().x + m_textOffset.x);
 
-			if (!IsCached())
+			if (IsCached())
+				distFromStart = static_cast<int32>(GetScreenPosition().x + m_textOffset.x);
+			else
 				distFromStart = pObject->GetTextExtent(text, GetFullRect(), flags).left;
 
 			for (; currentPos < textLength; ++currentPos) {
@@ -162,16 +164,18 @@ namespace Components {
 	}
 
 	int32 Label::CPToX(uint32 cp) const {
+		int32 currentPos = 0;
 		std::wstring text = GetText();
 		uint32 textLength = text.length();
 		uint32 flags = GetFormatFlags();
 		const auto pFont = GetFont();
-		int32 currentPos = static_cast<int32>(GetScreenPosition().x + m_textOffset.x);
 
 		if (pFont != nullptr && pFont->GetObject() != nullptr) {
 			const auto pObject = pFont->GetObject();
 
-			if (!IsCached())
+			if (IsCached())
+				currentPos = static_cast<int32>(GetScreenPosition().x + m_textOffset.x);
+			else
 				currentPos = pObject->GetTextExtent(text, GetFullRect(), flags).left;
 
 			for (uint32 i = 0; i < textLength && i < cp; ++i) {
