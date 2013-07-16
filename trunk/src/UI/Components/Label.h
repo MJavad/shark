@@ -107,7 +107,7 @@ namespace Components {
 		uint32 m_formatFlags;
 		bool m_shouldCache, m_dropShadow;
 		Utils::Vector2 m_shadowDirection;
-		Utils::Vector2 m_textIndent;
+		Utils::Vector2 m_textOffset;
 		std::shared_ptr<D3DFont> m_font;
 		std::shared_ptr<D3DTexture> m_fontCache;
 

@@ -1,5 +1,6 @@
 #include "Misc/stdafx.h"
 #include "Log.h"
+#include "UI/ConsoleWindow.h"
 
 void Log::Initialize() {
 
@@ -8,6 +9,7 @@ void Log::Initialize() {
 // TODO: Proper implementation
 void Log::OutDebug(const std::wstring &swMessage) const {
 	std::wcout << swMessage << std::endl;
+	sConsoleWindow.AddLine(swMessage);
 }
 
 // TODO: Proper implementation

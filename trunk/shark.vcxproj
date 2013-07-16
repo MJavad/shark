@@ -63,6 +63,7 @@
     <ClInclude Include="src\UI\Components\TabControl.h" />
     <ClInclude Include="src\UI\Components\TabPage.h" />
     <ClInclude Include="src\UI\Components\Texture.h" />
+    <ClInclude Include="src\UI\ConsoleWindow.h" />
     <ClInclude Include="src\UI\D3DFont.h" />
     <ClInclude Include="src\UI\D3DFontObject9.h" />
     <ClInclude Include="src\UI\D3DSprite9.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="src\UI\Components\TabControl.cpp" />
     <ClCompile Include="src\UI\Components\TabPage.cpp" />
     <ClCompile Include="src\UI\Components\Texture.cpp" />
+    <ClCompile Include="src\UI\ConsoleWindow.cpp" />
     <ClCompile Include="src\UI\D3DFont.cpp" />
     <ClCompile Include="src\UI\D3DFontObject9.cpp" />
     <ClCompile Include="src\UI\D3DSprite9.cpp" />

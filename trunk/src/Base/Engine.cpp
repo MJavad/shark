@@ -1,6 +1,7 @@
 #include "Misc/stdafx.h"
 #include "Engine.h"
 #include "UI/GUIManager.h"
+#include "UI/ConsoleWindow.h"
 #include "D3DManager.h"
 
 void Engine::Initialize(HINSTANCE hInstance) {
@@ -23,6 +24,8 @@ void Engine::InitializeEnvironment() {
 
 	try {
 		sGUIMgr.Initialize();
+		sConsoleWindow.Initialize();
+		sConsoleWindow.AddLine(L"D3DShark initialized!");
 	}
 	catch (std::exception &e) {
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;

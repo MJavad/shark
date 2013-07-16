@@ -100,15 +100,15 @@ namespace Utils
 		}
 
 		float distance_to(const Vector2 &loc) const {
-			return sqrt(pow(x - loc.x, 2) + pow(y - loc.y, 2));
+			return std::sqrt(std::pow(x - loc.x, 2) + std::pow(y - loc.y, 2));
 		}
 
 		static float GetDistance(const Vector2 &loc1, const Vector2 &loc2) {
-			return sqrt(pow(loc1.x - loc2.x, 2) + pow(loc1.y - loc2.y, 2));
+			return std::sqrt(std::pow(loc1.x - loc2.x, 2) + std::pow(loc1.y - loc2.y, 2));
 		}
 
 		float length() const {
-			return sqrt(pow(x, 2) + pow(y, 2));
+			return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
 		}
 
 		Vector2 normalize() const {
@@ -119,27 +119,31 @@ namespace Utils
 			return Vector2(x / fLength, y / fLength);
 		}
 
+		Vector2 floor() const {
+			return Vector2(std::floor(x), std::floor(y));
+		}
+
 		float dot(const Vector2 &vOther) const {
 			return (x * vOther.x + y * vOther.y);
 		}
 
 		Vector2 round_to(size_t uDigits) const {
-			float fMultiplicator = powf(10.0f, float(uDigits));
-			float fNewX = floor(x * fMultiplicator + 0.5f) / 100.0f;
-			float fNewY = floor(y * fMultiplicator + 0.5f) / 100.0f;
+			float fMultiplicator = std::pow(10.0f, float(uDigits));
+			float fNewX = std::floor(x * fMultiplicator + 0.5f) / 100.0f;
+			float fNewY = std::floor(y * fMultiplicator + 0.5f) / 100.0f;
 			return Vector2(fNewX, fNewY);
 		}
 
 		Vector2 rotate_transform(const Vector2 &vPoint, float fAngle) const {
 			Vector2 vResult;
 			Vector2 vRelative = *this - vPoint;
-			vResult.x = vRelative.x * cos(fAngle) - vRelative.y * sin(fAngle);
-			vResult.y = vRelative.x * sin(fAngle) + vRelative.y * cos(fAngle);
+			vResult.x = vRelative.x * std::cos(fAngle) - vRelative.y * std::sin(fAngle);
+			vResult.y = vRelative.x * std::sin(fAngle) + vRelative.y * std::cos(fAngle);
 			return vResult;
 		}
 
 		float angle() const {
-			float fAngle = atan2(y, x);
+			float fAngle = std::atan2(y, x);
 			if (fAngle < 0.0f)
 				fAngle += M_TWO_PI_F;
 
@@ -257,23 +261,26 @@ namespace Utils
 		}
 
 		float distance_to(const Vector3 &loc) const {
-			return sqrt(pow(x - loc.x, 2) +
-						pow(y - loc.y, 2) +
-						pow(z - loc.z, 2));
+			return std::sqrt(std::pow(x - loc.x, 2) +
+							 std::pow(y - loc.y, 2) +
+							 std::pow(z - loc.z, 2));
 		}
 
 		static float GetDistance(const Vector3 &loc1, const Vector3 &loc2) {
-			return sqrt(pow(loc1.x - loc2.x, 2) +
-						pow(loc1.y - loc2.y, 2) +
-						pow(loc1.z - loc2.z, 2));
+			return std::sqrt(std::pow(loc1.x - loc2.x, 2) +
+							 std::pow(loc1.y - loc2.y, 2) +
+							 std::pow(loc1.z - loc2.z, 2));
 		}
 
 		float length2D() const {
-			return sqrt(pow(x, 2) + pow(y, 2));
+			return std::sqrt(std::pow(x, 2) +
+							 std::pow(y, 2));
 		}
 
 		float length() const {
-			return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+			return std::sqrt(std::pow(x, 2) +
+							 std::pow(y, 2) +
+							 std::pow(z, 2));
 		}
 
 		Vector3 normalize() const {
@@ -282,6 +289,12 @@ namespace Utils
 				return *this;
 
 			return Vector3(x / fLength, y / fLength, z / fLength );
+		}
+
+		Vector3 floor() const {
+			return Vector3(std::floor(x),
+						   std::floor(y),
+						   std::floor(z));
 		}
 
 		Vector3 cross(const Vector3 &vOther) const {
@@ -296,24 +309,24 @@ namespace Utils
 		}
 
 		Vector3 round_to(size_t uDigits) const {
-			float fMultiplicator = powf(10.0f, float(uDigits));
-			float fNewX = floor(x * fMultiplicator + 0.5f) / 100.0f;
-			float fNewY = floor(y * fMultiplicator + 0.5f) / 100.0f;
-			float fNewZ = floor(z * fMultiplicator + 0.5f) / 100.0f;
+			float fMultiplicator = std::pow(10.0f, float(uDigits));
+			float fNewX = std::floor(x * fMultiplicator + 0.5f) / 100.0f;
+			float fNewY = std::floor(y * fMultiplicator + 0.5f) / 100.0f;
+			float fNewZ = std::floor(z * fMultiplicator + 0.5f) / 100.0f;
 			return Vector3(fNewX, fNewY, fNewZ);
 		}
 
 		Vector3 rotate_transform(const Vector3 &vPoint, float fAngle) const {
 			Vector3 vResult;
 			Vector3 vRelative = *this - vPoint;
-			vResult.x = vRelative.x * cos(fAngle) - vRelative.y * sin(fAngle);
-			vResult.y = vRelative.x * sin(fAngle) + vRelative.y * cos(fAngle);
+			vResult.x = vRelative.x * std::cos(fAngle) - vRelative.y * std::sin(fAngle);
+			vResult.y = vRelative.x * std::sin(fAngle) + vRelative.y * std::cos(fAngle);
 			vResult.z = vRelative.z;
 			return vResult;
 		}
 
 		float angle() const {
-			float fAngle = atan2(y, x);
+			float fAngle = std::atan2(y, x);
 			if (fAngle < 0.0f)
 				fAngle += M_TWO_PI_F;
 

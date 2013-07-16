@@ -229,6 +229,9 @@
     <ClInclude Include="src\Misc\Helpers.h">
       <Filter>Headers\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="src\UI\ConsoleWindow.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -362,6 +365,9 @@
     </ClCompile>
     <ClCompile Include="src\Misc\Helpers.cpp">
       <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\ConsoleWindow.cpp">
+      <Filter>Sources\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

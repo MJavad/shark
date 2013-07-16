@@ -47,7 +47,8 @@ namespace Components {
 				if (GetDropShadow()) {
 					RECT shadowRect = screenRect;
 					Utils::Vector2 vShadow = GetShadowDirection();
-					OffsetRect(&shadowRect, (int) vShadow.x, (int) vShadow.y);
+					OffsetRect(&shadowRect, static_cast<int32>(vShadow.x), static_cast<int32>(vShadow.y));
+
 					pObject->DrawText(pSprite, textString, shadowRect, dwFormatFlags,
 						CalculateAbsoluteColor(0x70000000));
 				}
@@ -85,8 +86,8 @@ namespace Components {
 		textExtent.bottom = static_cast<LONG>(GetHeight());
 		textExtent = pFontObject->GetTextExtent(textString, textExtent, GetFormatFlags());
 
-		m_textIndent.x = static_cast<float>(textExtent.left);
-		m_textIndent.y = static_cast<float>(textExtent.top);
+		m_textOffset.x = static_cast<float>(textExtent.left);
+		m_textOffset.y = static_cast<float>(textExtent.top);
 
 		LONG width = textExtent.right - textExtent.left;
 		LONG height = textExtent.bottom - textExtent.top;
@@ -120,15 +121,15 @@ namespace Components {
 
 	void Label::RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const {
 		if (m_fontCache != nullptr) {
-			Utils::Vector2 vScreen = GetScreenPosition() + m_textIndent;
+			Utils::Vector2 textPosition = (GetScreenPosition() + m_textOffset).floor();
 			if (GetDropShadow()) {
-				Utils::Vector3 vShadow = vScreen + GetShadowDirection();
+				Utils::Vector3 vShadow = textPosition + GetShadowDirection();
 				pSprite->Draw(m_fontCache, nullptr, nullptr, &vShadow,
 					CalculateAbsoluteColor(0x70000000));
 			}
 
-			Utils::Vector3 position = vScreen;
-			pSprite->Draw(m_fontCache, nullptr, nullptr, &position,
+			Utils::Vector3 position3 = textPosition;
+			pSprite->Draw(m_fontCache, nullptr, nullptr, &position3,
 				CalculateAbsoluteColor(GetColor()));
 		}
 	}
@@ -142,9 +143,10 @@ namespace Components {
 
 		if (pFont != nullptr && pFont->GetObject() != nullptr) {
 			const auto pObject = pFont->GetObject();
+			int32 distFromStart = static_cast<int32>(GetScreenPosition().x + m_textOffset.x);
 
-			RECT textExtent = pObject->GetTextExtent(text, GetFullRect(), flags);
-			int32 distFromStart = textExtent.left;
+			if (!IsCached())
+				distFromStart = pObject->GetTextExtent(text, GetFullRect(), flags).left;
 
 			for (; currentPos < textLength; ++currentPos) {
 				POINT cellInc = pObject->GetGlyphCellInc(text[currentPos]);
@@ -160,17 +162,17 @@ namespace Components {
 	}
 
 	int32 Label::CPToX(uint32 cp) const {
-		int32 currentPos = 0;
 		std::wstring text = GetText();
 		uint32 textLength = text.length();
 		uint32 flags = GetFormatFlags();
 		const auto pFont = GetFont();
+		int32 currentPos = static_cast<int32>(GetScreenPosition().x + m_textOffset.x);
 
 		if (pFont != nullptr && pFont->GetObject() != nullptr) {
 			const auto pObject = pFont->GetObject();
 
-			RECT textExtent = pObject->GetTextExtent(text, GetFullRect(), flags);
-			currentPos = textExtent.left;
+			if (!IsCached())
+				currentPos = pObject->GetTextExtent(text, GetFullRect(), flags).left;
 
 			for (uint32 i = 0; i < textLength && i < cp; ++i) {
 				POINT cellInc = pObject->GetGlyphCellInc(text[i]);
