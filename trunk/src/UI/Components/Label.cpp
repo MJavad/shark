@@ -5,7 +5,7 @@ namespace UI {
 namespace Components {
 	Label::Label() : m_color(0xFFE0E0E0), m_formatFlags(0),
 		m_shouldCache(true), m_dropShadow(true), m_shadowDirection(2.0f, 2.0f) {
-		const auto callback = std::bind(&Label::FlushFontCache, this);
+		const auto callback = std::bind(&Label::_flushFontCache, this);
 		m_lostDevice = sD3DMgr.OnDeviceLostEvent.connect(callback);
 		m_changeDevice = sD3DMgr.OnDeviceChangedEvent.connect(callback);
 	}
@@ -138,11 +138,17 @@ namespace Components {
 		if (GetWidth() != width) {
 			IRectComponent::SetWidth(width);
 
-			uint32 formatFlags = GetFormatFlags();
-			if (((formatFlags & DT_CENTER) == DT_CENTER) ||
-				((formatFlags & DT_RIGHT) == DT_RIGHT) ||
-				((formatFlags & DT_WORDBREAK) == DT_WORDBREAK))
-				FlushFontCache();
+			if (GetUseCache()) {
+				// If we use word breaking, we need to render it all over again :(
+				uint32 formatFlags = GetFormatFlags();
+				if ((formatFlags & DT_WORDBREAK) == DT_WORDBREAK)
+					_flushFontCache();
+
+				// ... otherwise we can just calculate the new text metrics...
+				else if (((formatFlags & DT_CENTER) == DT_CENTER) ||
+						((formatFlags & DT_RIGHT) == DT_RIGHT))
+					_recalcTextMetrics();
+			}
 		}
 	}
 
@@ -150,10 +156,13 @@ namespace Components {
 		if (GetHeight() != height) {
 			IRectComponent::SetHeight(height);
 
-			uint32 formatFlags = GetFormatFlags();
-			if (((formatFlags & DT_VCENTER) == DT_VCENTER) ||
-				((formatFlags & DT_BOTTOM) == DT_BOTTOM))
-				FlushFontCache();
+			// If we use caching, we probably need to recalc text metrics...
+			if (GetUseCache()) {
+				uint32 formatFlags = GetFormatFlags();
+				if (((formatFlags & DT_VCENTER) == DT_VCENTER) ||
+					((formatFlags & DT_BOTTOM) == DT_BOTTOM))
+					_recalcTextMetrics();
+			}
 		}
 	}
 
@@ -208,6 +217,19 @@ namespace Components {
 		}
 
 		return currentPos;
+	}
+
+	void Label::_recalcTextMetrics() {
+		const auto pFont = GetFont();
+		if (pFont != nullptr && pFont->GetObject() != nullptr) {
+			RECT textExtent = {0};
+			textExtent.right = static_cast<LONG>(GetWidth());
+			textExtent.bottom = static_cast<LONG>(GetHeight());
+			textExtent = pFont->GetObject()->GetTextExtent(GetText(), textExtent, GetFormatFlags());
+
+			m_textOffset.x = static_cast<float>(textExtent.left);
+			m_textOffset.y = static_cast<float>(textExtent.top);
+		}
 	}
 }
 }

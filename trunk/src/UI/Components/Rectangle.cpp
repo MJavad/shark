@@ -8,7 +8,7 @@ namespace Components {
 		memset(&m_horizRoundings, 0, sizeof(m_horizRoundings));
 		memset(&m_vertRoundings, 0, sizeof(m_vertRoundings));
 
-		const auto callback = std::bind(&Rectangle::FlushShadowTexture, this);
+		const auto callback = std::bind(&Rectangle::_flushTextureCache, this);
 		m_lostDevice = sD3DMgr.OnDeviceLostEvent.connect(callback);
 		m_changeDevice = sD3DMgr.OnDeviceChangedEvent.connect(callback);
 	}
@@ -26,7 +26,7 @@ namespace Components {
 	}
 
 	void Rectangle::SetDimensions(std::array<Utils::Vector2, 4> dimensions) {
-		FlushShadowTexture();
+		_flushTextureCache();
 		m_dimensions = std::move(dimensions);
 		IRectComponent::SetWidth(IRenderTarget::GetDimensionWidth(m_dimensions));
 		IRectComponent::SetHeight(IRenderTarget::GetDimensionHeight(m_dimensions));

@@ -24,12 +24,12 @@ namespace Components {
 
 		virtual void SetHorizontalRoundings(const float4 &roundings) {
 			m_horizRoundings = roundings;
-			FlushShadowTexture();
+			_flushTextureCache();
 		}
 
 		virtual void SetVerticalRoundings(const float4 &roundings) {
 			m_vertRoundings = roundings;
-			FlushShadowTexture();
+			_flushTextureCache();
 		}
 
 		virtual void SetHorizontalRounding(float horizontalRounding) {
@@ -37,7 +37,7 @@ namespace Components {
 			m_horizRoundings._2 = horizontalRounding;
 			m_horizRoundings._3 = horizontalRounding;
 			m_horizRoundings._4 = horizontalRounding;
-			FlushShadowTexture();
+			_flushTextureCache();
 		}
 
 		virtual void SetVerticalRounding(float verticalRounding) {
@@ -45,17 +45,17 @@ namespace Components {
 			m_vertRoundings._2 = verticalRounding;
 			m_vertRoundings._3 = verticalRounding;
 			m_vertRoundings._4 = verticalRounding;
-			FlushShadowTexture();
+			_flushTextureCache();
 		}
 
 		virtual void SetColor(const D3DXCOLOR &color) {
 			m_colors.fill(color);
-			FlushShadowTexture();
+			_flushTextureCache();
 		}
 
 		virtual void SetGradientColors(std::array<D3DXCOLOR, 4> gradient) {
 			m_colors = std::move(gradient);
-			FlushShadowTexture();
+			_flushTextureCache();
 		}
 
 		virtual std::array<D3DXCOLOR, 4> GetGradientColors() const {
@@ -65,7 +65,7 @@ namespace Components {
 		virtual void SetDropShadow(bool dropShadow) {
 			m_dropShadow = dropShadow;
 			if (!dropShadow)
-				FlushShadowTexture();
+				_flushTextureCache();
 		}
 
 		virtual bool GetDropShadow() const {
@@ -89,7 +89,7 @@ namespace Components {
 		virtual void SetWidth(float width) {
 			if (GetWidth() != width) {
 				IRectComponent::SetWidth(width);
-				FlushShadowTexture();
+				_flushTextureCache();
 
 				m_dimensions[0].x = 0; m_dimensions[1].x = width;
 				m_dimensions[3].x = 0; m_dimensions[2].x = width;
@@ -99,7 +99,7 @@ namespace Components {
 		virtual void SetHeight(float height) {
 			if (GetHeight() != height) {
 				IRectComponent::SetHeight(height);
-				FlushShadowTexture();
+				_flushTextureCache();
 
 				m_dimensions[0].y = 0; m_dimensions[3].y = height;
 				m_dimensions[1].y = 0; m_dimensions[2].y = height;
@@ -107,10 +107,6 @@ namespace Components {
 		}
 
 		void CreateShadowTexture();
-
-		void FlushShadowTexture() {
-			m_shadowTexture.reset();
-		}
 
 	private:
 		bool m_dropShadow;
@@ -124,6 +120,10 @@ namespace Components {
 
 		Utils::SEventDelegate<void ()> m_lostDevice;
 		Utils::SEventDelegate<void ()> m_changeDevice;
+
+		void _flushTextureCache() {
+			m_shadowTexture.reset();
+		}
 	};
 }
 }

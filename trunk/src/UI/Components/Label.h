@@ -29,7 +29,7 @@ namespace Components {
 		virtual void SetText(std::wstring textString) {
 			if (m_text != textString) {
 				m_text = std::move(textString);
-				FlushFontCache();
+				_flushFontCache();
 			}
 		}
 
@@ -48,7 +48,7 @@ namespace Components {
 		virtual void SetFormatFlags(uint32 formatFlags) {
 			if (m_formatFlags != formatFlags) {
 				m_formatFlags = formatFlags;
-				FlushFontCache();
+				_flushFontCache();
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace Components {
 		virtual void SetFont(std::shared_ptr<UI::D3DFont> pFont) {
 			if (m_font != pFont) {
 				m_font = std::move(pFont);
-				FlushFontCache();
+				_flushFontCache();
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Components {
 		virtual void SetUseCache(bool useCache) {
 			m_shouldCache = useCache;
 			if (!useCache)
-				FlushFontCache();
+				_flushFontCache();
 		}
 
 		virtual bool GetUseCache() const {
@@ -91,10 +91,6 @@ namespace Components {
 
 		bool IsCached() const {
 			return m_fontCache != nullptr;
-		}
-
-		void FlushFontCache() {
-			m_fontCache.reset();
 		}
 
 		uint32 XToCP(int32 x) const;
@@ -112,6 +108,12 @@ namespace Components {
 
 		Utils::SEventDelegate<void ()> m_lostDevice;
 		Utils::SEventDelegate<void ()> m_changeDevice;
+
+		void _recalcTextMetrics();
+
+		void _flushFontCache() {
+			m_fontCache.reset();
+		}
 	};
 }
 }
