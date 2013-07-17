@@ -81,7 +81,7 @@ namespace Components {
 			return false;
 
 		const auto pParent = GetUIParent();
-		bool bNext = !HasChild(pComponent);
+		bool nextItem = !HasChild(pComponent);
 		const auto lstChildren = m_children;
 
 		for (uint32 i = 0; i < 2; ++i) {
@@ -89,7 +89,7 @@ namespace Components {
 					  end = lstChildren.crend(); itr != end; ++itr)
 			{
 				const auto &pCurrent = *itr;
-				if (bNext || i > 0) {
+				if (nextItem || i > 0) {
 					if (pCurrent == pComponent)
 						return false;
 
@@ -97,7 +97,7 @@ namespace Components {
 						return true;
 				}
 				else if (pCurrent == pComponent)
-					bNext = true;
+					nextItem = true;
 			}
 
 			// only call it after the first loop

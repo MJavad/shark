@@ -134,6 +134,29 @@ namespace Components {
 		}
 	}
 
+	void Label::SetWidth(float width) {
+		if (GetWidth() != width) {
+			IRectComponent::SetWidth(width);
+
+			uint32 formatFlags = GetFormatFlags();
+			if (((formatFlags & DT_CENTER) == DT_CENTER) ||
+				((formatFlags & DT_RIGHT) == DT_RIGHT) ||
+				((formatFlags & DT_WORDBREAK) == DT_WORDBREAK))
+				FlushFontCache();
+		}
+	}
+
+	void Label::SetHeight(float height) {
+		if (GetHeight() != height) {
+			IRectComponent::SetHeight(height);
+
+			uint32 formatFlags = GetFormatFlags();
+			if (((formatFlags & DT_VCENTER) == DT_VCENTER) ||
+				((formatFlags & DT_BOTTOM) == DT_BOTTOM))
+				FlushFontCache();
+		}
+	}
+
 	uint32 Label::XToCP(int32 x) const {
 		uint32 currentPos = 0;
 		int32 distFromStart = 0;

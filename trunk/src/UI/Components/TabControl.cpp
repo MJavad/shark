@@ -22,22 +22,27 @@ namespace Components {
 		SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 		Rectangle::OnRender(timePassed);
 
-		GetInterface()->ClipStack.SetRect(GetFullRect(), [&] {
-			for (const auto& pTabPage : m_tabPages) {
-				if (pTabPage->GetVisibility()) {
-					D3DXCOLOR previousColor = pTabPage->GetColorMod();
-					pTabPage->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-					pTabPage->RenderChildren(timePassed);
-					pTabPage->SetColorMod(previousColor);
-				}
+		const auto pInterface = GetInterface();
+		pInterface->ClipStack.Push(GetFullRect());
+		pInterface->ClipStack.Apply();
+
+		for (const auto& pTabPage : m_tabPages) {
+			if (pTabPage->GetVisibility()) {
+				D3DXCOLOR previousColor = pTabPage->GetColorMod();
+				pTabPage->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+				pTabPage->RenderChildren(timePassed);
+				pTabPage->SetColorMod(previousColor);
 			}
-		});
+		}
+
+		pInterface->ClipStack.Pop();
+		pInterface->ClipStack.Apply();
 
 		SetPosition(position);
-		float fCurrentOffset = 0.0f;
-		float fActiveTabOffset = 0.0f;
+		float renderOffset = 0.0f;
+		float activeTabOffset = 0.0f;
 		for (const auto &pTabPage: m_tabPages)
-			fCurrentOffset += (pTabPage->GetWidth() - 2.0f);
+			renderOffset += (pTabPage->GetWidth() - 2.0f);
 
 		for (auto itr = m_tabPages.crbegin(),
 			end = m_tabPages.crend(); itr != end; ++itr) {
@@ -45,16 +50,17 @@ namespace Components {
 			if (!pTabPage->GetVisibility())
 				continue;
 
-			fCurrentOffset -= (pTabPage->GetWidth() - 2);
+			renderOffset -= (pTabPage->GetWidth() - 2);
 			if (!validActiveTab || pTabPage != m_tabPages[m_activeTab]) {
-				SetChildOffset(Utils::Vector2(fCurrentOffset + 2, 0.0f));
+				SetChildOffset(Utils::Vector2(renderOffset + 2.0f, 0.0f));
 				pTabPage->OnRender(timePassed);
 			}
 			else
-				fActiveTabOffset = (fCurrentOffset + 2);
+				activeTabOffset = (renderOffset + 2);
 		}
 
-		if (!validActiveTab || !m_tabPages[m_activeTab]->GetVisibility())
+		if (!validActiveTab ||
+			!m_tabPages[m_activeTab]->GetVisibility())
 			return;
 
 		const auto &pActiveTab = m_tabPages[m_activeTab];
@@ -62,7 +68,7 @@ namespace Components {
 		D3DXCOLOR highlightColor = previousColor * 1.5f;
 
 		pActiveTab->SetColorMod(highlightColor);
-		SetChildOffset(Utils::Vector2(fActiveTabOffset, 0.0f));
+		SetChildOffset(Utils::Vector2(activeTabOffset, 0.0f));
 		pActiveTab->OnRender(timePassed);
 		pActiveTab->SetColorMod(previousColor);
 	}
@@ -75,12 +81,13 @@ namespace Components {
 		if (!GetVisibility())
 			sWndProc.LastMessageHandled = true;
 
-		float fCurrentOffset = 0.0f;
+		float renderOffset = 0.0f;
 		const auto vTabPages = m_tabPages;
 		for (const auto &pTabPage: vTabPages) {
-			SetChildOffset(Utils::Vector2(fCurrentOffset, 0.0f));
+			SetChildOffset(Utils::Vector2(renderOffset, 0.0f));
+			renderOffset += (pTabPage->GetWidth() + 2.0f);
+
 			pTabPage->OnMessageReceived(uMsg, wParam, lParam);
-			fCurrentOffset += (pTabPage->GetWidth() + 2);
 		}
 
 		Utils::Vector2 position = GetPosition();
@@ -164,7 +171,7 @@ namespace Components {
 			return false;
 
 		const auto pParent = GetUIParent();
-		bool bNext = !_hasPage(pComponent);
+		bool nextItem = !_hasPage(pComponent);
 		const auto vTabPages = m_tabPages;
 
 		for (uint32 i = 0; i < 2; ++i) {
@@ -172,7 +179,7 @@ namespace Components {
 					  end = vTabPages.cend(); itr != end; ++itr)
 			{
 				const auto &pCurrent = *itr;
-				if (bNext || i > 0) {
+				if (nextItem || i > 0) {
 					if (pCurrent == pComponent)
 						return false;
 
@@ -180,7 +187,7 @@ namespace Components {
 						return true;
 				}
 				else if (pCurrent == pComponent)
-					bNext = true;
+					nextItem = true;
 			}
 
 			// only call it after the first loop

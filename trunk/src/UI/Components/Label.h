@@ -19,13 +19,18 @@ namespace Components {
 		void CreateCachedFontBatch();
 		void RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const;
 
+		virtual void SetWidth(float width);
+		virtual void SetHeight(float height);
+
 		virtual const std::wstring& GetText() const {
 			return m_text;
 		}
 
 		virtual void SetText(std::wstring textString) {
-			m_text = std::move(textString);
-			FlushFontCache();
+			if (m_text != textString) {
+				m_text = std::move(textString);
+				FlushFontCache();
+			}
 		}
 
 		virtual D3DXCOLOR GetColor() const {
@@ -36,23 +41,15 @@ namespace Components {
 			m_color = color;
 		}
 
-		virtual void SetWidth(float width) {
-			IRectComponent::SetWidth(width);
-			FlushFontCache();
-		}
-
-		virtual void SetHeight(float height) {
-			IRectComponent::SetHeight(height);
-			FlushFontCache();
-		}
-
 		virtual uint32 GetFormatFlags() const {
 			return m_formatFlags;
 		}
 
-		virtual void SetFormatFlags(uint32 dwFormatFlags) {
-			m_formatFlags = dwFormatFlags;
-			FlushFontCache();
+		virtual void SetFormatFlags(uint32 formatFlags) {
+			if (m_formatFlags != formatFlags) {
+				m_formatFlags = formatFlags;
+				FlushFontCache();
+			}
 		}
 
 		virtual std::shared_ptr<UI::D3DFont> GetFont() const {
@@ -60,8 +57,10 @@ namespace Components {
 		}
 
 		virtual void SetFont(std::shared_ptr<UI::D3DFont> pFont) {
-			m_font = std::move(pFont);
-			FlushFontCache();
+			if (m_font != pFont) {
+				m_font = std::move(pFont);
+				FlushFontCache();
+			}
 		}
 
 		virtual void SetDropShadow(bool bDropShadow) {
@@ -80,9 +79,9 @@ namespace Components {
 			return m_shadowDirection;
 		}
 
-		virtual void SetUseCache(bool bUseCache) {
-			m_shouldCache = bUseCache;
-			if (!bUseCache)
+		virtual void SetUseCache(bool useCache) {
+			m_shouldCache = useCache;
+			if (!useCache)
 				FlushFontCache();
 		}
 

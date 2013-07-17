@@ -24,10 +24,10 @@ namespace Components {
 
 		Rectangle::OnRender(timePassed);
 
-		float fItemOffset = 0.0f;
+		float renderOffset = 0.0f;
 		for (const auto &pListBoxEntry: m_entries) {
-			SetChildOffset(Utils::Vector2(0.0f, fItemOffset));
-			fItemOffset += pListBoxEntry->GetHeight() + 1.0f;
+			SetChildOffset(Utils::Vector2(0.0f, renderOffset));
+			renderOffset += pListBoxEntry->GetHeight() + 1.0f;
 
 			if (pListBoxEntry->GetVisibility())
 				pListBoxEntry->OnRender(timePassed);
@@ -37,16 +37,16 @@ namespace Components {
 		if (pSprite != nullptr) {
 			pSprite->Begin(D3DXSPRITE_DO_NOT_ADDREF_TEXTURE);
 
-			fItemOffset = 0.0f;
+			renderOffset = 0.0f;
 			for (const auto &pListBoxEntry: m_entries) {
-				SetChildOffset(Utils::Vector2(0.0f, fItemOffset));
-				fItemOffset += pListBoxEntry->GetHeight() + 1.0f;
+				SetChildOffset(Utils::Vector2(0.0f, renderOffset));
+				renderOffset += pListBoxEntry->GetHeight() + 1.0f;
 
 				if (pListBoxEntry->GetVisibility())
 					pListBoxEntry->RenderCachedFontBatch(pSprite);
 			}
-			SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 
+			SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 			pSprite->End();
 		}
 	}
@@ -62,12 +62,13 @@ namespace Components {
 			PtInBoundingRect(position))
 			SetSelecting(true);
 
-		float fItemOffset = 0.0f;
+		float renderOffset = 0.0f;
 		for (const auto &pListBoxEntry: m_entries) {
-			SetChildOffset(Utils::Vector2(0.0f, fItemOffset));
-			fItemOffset += pListBoxEntry->GetHeight() + 1.0f;
+			SetChildOffset(Utils::Vector2(0.0f, renderOffset));
+			renderOffset += pListBoxEntry->GetHeight() + 1.0f;
 			pListBoxEntry->OnMessageReceived(uMsg, wParam, lParam);
 		}
+
 		SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 
 		if (IsSelecting()) {
@@ -83,7 +84,7 @@ namespace Components {
 			}
 		}
 	}
-		
+
 	void ListBox::SetWidth(float width) {
 		Rectangle::SetWidth(width);
 		
