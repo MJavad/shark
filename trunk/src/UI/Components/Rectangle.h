@@ -23,48 +23,48 @@ namespace Components {
 		}
 
 		virtual void SetHorizontalRoundings(const float4 &roundings) {
-			FlushShadowTexture();
 			m_horizRoundings = roundings;
+			FlushShadowTexture();
 		}
 
 		virtual void SetVerticalRoundings(const float4 &roundings) {
-			FlushShadowTexture();
 			m_vertRoundings = roundings;
+			FlushShadowTexture();
 		}
 
 		virtual void SetHorizontalRounding(float horizontalRounding) {
-			FlushShadowTexture();
 			m_horizRoundings._1 = horizontalRounding;
 			m_horizRoundings._2 = horizontalRounding;
 			m_horizRoundings._3 = horizontalRounding;
 			m_horizRoundings._4 = horizontalRounding;
+			FlushShadowTexture();
 		}
 
 		virtual void SetVerticalRounding(float verticalRounding) {
-			FlushShadowTexture();
 			m_vertRoundings._1 = verticalRounding;
 			m_vertRoundings._2 = verticalRounding;
 			m_vertRoundings._3 = verticalRounding;
 			m_vertRoundings._4 = verticalRounding;
+			FlushShadowTexture();
 		}
 
 		virtual void SetColor(const D3DXCOLOR &color) {
-			FlushShadowTexture();
 			m_colors.fill(color);
+			FlushShadowTexture();
 		}
 
 		virtual void SetGradientColors(std::array<D3DXCOLOR, 4> gradient) {
-			FlushShadowTexture();
 			m_colors = std::move(gradient);
+			FlushShadowTexture();
 		}
 
 		virtual std::array<D3DXCOLOR, 4> GetGradientColors() const {
 			return m_colors;
 		}
 
-		virtual void SetDropShadow(bool bDropShadow) {
-			m_dropShadow = bDropShadow;
-			if (!bDropShadow)
+		virtual void SetDropShadow(bool dropShadow) {
+			m_dropShadow = dropShadow;
+			if (!dropShadow)
 				FlushShadowTexture();
 		}
 
@@ -72,8 +72,8 @@ namespace Components {
 			return m_dropShadow;
 		}
 
-		virtual void SetShadowDirection(const Utils::Vector2 &vShadowDirection) {
-			m_shadowDirection = vShadowDirection;
+		virtual void SetShadowDirection(const Utils::Vector2 &shadowDirection) {
+			m_shadowDirection = shadowDirection;
 		}
 
 		virtual Utils::Vector2 GetShadowDirection() const {
@@ -87,17 +87,23 @@ namespace Components {
 		}
 
 		virtual void SetWidth(float width) {
-			FlushShadowTexture();
-			IRectComponent::SetWidth(width);
-			m_dimensions[0].x = 0; m_dimensions[1].x = width;
-			m_dimensions[3].x = 0; m_dimensions[2].x = width;
+			if (GetWidth() != width) {
+				IRectComponent::SetWidth(width);
+				FlushShadowTexture();
+
+				m_dimensions[0].x = 0; m_dimensions[1].x = width;
+				m_dimensions[3].x = 0; m_dimensions[2].x = width;
+			}
 		}
 
 		virtual void SetHeight(float height) {
-			FlushShadowTexture();
-			IRectComponent::SetHeight(height);
-			m_dimensions[0].y = 0; m_dimensions[3].y = height;
-			m_dimensions[1].y = 0; m_dimensions[2].y = height;
+			if (GetHeight() != height) {
+				IRectComponent::SetHeight(height);
+				FlushShadowTexture();
+
+				m_dimensions[0].y = 0; m_dimensions[3].y = height;
+				m_dimensions[1].y = 0; m_dimensions[2].y = height;
+			}
 		}
 
 		void CreateShadowTexture();
