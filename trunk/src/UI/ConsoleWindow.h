@@ -6,7 +6,7 @@
 
 namespace UI {
 	class ConsoleWindow {
-		SINGLETON_CLASS(ConsoleWindow) {}
+		SINGLETON_CLASS(ConsoleWindow) : m_isInitialized(false) {}
 
 	public:
 		void Initialize();
@@ -22,6 +22,7 @@ namespace UI {
 		}
 
 	private:
+		bool m_isInitialized;
 		std::shared_ptr<ComponentInterface> m_interface;
 		std::shared_ptr<Components::ItemsControl> m_controlGroup;
 		std::shared_ptr<Components::Label> m_consoleLabel;

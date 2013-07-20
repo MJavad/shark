@@ -5,6 +5,7 @@
 
 namespace UI {
 	void ConsoleWindow::Initialize() {
+		m_isInitialized = true;
 		m_consoleLabel = Components::Label::Create();
 		m_consoleLabel->SetDropShadow(false);
 		m_consoleLabel->SetFont(sD3DMgr.GetFont(L"Consolas", 16));
@@ -39,18 +40,20 @@ namespace UI {
 	void ConsoleWindow::UpdateWindow() {
 		RECT screenDimensions = {0};
 		const auto pRenderTarget = sD3DMgr.GetRenderTarget();
-		if (pRenderTarget == nullptr ||
-			!pRenderTarget->GetSurfaceRect(&screenDimensions))
-			return;
 
-		float screenWidth = static_cast<float>(
-			screenDimensions.right - screenDimensions.left);
-		m_consoleLabel->SetWidth(screenWidth);
-		m_windowBackground->SetWidth(screenWidth);
+		if (m_isInitialized && pRenderTarget != nullptr &&
+			pRenderTarget->GetSurfaceRect(&screenDimensions))
+		{
+			float screenWidth = static_cast<float>(
+				screenDimensions.right - screenDimensions.left);
+
+			m_consoleLabel->SetWidth(screenWidth);
+			m_windowBackground->SetWidth(screenWidth);
+		}
 	}
 
 	void ConsoleWindow::AddLine(const std::wstring &line) const {
-		if (m_consoleLabel != nullptr) {
+		if (m_isInitialized) {
 			std::wstring currentText = m_consoleLabel->GetText();
 			m_consoleLabel->SetText(currentText + line + L"\r\n");
 
@@ -64,7 +67,7 @@ namespace UI {
 	}
 
 	void ConsoleWindow::RemoveLine(uint32 lineIndex) const {
-		if (m_consoleLabel != nullptr) {
+		if (m_isInitialized) {
 			std::wstring output, current;
 			std::wistringstream in(m_consoleLabel->GetText());
 
@@ -79,15 +82,19 @@ namespace UI {
 	}
 
 	void ConsoleWindow::Show() const {
-		m_controlGroup->Show(150);
-		m_controlGroup->MoveTo(150, Utils::Vector2(0.0f, 0.0f));
+		if (m_isInitialized) {
+			m_controlGroup->Show(150);
+			m_controlGroup->MoveTo(150, Utils::Vector2(0.0f, 0.0f));
+		}
 	}
 
 	void ConsoleWindow::Hide() const {
-		Utils::Vector2 hidePoint;
-		hidePoint.y = -m_windowBackground->GetHeight();
-		m_controlGroup->MoveTo(150, hidePoint);
-		m_controlGroup->Hide(150);
+		if (m_isInitialized) {
+			Utils::Vector2 hidePoint;
+			hidePoint.y = -m_windowBackground->GetHeight();
+			m_controlGroup->MoveTo(150, hidePoint);
+			m_controlGroup->Hide(150);
+		}
 	}
 
 	void ConsoleWindow::_onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) const {
