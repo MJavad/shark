@@ -1,7 +1,6 @@
 #include "Misc/stdafx.h"
 #include "ConsoleWindow.h"
 #include "Base/D3DManager.h"
-#include "Base/Engine.h"
 #include "Base/WndProc.h"
 
 namespace UI {
@@ -80,19 +79,15 @@ namespace UI {
 	}
 
 	void ConsoleWindow::Show() const {
-		m_controlGroup->SetVisibility(true);
-		m_controlGroup->MoveTo(100, Utils::Vector2(0.0f, 0.0f));
+		m_controlGroup->Show(150);
+		m_controlGroup->MoveTo(150, Utils::Vector2(0.0f, 0.0f));
 	}
 
 	void ConsoleWindow::Hide() const {
 		Utils::Vector2 hidePoint;
 		hidePoint.y = -m_windowBackground->GetHeight();
-		m_controlGroup->MoveTo(100, hidePoint);
-
-		sEngine.PulseTimer.AddTimer(100, [this] (const Utils::STimerDispatchEvt&) {
-			m_controlGroup->SetVisibility(false);
-			return TIMER_STOP_EXECUTION;
-		});
+		m_controlGroup->MoveTo(150, hidePoint);
+		m_controlGroup->Hide(150);
 	}
 
 	void ConsoleWindow::_onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) const {
