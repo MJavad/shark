@@ -16,10 +16,6 @@ namespace Components {
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		virtual void OnUpdate(uint32 timePassed) {
-			ItemsControl::OnUpdate(timePassed);
-		}
-
 		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
 			return ItemsControl::OnTabPressed(pComponent);
 		}
@@ -28,8 +24,8 @@ namespace Components {
 			return m_sizable;
 		}
 
-		void SetSizable(bool bSizable) {
-			m_sizable = bSizable;
+		void SetSizable(bool sizable) {
+			m_sizable = sizable;
 
 			if (IsSizing()) {
 				_notifyResizeEndEvent(nullptr);
