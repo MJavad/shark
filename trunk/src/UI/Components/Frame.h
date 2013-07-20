@@ -16,6 +16,10 @@ namespace Components {
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		virtual void OnUpdate(uint32 timePassed) {
+			ItemsControl::OnUpdate(timePassed);
+		}
+
 		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
 			return ItemsControl::OnTabPressed(pComponent);
 		}

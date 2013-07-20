@@ -167,7 +167,7 @@ namespace UI {
 		pHeaderBar->SetHorizontalRoundings(frameRoundings);
 		pFrame->PushChild(pHeaderBar);
 
-		const auto pWindowTitle = Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER, width);
+		const auto pWindowTitle = Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE, width);
 		pWindowTitle->SetPosition(Utils::Vector2(0.0f, 5.0f));
 		pWindowTitle->SetColor(0x90FFFFFF);
 		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, 0, FW_BOLD));

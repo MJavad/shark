@@ -16,7 +16,7 @@ namespace Components {
 	}
 
 	std::shared_ptr<Label> Label::Create(std::wstring textString,
-										 uint32 dwFormatFlags,
+										 uint32 formatFlags,
 										 float width,
 										 float height)
 	{
@@ -24,7 +24,7 @@ namespace Components {
 		pLabel->SetText(std::move(textString));
 		pLabel->SetWidth(width);
 		pLabel->SetHeight(height);
-		pLabel->SetFormatFlags(dwFormatFlags);
+		pLabel->SetFormatFlags(formatFlags);
 		pLabel->SetFont(sD3DMgr.GetFont(L"Segoe UI", 15));
 		return pLabel;
 	}

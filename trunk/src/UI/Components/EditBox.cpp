@@ -279,8 +279,8 @@ namespace Components {
 		sWndProc.LastMessageHandled = true;
 	}
 
-	void EditBox::_onKeyDown(int key) {
-		switch (key) {
+	void EditBox::_onKeyDown(uint32 keyCode) {
+		switch (keyCode) {
 		case VK_DELETE:
 			_eraseText(s_caretPosition, 1);
 			break;

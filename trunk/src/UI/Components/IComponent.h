@@ -24,8 +24,12 @@ namespace Components {
 		bool HasParent(const std::shared_ptr<const IComponent> &pParent) const;
 
 		void StopFade() { m_fadeActive = false; }
-		void FadeTo(uint32 uFadeTime, const D3DXCOLOR &fadeColor);
+		void FadeTo(uint32 fadeTime, const D3DXCOLOR &fadeColor);
 		void UndoFade();
+
+		void StopMove() { m_moveActive = false; }
+		void MoveTo(uint32 moveTime, const Utils::Vector2 &position);
+		void UndoMove();
 
 		virtual void Hide(uint32 time = 200);
 		virtual void Show(uint32 time = 200);
@@ -34,8 +38,8 @@ namespace Components {
 			return m_isVisible;
 		}
 
-		virtual void SetVisibility(bool bVisible) {
-			m_isVisible = bVisible;
+		virtual void SetVisibility(bool visible) {
+			m_isVisible = visible;
 		}
 
 		virtual Utils::Vector2 GetPosition() const {
@@ -50,8 +54,8 @@ namespace Components {
 			return m_childOffset;
 		}
 
-		virtual void SetChildOffset(const Utils::Vector2 &vOffset) {
-			m_childOffset = vOffset;
+		virtual void SetChildOffset(const Utils::Vector2 &childOffset) {
+			m_childOffset = childOffset;
 		}
 
 		virtual D3DXCOLOR GetColorMod() const {
@@ -114,6 +118,10 @@ namespace Components {
 		bool m_fadeActive, m_prevFade;
 		uint32 m_fadeTime, m_fadeTimePassed;
 		D3DXCOLOR m_fadeTo, m_fadeSrc;
+
+		bool m_moveActive, m_prevMove;
+		uint32 m_moveTime, m_moveTimePassed;
+		Utils::Vector2 m_moveTo, m_moveSrc;
 
 		Utils::Vector2 m_position, m_childOffset;
 

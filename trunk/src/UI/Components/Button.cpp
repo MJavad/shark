@@ -11,7 +11,7 @@ namespace Components {
 										   float verticalRounding)
 	{
 		const auto pButton = std::make_shared<Button>();
-		pButton->SetCaption(Label::Create(std::move(textString), DT_VCENTER | DT_CENTER));
+		pButton->SetCaption(Label::Create(std::move(textString), DT_CENTER | DT_VCENTER));
 
 		const auto pBorder = Rectangle::Create(width, height);
 		pBorder->SetColor(0xFF40B0FF);

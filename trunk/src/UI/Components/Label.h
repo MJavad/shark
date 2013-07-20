@@ -11,7 +11,7 @@ namespace Components {
 		~Label();
 
 		static std::shared_ptr<Label> Create(std::wstring textString = L"",
-			uint32 dwFormatFlags = DT_NOCLIP | DT_SINGLELINE,
+			uint32 formatFlags = DT_LEFT | DT_TOP,
 			float width = 100.0f, float height = 20.0f);
 		
 		virtual void OnRender(uint32 timePassed);

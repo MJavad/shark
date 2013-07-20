@@ -1,27 +1,38 @@
 #include "Misc/stdafx.h"
 #include "ConsoleWindow.h"
 #include "Base/D3DManager.h"
+#include "Base/Engine.h"
+#include "Base/WndProc.h"
 
 namespace UI {
 	void ConsoleWindow::Initialize() {
-		m_windowContent = Components::Label::Create();
-		m_windowContent->SetDropShadow(false);
-		m_windowContent->SetFont(sD3DMgr.GetFont(L"Consolas", 16));
-		m_windowContent->SetFormatFlags(DT_LEFT | DT_BOTTOM);
-		m_windowContent->SetHeight(200.0f);
+		m_consoleLabel = Components::Label::Create();
+		m_consoleLabel->SetDropShadow(false);
+		m_consoleLabel->SetFont(sD3DMgr.GetFont(L"Consolas", 16));
+		m_consoleLabel->SetFormatFlags(DT_LEFT | DT_BOTTOM | DT_NOCLIP);
+		m_consoleLabel->SetHeight(200.0f);
 
 		m_windowBackground = Components::Rectangle::Create(0.0f, 0.0f);
 		m_windowBackground->SetColor(0xC0000000);
 		m_windowBackground->SetHeight(200.0f);
 
+		m_controlGroup = Components::ItemsControl::Create();
+		m_controlGroup->PushChild(m_windowBackground);
+		m_controlGroup->PushChild(m_consoleLabel);
+		m_controlGroup->SetVisibility(false);
+		m_controlGroup->SetPosition(Utils::Vector2(0.0f, -200.0f));
+
 		m_interface = std::make_shared<ComponentInterface>();
-		m_interface->PushControl(m_windowBackground);
-		m_interface->PushControl(m_windowContent);
+		m_interface->PushControl(m_controlGroup);
 		sD3DMgr.PushInterface(m_interface);
 
 		const auto updateDelegate = std::bind(&ConsoleWindow::UpdateWindow, this);
 		sD3DMgr.OnDeviceResetEvent.connect(updateDelegate);
 		sD3DMgr.OnDeviceChangedEvent.connect(updateDelegate);
+
+		using namespace std::placeholders;
+		sWndProc.OnMessageReceivedEvent.connect(std::bind(
+			&ConsoleWindow::_onMessageReceived, this, _1, _2, _3));
 
 		UpdateWindow();
 	}
@@ -35,14 +46,14 @@ namespace UI {
 
 		float screenWidth = static_cast<float>(
 			screenDimensions.right - screenDimensions.left);
-		m_windowContent->SetWidth(screenWidth);
+		m_consoleLabel->SetWidth(screenWidth);
 		m_windowBackground->SetWidth(screenWidth);
 	}
 
 	void ConsoleWindow::AddLine(const std::wstring &line) const {
-		if (m_windowContent != nullptr) {
-			std::wstring currentText = m_windowContent->GetText();
-			m_windowContent->SetText(currentText + line + L"\r\n");
+		if (m_consoleLabel != nullptr) {
+			std::wstring currentText = m_consoleLabel->GetText();
+			m_consoleLabel->SetText(currentText + line + L"\r\n");
 
 			size_t numLines = std::count(
 				currentText.begin(),
@@ -54,9 +65,9 @@ namespace UI {
 	}
 
 	void ConsoleWindow::RemoveLine(uint32 lineIndex) const {
-		if (m_windowContent != nullptr) {
+		if (m_consoleLabel != nullptr) {
 			std::wstring output, current;
-			std::wistringstream in(m_windowContent->GetText());
+			std::wistringstream in(m_consoleLabel->GetText());
 
 			uint32 currentLine = 0;
 			while (std::getline(in, current).good()) {
@@ -64,7 +75,55 @@ namespace UI {
 					output += (current + L"\r\n");
 			}
 
-			m_windowContent->SetText(output);
+			m_consoleLabel->SetText(output);
 		}
+	}
+
+	void ConsoleWindow::Show() const {
+		m_controlGroup->SetVisibility(true);
+		m_controlGroup->MoveTo(100, Utils::Vector2(0.0f, 0.0f));
+	}
+
+	void ConsoleWindow::Hide() const {
+		Utils::Vector2 hidePoint;
+		hidePoint.y = -m_windowBackground->GetHeight();
+		m_controlGroup->MoveTo(100, hidePoint);
+
+		sEngine.PulseTimer.AddTimer(100, [this] (const Utils::STimerDispatchEvt&) {
+			m_controlGroup->SetVisibility(false);
+			return TIMER_STOP_EXECUTION;
+		});
+	}
+
+	void ConsoleWindow::_onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) const {
+		switch (uMsg) {
+		case WM_KEYDOWN:
+			if (!sWndProc.LastMessageHandled)
+				_onKeyDown(wParam);
+			break;
+		}
+	}
+
+	void ConsoleWindow::_onKeyDown(uint32 keyCode) const {
+		switch (keyCode) {
+		case VK_OEM_3: // The console trigger key ` (US)
+			if (!IsShown())
+				Show();
+			else
+				Hide();
+			break;
+
+		case VK_ESCAPE: // Escape closes the console
+			if (IsShown())
+				Hide();
+			else
+				return;
+			break;
+
+		default:
+			return;
+		}
+
+		sWndProc.LastMessageHandled = true;
 	}
 }

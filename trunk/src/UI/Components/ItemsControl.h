@@ -6,6 +6,8 @@ namespace Components {
 	class ItemsControl : public virtual IComponent
 	{
 	public:
+		static std::shared_ptr<ItemsControl> Create();
+
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

@@ -8,18 +8,17 @@ namespace Components {
 	IComponent::IComponent(): m_isVisible(true),
 							  m_fadeActive(false),
 							  m_prevFade(false),
+							  m_moveActive(false),
+							  m_prevMove(false),
 							  m_colorMod(1.0f, 1.0f, 1.0f, 1.0f)
 	{	// register for update...
 		using namespace std::placeholders;
 		m_updateDelegate = sD3DMgr.OnUpdateEvent.connect(
 			std::bind(&IComponent::OnUpdate, this, _1));
-
-		LOG_DEBUG("%08X: Component created.", this);
 	}
 
 	IComponent::~IComponent() {
 		sD3DMgr.OnUpdateEvent -= m_updateDelegate;
-		LOG_DEBUG("%08X: Component destroyed.", this);
 	}
 
 	void IComponent::OnUpdate(uint32 timePassed) {
@@ -37,6 +36,21 @@ namespace Components {
 
 			m_isVisible = (m_colorMod.a > 0.0f);
 			m_fadeTimePassed += timePassed;
+		}
+
+		if (m_moveActive) {
+			if (m_moveTimePassed < m_moveTime) {
+				Utils::Vector2 position;
+				position.x = floor(((m_moveTo.x - m_moveSrc.x) * 1000.0f) / m_moveTime * m_moveTimePassed / 1000.0f + m_moveSrc.x);
+				position.y = floor(((m_moveTo.y - m_moveSrc.y) * 1000.0f) / m_moveTime * m_moveTimePassed / 1000.0f + m_moveSrc.y);
+				SetPosition(position);
+			}
+			else {
+				m_moveActive = false;
+				SetPosition(m_moveTo);
+			}
+
+			m_moveTimePassed += timePassed;
 		}
 	}
 
@@ -136,6 +150,26 @@ namespace Components {
 		m_fadeSrc = temp;
 		m_fadeActive = true;
 		m_fadeTimePassed = 0;
+	}
+
+	void IComponent::MoveTo(uint32 moveTime, const Utils::Vector2 &position) {
+		m_moveActive = true;
+		m_prevMove = true;
+		m_moveTimePassed = 0;
+		m_moveTime = moveTime;
+		m_moveTo = position;
+		m_moveSrc = GetPosition();
+	}
+
+	void IComponent::UndoMove() {
+		if (!m_prevMove)
+			return;
+
+		auto temp = m_moveTo;
+		m_moveTo = m_moveSrc;
+		m_moveSrc = temp;
+		m_moveActive = true;
+		m_moveTimePassed = 0;
 	}
 
 	void IComponent::Hide(uint32 time) {

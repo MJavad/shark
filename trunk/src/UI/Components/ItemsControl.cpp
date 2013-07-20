@@ -5,6 +5,10 @@
 
 namespace UI {
 namespace Components {
+	std::shared_ptr<ItemsControl> ItemsControl::Create() {
+		return std::make_shared<ItemsControl>();
+	}
+
 	bool ItemsControl::PushChild(std::shared_ptr<IComponent> pControl) {
 		if (HasChild(pControl)) {
 			m_children.remove(pControl);

@@ -81,7 +81,7 @@ namespace Components {
 		std::shared_ptr<Rectangle> m_border;
 
 		void _onChar(wchar_t c);
-		void _onKeyDown(int key);
+		void _onKeyDown(uint32 keyCode);
 		void _onMouseMove(const Utils::Vector2 &position);
 
 		static void _resetCaret() {
