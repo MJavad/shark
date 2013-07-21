@@ -141,6 +141,11 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">3.0</ShaderModel>
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">BlurShader</VariableName>
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">src/Shaders/Blur.h</HeaderFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PixelMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">BlurShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">src/Shaders/Blur.h</HeaderFileOutput>
     </FxCompile>
     <FxCompile Include="src\Shaders\DrawRoundedRectangle.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -148,6 +153,11 @@
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DrawRoundedRectangleShader</VariableName>
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">src\Shaders\DrawRoundedRectangle.h</HeaderFileOutput>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PixelMain</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PixelMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DrawRoundedRectangleShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">src\Shaders\DrawRoundedRectangle.h</HeaderFileOutput>
     </FxCompile>
     <FxCompile Include="src\Shaders\FillRoundedRectangle.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -155,6 +165,11 @@
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">FillRoundedRectangleShader</VariableName>
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">src\Shaders\FillRoundedRectangle.h</HeaderFileOutput>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PixelMain</EntryPointName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FillRoundedRectangleShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">src\Shaders\FillRoundedRectangle.h</HeaderFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PixelMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="src\Shaders\UIVertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -162,6 +177,11 @@
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UIVertexShader</VariableName>
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">src\Shaders\UIVertex.h</HeaderFileOutput>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VertexMain</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VertexMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">3.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UIVertexShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">src\Shaders\UIVertex.h</HeaderFileOutput>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
