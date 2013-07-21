@@ -9,8 +9,7 @@
 #include "UI/Components/IFocusable.h"
 
 void D3DManager::Initialize() {
-	using namespace std::placeholders;
-	sWndProc.OnMessageReceivedEvent.connect(std::bind(
+	sWndProc.OnMessageReceivedEvent.connect(boost::bind(
 		&D3DManager::OnMessageReceived, this, _1, _2, _3));
 }
 
@@ -55,8 +54,8 @@ void D3DManager::SetDevice9(IDirect3DDevice9 *pDevice) {
 	m_device11 = nullptr;
 	m_deviceContext11 = nullptr;
 	m_swapChain = nullptr;
-	m_sprite = std::make_shared<UI::D3DSprite9>(pDevice);
-	m_renderTarget = std::make_shared<RenderTarget9>(pDevice);
+	m_sprite = boost::make_shared<UI::D3DSprite9>(pDevice);
+	m_renderTarget = boost::make_shared<RenderTarget9>(pDevice);
 
 	D3DDEVICE_CREATION_PARAMETERS creationParams = {0};
 	if (pDevice->GetCreationParameters(&creationParams) == D3D_OK)
@@ -89,7 +88,7 @@ void D3DManager::SetDevice11(ID3D11Device *pDevice) {
 	if (m_device11 != nullptr &&
 		m_deviceContext11 != nullptr &&
 		m_swapChain != nullptr) {
-		m_renderTarget = std::make_shared<RenderTarget11>(
+		m_renderTarget = boost::make_shared<RenderTarget11>(
 			m_swapChain, m_device11, m_deviceContext11);
 	}
 }
@@ -102,7 +101,7 @@ void D3DManager::SetDeviceContext11(ID3D11DeviceContext *pDeviceContext) {
 	if (m_device11 != nullptr &&
 		m_deviceContext11 != nullptr &&
 		m_swapChain != nullptr) {
-		m_renderTarget = std::make_shared<RenderTarget11>(
+		m_renderTarget = boost::make_shared<RenderTarget11>(
 			m_swapChain, m_device11, m_deviceContext11);
 	}
 }
@@ -115,12 +114,12 @@ void D3DManager::SetSwapChain(IDXGISwapChain *pSwapChain) {
 	if (m_device11 != nullptr &&
 		m_deviceContext11 != nullptr &&
 		m_swapChain != nullptr) {
-		m_renderTarget = std::make_shared<RenderTarget11>(
+		m_renderTarget = boost::make_shared<RenderTarget11>(
 			m_swapChain, m_device11, m_deviceContext11);
 	}
 }
 
-void D3DManager::PushInterface(std::shared_ptr<ID3DInterface> pInterface) {
+void D3DManager::PushInterface(boost::shared_ptr<ID3DInterface> pInterface) {
 	m_interfaces.remove(pInterface);
 	m_interfaces.push_front(std::move(pInterface));
 }
@@ -218,7 +217,7 @@ void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 }
 
-std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
+boost::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
 	uint32 height, uint32 width, uint32 weight, bool italic)
 {
 	size_t dwFontFace = std::hash<std::wstring>()(fontName);
@@ -248,7 +247,7 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
 	fontDesc.pitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
 	fontDesc.faceName = std::move(fontName);
 
-	auto pFont = std::make_shared<UI::D3DFont>(fontDesc);
+	auto pFont = boost::make_shared<UI::D3DFont>(fontDesc);
 	m_fonts.push_back(pFont);
 
 	if (m_device9 != nullptr)
@@ -258,7 +257,7 @@ std::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
 	return pFont;
 }
 
-std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
+boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	const std::wstring &fileName, uint32 width, uint32 height)
 {
 	size_t fileNameHash = std::hash<std::wstring>()(fileName);
@@ -292,7 +291,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	texDesc.colorKey = D3DXCOLOR(0, 0, 0, 0);
 	texDesc.usage = 0;
 
-	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
+	auto pTexture = boost::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);
 
 	if (m_device9 != nullptr)
@@ -302,7 +301,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	return pTexture;
 }
 
-std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
+boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	uint32 resourceId, HMODULE module, uint32 width, uint32 height)
 {
 	if (module == nullptr)
@@ -338,7 +337,7 @@ std::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	texDesc.colorKey = D3DXCOLOR(0, 0, 0, 0);
 	texDesc.usage = 0;
 
-	auto pTexture = std::make_shared<UI::D3DTexture>(texDesc);
+	auto pTexture = boost::make_shared<UI::D3DTexture>(texDesc);
 	m_textures.push_back(pTexture);
 
 	if (m_device9 != nullptr)

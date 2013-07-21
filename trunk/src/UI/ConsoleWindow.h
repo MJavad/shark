@@ -23,10 +23,10 @@ namespace UI {
 
 	private:
 		bool m_isInitialized;
-		std::shared_ptr<ComponentInterface> m_interface;
-		std::shared_ptr<Components::ItemsControl> m_controlGroup;
-		std::shared_ptr<Components::Label> m_consoleLabel;
-		std::shared_ptr<Components::Rectangle> m_windowBackground;
+		boost::shared_ptr<ComponentInterface> m_interface;
+		boost::shared_ptr<Components::ItemsControl> m_controlGroup;
+		boost::shared_ptr<Components::Label> m_consoleLabel;
+		boost::shared_ptr<Components::Rectangle> m_windowBackground;
 
 		void _onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 		void _onKeyDown(UINT keyCode) const;

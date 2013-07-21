@@ -226,13 +226,13 @@ namespace Utils {
 		return bSuccess;
 	}
 
-	void SharkMemory::_detourResumeThread(const std::shared_ptr<Thread> &thread) const {
+	void SharkMemory::_detourResumeThread(const boost::shared_ptr<Thread> &thread) const {
 		if (thread->id() != GetCurrentThreadId() &&
 			thread->open(thread->access() | THREAD_SUSPEND_RESUME))
 			thread->resume();
 	}
 
-	void SharkMemory::_detourUpdateThread(const std::shared_ptr<Thread> &thread,
+	void SharkMemory::_detourUpdateThread(const boost::shared_ptr<Thread> &thread,
 										  const SHookInformation &hookInfo) const
 	{
 		if (thread->id() != GetCurrentThreadId() &&

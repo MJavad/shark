@@ -24,11 +24,11 @@ namespace UI {
 		}
 
 		const FontDescription& GetDescription() const { return m_fontDesc; }
-		std::shared_ptr<ID3DFontObject> GetObject() const { return m_fontObject; }
+		boost::shared_ptr<ID3DFontObject> GetObject() const { return m_fontObject; }
 		virtual bool IsCreated() const { return m_fontObject != nullptr; }
 
 	protected:
 		FontDescription m_fontDesc;
-		std::shared_ptr<ID3DFontObject> m_fontObject;
+		boost::shared_ptr<ID3DFontObject> m_fontObject;
 	};
 }

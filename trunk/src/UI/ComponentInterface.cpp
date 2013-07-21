@@ -34,9 +34,9 @@ namespace UI {
 			sWndProc.LastMessageHandled = bHandled;
 	}
 
-	bool ComponentInterface::PushControl(std::shared_ptr<Components::IComponent> pControl) {
+	bool ComponentInterface::PushControl(boost::shared_ptr<Components::IComponent> pControl) {
 		// If it had a parent...
-		const auto pParent = std::dynamic_pointer_cast<Components::ItemsControl>(pControl->GetUIParent());
+		const auto pParent = boost::dynamic_pointer_cast<Components::ItemsControl>(pControl->GetUIParent());
 		if (pParent != nullptr && !pParent->PopChild(pControl))
 			return false;
 
@@ -50,7 +50,7 @@ namespace UI {
 		return true;
 	}
 
-	void ComponentInterface::PopControl(const std::shared_ptr<Components::IComponent> &pControl) {
+	void ComponentInterface::PopControl(const boost::shared_ptr<Components::IComponent> &pControl) {
 		if (!_hasControl(pControl))
 			return;
 
@@ -58,7 +58,7 @@ namespace UI {
 		m_components.remove(pControl);
 	}
 
-	bool ComponentInterface::_hasControl(const std::shared_ptr<Components::IComponent> &pControl) const {
+	bool ComponentInterface::_hasControl(const boost::shared_ptr<Components::IComponent> &pControl) const {
 		return pControl->GetClientInterface().get() == this;
 	}
 }

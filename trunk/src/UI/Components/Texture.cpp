@@ -4,8 +4,8 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<Texture> Texture::Create(std::shared_ptr<D3DTexture> pTexture) {
-		const auto pControl = std::make_shared<Texture>();
+	boost::shared_ptr<Texture> Texture::Create(boost::shared_ptr<D3DTexture> pTexture) {
+		const auto pControl = boost::make_shared<Texture>();
 		pControl->SetTexture(std::move(pTexture));
 		return pControl;
 	}

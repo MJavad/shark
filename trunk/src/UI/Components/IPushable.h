@@ -8,7 +8,7 @@ namespace Components {
 	public:
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		static std::shared_ptr<IPushable> GetActiveClick() {
+		static boost::shared_ptr<IPushable> GetActiveClick() {
 			return s_activeClick.lock();
 		}
 
@@ -16,10 +16,10 @@ namespace Components {
 			return GetActiveClick().get() == this;
 		}
 
-		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnClickEvent;
-		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnDblClickEvent;
-		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnPushEvent;
-		Utils::Event<void (const std::shared_ptr<IPushable>&, Utils::Vector2*)> OnReleaseEvent;
+		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnClickEvent;
+		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnDblClickEvent;
+		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnPushEvent;
+		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnReleaseEvent;
 
 	protected:
 		IPushable() : m_lastClick(0) {}
@@ -46,7 +46,7 @@ namespace Components {
 
 	private:
 		uint32 m_lastClick;
-		static std::weak_ptr<IPushable> s_activeClick;
+		static boost::weak_ptr<IPushable> s_activeClick;
 	};
 }
 }

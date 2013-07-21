@@ -22,7 +22,7 @@ namespace UI {
 				m_d3dxSprite->Begin(flags);
 		}
 
-		virtual void Draw(const std::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,
+		virtual void Draw(const boost::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,
 			const Utils::Vector3 *pCenter, const Utils::Vector3 *pPosition, const D3DXCOLOR &color) const;
 
 		virtual void End() {

@@ -9,7 +9,7 @@ namespace Components {
 	{
 	public:
 		ListBox() : m_isSelecting(false), m_isMultiSelect(false) {}
-		static std::shared_ptr<ListBox> Create(float width = 200.0f, float height = 160.0f);
+		static boost::shared_ptr<ListBox> Create(float width = 200.0f, float height = 160.0f);
 
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -17,17 +17,17 @@ namespace Components {
 		virtual void SetWidth(float width);
 		virtual void SetHeight(float height);
 
-		virtual void SelectItem(const std::shared_ptr<ListBoxEntry> &pItem);
-		virtual void DeselectItem(const std::shared_ptr<ListBoxEntry> &pItem);
+		virtual void SelectItem(const boost::shared_ptr<ListBoxEntry> &pItem);
+		virtual void DeselectItem(const boost::shared_ptr<ListBoxEntry> &pItem);
 		virtual void DeselectAll();
 		
-		virtual void AddItem(std::shared_ptr<ListBoxEntry> pItem) {
+		virtual void AddItem(boost::shared_ptr<ListBoxEntry> pItem) {
 			pItem->SetWidth(GetWidth());
 			pItem->SetUIParent(shared_from_this());
 			m_entries.push_back(std::move(pItem));
 		}
 
-		virtual void RemoveItem(const std::shared_ptr<ListBoxEntry> &pItem) {
+		virtual void RemoveItem(const boost::shared_ptr<ListBoxEntry> &pItem) {
 			pItem->SetUIParent(nullptr);
 			m_entries.remove(pItem);
 		}
@@ -54,11 +54,11 @@ namespace Components {
 			m_isSelecting = bSelecting;
 		}
 
-		virtual std::shared_ptr<Rectangle> GetBorder() const {
+		virtual boost::shared_ptr<Rectangle> GetBorder() const {
 			return m_border;
 		}
 
-		virtual void SetBorder(std::shared_ptr<Rectangle> pBorder) {
+		virtual void SetBorder(boost::shared_ptr<Rectangle> pBorder) {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr) {
 				m_border->SetPosition(Utils::Vector2(-1.0f, -1.0f));
@@ -68,8 +68,8 @@ namespace Components {
 
 	private:
 		bool m_isSelecting, m_isMultiSelect;
-		std::shared_ptr<Rectangle> m_border;
-		std::list<std::shared_ptr<ListBoxEntry>> m_entries;
+		boost::shared_ptr<Rectangle> m_border;
+		std::list<boost::shared_ptr<ListBoxEntry>> m_entries;
 	};
 }
 }

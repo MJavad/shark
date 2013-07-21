@@ -14,50 +14,50 @@ namespace Components {
 	public:
 		Button() : m_renderRect(true) {}
 
-		static std::shared_ptr<Button> Create(std::wstring textString = L"",
+		static boost::shared_ptr<Button> Create(std::wstring textString = L"",
 			float width = 100.0f, float height = 20.0f,
 			float horizontalRounding = 6.0f, float verticalRounding = 3.0f);
 
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+		virtual bool OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
 			return IFocusable::OnTabPressed(pComponent);
 		}
 		
 		virtual void SetWidth(float width);
 		virtual void SetHeight(float height);
 
-		virtual std::shared_ptr<Label> GetCaption() const {
+		virtual boost::shared_ptr<Label> GetCaption() const {
 			return m_caption;
 		}
 
-		virtual void SetCaption(std::shared_ptr<Label> pCaption) {
+		virtual void SetCaption(boost::shared_ptr<Label> pCaption) {
 			m_caption = std::move(pCaption);
 			if (m_caption != nullptr)
 				m_caption->SetUIParent(shared_from_this());
 		}
 
-		virtual std::shared_ptr<Rectangle> GetBorder() const {
+		virtual boost::shared_ptr<Rectangle> GetBorder() const {
 			return m_border;
 		}
 
-		virtual void SetBorder(std::shared_ptr<Rectangle> pBorder) {
+		virtual void SetBorder(boost::shared_ptr<Rectangle> pBorder) {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr)
 				m_border->SetUIParent(shared_from_this());
 		}
 
-		virtual std::list<std::shared_ptr<Texture>> GetTextures() const {
+		virtual std::list<boost::shared_ptr<Texture>> GetTextures() const {
 			return m_textures;
 		}
 
-		virtual void AddTexture(std::shared_ptr<Texture> pTexture) {
+		virtual void AddTexture(boost::shared_ptr<Texture> pTexture) {
 			pTexture->SetUIParent(shared_from_this());
 			m_textures.push_back(std::move(pTexture));
 		}
 
-		virtual void RemoveTexture(const std::shared_ptr<Texture> &pTexture) {
+		virtual void RemoveTexture(const boost::shared_ptr<Texture> &pTexture) {
 			m_textures.remove(pTexture);
 		}
 
@@ -87,9 +87,9 @@ namespace Components {
 
 	private:
 		bool m_renderRect;
-		std::shared_ptr<Label> m_caption;
-		std::shared_ptr<Rectangle> m_border;
-		std::list<std::shared_ptr<Texture>> m_textures;
+		boost::shared_ptr<Label> m_caption;
+		boost::shared_ptr<Rectangle> m_border;
+		std::list<boost::shared_ptr<Texture>> m_textures;
 	};
 }
 }

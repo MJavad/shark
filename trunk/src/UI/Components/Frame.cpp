@@ -6,8 +6,8 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<Frame> Frame::Create(float width, float height) {
-		const auto pFrame = std::make_shared<Frame>();
+	boost::shared_ptr<Frame> Frame::Create(float width, float height) {
+		const auto pFrame = boost::make_shared<Frame>();
 		pFrame->SetWidth(width);
 		pFrame->SetHeight(height);
 		return pFrame;
@@ -66,7 +66,7 @@ namespace Components {
 						const auto pClientInterface = GetClientInterface();
 
 						if (pParent != nullptr) {
-							auto pItemControl = std::dynamic_pointer_cast<ItemsControl>(pParent);
+							auto pItemControl = boost::dynamic_pointer_cast<ItemsControl>(pParent);
 							if (pItemControl != nullptr)
 								pItemControl->PushChild(pThis); // push to front
 						}

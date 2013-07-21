@@ -10,14 +10,14 @@ namespace Components {
 		Label();
 		~Label();
 
-		static std::shared_ptr<Label> Create(std::wstring textString = L"",
+		static boost::shared_ptr<Label> Create(std::wstring textString = L"",
 			uint32 formatFlags = DT_LEFT | DT_TOP,
 			float width = 100.0f, float height = 20.0f);
 		
 		virtual void OnRender(uint32 timePassed);
 
 		void CreateCachedFontBatch();
-		void RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const;
+		void RenderCachedFontBatch(const boost::shared_ptr<const ID3DSprite> &pSprite) const;
 
 		virtual void SetWidth(float width);
 		virtual void SetHeight(float height);
@@ -52,27 +52,27 @@ namespace Components {
 			}
 		}
 
-		virtual std::shared_ptr<UI::D3DFont> GetFont() const {
+		virtual boost::shared_ptr<UI::D3DFont> GetFont() const {
 			return m_font;
 		}
 
-		virtual void SetFont(std::shared_ptr<UI::D3DFont> pFont) {
+		virtual void SetFont(boost::shared_ptr<UI::D3DFont> pFont) {
 			if (m_font != pFont) {
 				m_font = std::move(pFont);
 				_flushFontCache();
 			}
 		}
 
-		virtual void SetDropShadow(bool bDropShadow) {
-			m_dropShadow = bDropShadow;
+		virtual void SetDropShadow(bool dropShadow) {
+			m_dropShadow = dropShadow;
 		}
 
 		virtual bool GetDropShadow() const {
 			return m_dropShadow;
 		}
 
-		virtual void SetShadowDirection(const Utils::Vector2 &vShadowDirection) {
-			m_shadowDirection = vShadowDirection;
+		virtual void SetShadowDirection(const Utils::Vector2 &shadowDirection) {
+			m_shadowDirection = shadowDirection;
 		}
 
 		virtual Utils::Vector2 GetShadowDirection() const {
@@ -103,8 +103,8 @@ namespace Components {
 		bool m_shouldCache, m_dropShadow;
 		Utils::Vector2 m_shadowDirection;
 		Utils::Vector2 m_textOffset;
-		std::shared_ptr<D3DFont> m_font;
-		std::shared_ptr<D3DTexture> m_fontCache;
+		boost::shared_ptr<D3DFont> m_font;
+		boost::shared_ptr<D3DTexture> m_fontCache;
 
 		Utils::SEventDelegate<void ()> m_lostDevice;
 		Utils::SEventDelegate<void ()> m_changeDevice;

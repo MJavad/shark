@@ -8,14 +8,14 @@ namespace Components {
 	{
 	public:
 		TabControl() : m_activeTab(0) {}
-		static std::shared_ptr<TabControl> Create(float width,
+		static boost::shared_ptr<TabControl> Create(float width,
 			float height, D3DXCOLOR dwColor = 0x90000000);
 
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		void AddTabPage(std::shared_ptr<TabPage> pTabPage);
-		void RemoveTabPage(const std::shared_ptr<TabPage> &pTabPage);
+		void AddTabPage(boost::shared_ptr<TabPage> pTabPage);
+		void RemoveTabPage(const boost::shared_ptr<TabPage> &pTabPage);
 
 		void SetActiveTab(uint32 index);
 
@@ -23,7 +23,7 @@ namespace Components {
 			return m_activeTab;
 		}
 
-		std::vector<std::shared_ptr<TabPage>> GetTabPages() const {
+		std::vector<boost::shared_ptr<TabPage>> GetTabPages() const {
 			return m_tabPages;
 		}
 
@@ -31,14 +31,14 @@ namespace Components {
 			return m_tabPages.size() > index;
 		}
 
-		uint32 GetPageIndex(const std::shared_ptr<const TabPage> &pTabPage) const;
-		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent);
+		uint32 GetPageIndex(const boost::shared_ptr<const TabPage> &pTabPage) const;
+		virtual bool OnTabPressed(const boost::shared_ptr<IComponent> &pComponent);
 
 	private:
 		uint32 m_activeTab;
-		std::vector<std::shared_ptr<TabPage>> m_tabPages;
+		std::vector<boost::shared_ptr<TabPage>> m_tabPages;
 
-		bool _hasPage(const std::shared_ptr<const IComponent> &pComponent) const {
+		bool _hasPage(const boost::shared_ptr<const IComponent> &pComponent) const {
 			return std::find(m_tabPages.cbegin(), m_tabPages.cend(), pComponent) != m_tabPages.cend();
 		}
 	};

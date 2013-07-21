@@ -4,8 +4,8 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<ListBox> ListBox::Create(float width, float height) {
-		const auto pListBox = std::make_shared<ListBox>();
+	boost::shared_ptr<ListBox> ListBox::Create(float width, float height) {
+		const auto pListBox = boost::make_shared<ListBox>();
 		const auto pBorder = Rectangle::Create(width, height);
 		
 		pBorder->SetColor(0x90404040);
@@ -104,14 +104,14 @@ namespace Components {
 			pBorder->SetHeight(height + 2.0f);
 	}
 
-	void ListBox::SelectItem(const std::shared_ptr<ListBoxEntry> &pItem) {
+	void ListBox::SelectItem(const boost::shared_ptr<ListBoxEntry> &pItem) {
 		if (!IsMultiSelect())
 			DeselectAll();
 
 		pItem->SetSelected(true);
 	}
 
-	void ListBox::DeselectItem(const std::shared_ptr<ListBoxEntry> &pItem) {
+	void ListBox::DeselectItem(const boost::shared_ptr<ListBoxEntry> &pItem) {
 		pItem->SetSelected(false);
 	}
 

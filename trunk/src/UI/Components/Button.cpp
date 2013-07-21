@@ -4,13 +4,13 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<Button> Button::Create(std::wstring textString,
+	boost::shared_ptr<Button> Button::Create(std::wstring textString,
 										   float width,
 										   float height,
 										   float horizontalRounding,
 										   float verticalRounding)
 	{
-		const auto pButton = std::make_shared<Button>();
+		const auto pButton = boost::make_shared<Button>();
 		pButton->SetCaption(Label::Create(std::move(textString), DT_CENTER | DT_VCENTER));
 
 		const auto pBorder = Rectangle::Create(width, height);

@@ -10,11 +10,11 @@ namespace UI {
 			fontDesc.pitchAndFamily, fontDesc.faceName.c_str(), &m_d3dxFont));
 	}
 
-	void D3DFontObject9::DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring textString,
+	void D3DFontObject9::DrawText(const boost::shared_ptr<const ID3DSprite> &pSprite, std::wstring textString,
 								  RECT &screenRect, uint32 flags, const D3DXCOLOR &color) const {
 		if (m_d3dxFont != nullptr) {
 			CComPtr<ID3DXSprite> pD3DXSprite = nullptr;
-			const auto pSprite9 = std::dynamic_pointer_cast<const D3DSprite9>(pSprite);
+			const auto pSprite9 = boost::dynamic_pointer_cast<const D3DSprite9>(pSprite);
 			if (pSprite9 != nullptr)
 				pD3DXSprite = pSprite9->GetD3DXSprite();
 

@@ -11,12 +11,12 @@ namespace Components {
 		Frame() : m_sizable(true),
 			m_activeFocus(false) {}
 
-		static std::shared_ptr<Frame> Create(float width, float height);
+		static boost::shared_ptr<Frame> Create(float width, float height);
 
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+		virtual bool OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
 			return ItemsControl::OnTabPressed(pComponent);
 		}
 
@@ -42,9 +42,9 @@ namespace Components {
 		}
 
 		// When it handled the most recent event
-		Utils::Event<void (const std::shared_ptr<Frame>&)> OnFrameHighlightStartEvent;
-		Utils::Event<void (const std::shared_ptr<Frame>&)> OnFrameHighlightEndEvent;
-		Utils::Event<void (const std::shared_ptr<Frame>&, const Utils::Vector2&)> OnSetPositionEvent;
+		Utils::Event<void (const boost::shared_ptr<Frame>&)> OnFrameHighlightStartEvent;
+		Utils::Event<void (const boost::shared_ptr<Frame>&)> OnFrameHighlightEndEvent;
+		Utils::Event<void (const boost::shared_ptr<Frame>&, const Utils::Vector2&)> OnSetPositionEvent;
 
 	private:
 		bool m_sizable;

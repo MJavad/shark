@@ -109,7 +109,7 @@ void RenderTarget9::SetClippingArea(const RECT *pRect) const {
 		m_device9->SetScissorRect(pRect);
 }
 
-std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 width, uint32 height) const
+boost::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 width, uint32 height) const
 {
 	CComPtr<IDirect3DTexture9> pTexture = nullptr;
 	HRESULT result = D3DXCreateTexture(m_device9, width, height, 1,
@@ -117,11 +117,11 @@ std::shared_ptr<UI::D3DTexture> RenderTarget9::CreateRenderTargetTexture(uint32 
 	if (result != D3D_OK)
 		return nullptr;
 
-	auto pTextureObject = std::make_shared<UI::D3DTextureObject9>(pTexture);
-	return std::make_shared<UI::D3DTexture>(pTextureObject);
+	auto pTextureObject = boost::make_shared<UI::D3DTextureObject9>(pTexture);
+	return boost::make_shared<UI::D3DTexture>(pTextureObject);
 }
 
-std::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32 width, uint32 height) const
+boost::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32 width, uint32 height) const
 {
 	CComPtr<IDirect3DSurface9> pBackBuffer = nullptr;
 	HRESULT result = m_device9->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
@@ -139,14 +139,14 @@ std::shared_ptr<UI::ID3DSurface> RenderTarget9::CreateRenderTargetSurface(uint32
 	if (result != D3D_OK)
 		return nullptr;
 
-	return std::make_shared<UI::D3DSurface9>(pSurface);
+	return boost::make_shared<UI::D3DSurface9>(pSurface);
 }
 
-void RenderTarget9::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DSurface> &pSurface,
+void RenderTarget9::SetRenderTargetSurface(const boost::shared_ptr<const UI::ID3DSurface> &pSurface,
 										   uint32 index, bool shouldClear)
 {
 	CComPtr<IDirect3DSurface9> pOldSurface = nullptr;
-	auto pSurfaceObject = std::dynamic_pointer_cast<const UI::D3DSurface9>(pSurface);
+	auto pSurfaceObject = boost::dynamic_pointer_cast<const UI::D3DSurface9>(pSurface);
 
 	if (pSurfaceObject != nullptr) {
 		auto pSurface9 = pSurfaceObject->GetSurface9();
@@ -159,14 +159,14 @@ void RenderTarget9::SetRenderTargetSurface(const std::shared_ptr<const UI::ID3DS
 	}
 }
 
-std::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 index) const
+boost::shared_ptr<UI::ID3DSurface> RenderTarget9::GetRenderTargetSurface(uint32 index) const
 {
 	CComPtr<IDirect3DSurface9> pSurface = nullptr;
 	HRESULT result = m_device9->GetRenderTarget(index, &pSurface);
 	if (result != D3D_OK)
 		return nullptr;
 
-	return std::make_shared<UI::D3DSurface9>(pSurface);
+	return boost::make_shared<UI::D3DSurface9>(pSurface);
 }
 
 void RenderTarget9::DrawRectangle(const Utils::Vector2 &position,
@@ -336,7 +336,7 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &position,
 }
 
 void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
-									  std::shared_ptr<const UI::D3DTexture> pTexture,
+									  boost::shared_ptr<const UI::D3DTexture> pTexture,
 									  const std::array<Utils::Vector2, 4> &dimensions,
 									  const std::array<D3DXCOLOR, 4> &gradient) const
 {
@@ -347,7 +347,7 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
 		{ position.x + dimensions[3].x, position.y + dimensions[3].y, 0, 0, 1, gradient[3] }
 	};
 
-	const auto textureObject = std::dynamic_pointer_cast
+	const auto textureObject = boost::dynamic_pointer_cast
 		<const UI::D3DTextureObject9>(pTexture->GetObject());
 	if (textureObject == nullptr)
 		return;
@@ -388,7 +388,7 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
 }
 
 void RenderTarget9::DrawSprite(const Utils::Vector2 &position,
-							   std::shared_ptr<const UI::D3DTexture> pTexture,
+							   boost::shared_ptr<const UI::D3DTexture> pTexture,
 							   const std::array<Utils::Vector2, 4> &dimensions,
 							   const std::array<D3DXCOLOR, 4> &gradient) const
 {
@@ -399,7 +399,7 @@ void RenderTarget9::DrawSprite(const Utils::Vector2 &position,
 		{ position.x + dimensions[3].x, position.y + dimensions[3].y, 0, 1, gradient[3], 0, 1 }
 	};
 
-	const auto textureObject = std::dynamic_pointer_cast
+	const auto textureObject = boost::dynamic_pointer_cast
 		<const UI::D3DTextureObject9>(pTexture->GetObject());
 
 	if (textureObject != nullptr) {

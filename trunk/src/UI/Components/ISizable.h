@@ -24,7 +24,7 @@ namespace Components {
 			s_activeSizer.reset();
 		}
 
-		static std::shared_ptr<ISizable> GetActiveSizer() {
+		static boost::shared_ptr<ISizable> GetActiveSizer() {
 			return s_activeSizer.lock();
 		}
 
@@ -37,32 +37,32 @@ namespace Components {
 			return m_isGripVisible;
 		}
 
-		void SetGripVisibility(bool bVisible) {
-			m_isGripVisible = bVisible;
+		void SetGripVisibility(bool gripVisible) {
+			m_isGripVisible = gripVisible;
 		}
 
 		bool GetSizeLimited() const {
 			return m_isSizeLimited;
 		}
 
-		void SetSizeLimited(bool bLimit) {
-			m_isSizeLimited = bLimit;
+		void SetSizeLimited(bool sizeLimited) {
+			m_isSizeLimited = sizeLimited;
 		}
 
 		Utils::Vector2 GetMinSize() const {
 			return m_minSize;
 		}
 
-		void SetMinSize(const Utils::Vector2 &vMin) {
-			m_minSize = vMin;
+		void SetMinSize(const Utils::Vector2 &minSize) {
+			m_minSize = minSize;
 		}
 
 		Utils::Vector2 GetMaxSize() const {
 			return m_maxSize;
 		}
 
-		void SetMaxSize(const Utils::Vector2 &vMax) {
-			m_maxSize = vMax;
+		void SetMaxSize(const Utils::Vector2 &maxSize) {
+			m_maxSize = maxSize;
 			SetSizeLimited(true);
 		}
 
@@ -79,9 +79,9 @@ namespace Components {
 		}
 
 		// returning true = no size
-		Utils::Event<bool (const std::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeStartEvent;
-		Utils::Event<bool (const std::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeEndEvent;
-		Utils::Event<bool (const std::shared_ptr<ISizable>&, float, float)> OnResizeEvent;
+		Utils::Event<bool (const boost::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeStartEvent;
+		Utils::Event<bool (const boost::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeEndEvent;
+		Utils::Event<bool (const boost::shared_ptr<ISizable>&, float, float)> OnResizeEvent;
 
 	protected:
 		ISizable();
@@ -107,10 +107,10 @@ namespace Components {
 		bool m_isSizeLimited;
 		Utils::Vector2 m_minSize, m_maxSize;
 
-		std::shared_ptr<D3DTexture> m_resizeTexture;
-		std::shared_ptr<D3DTexture> m_resizeTextureHover;
+		boost::shared_ptr<D3DTexture> m_resizeTexture;
+		boost::shared_ptr<D3DTexture> m_resizeTextureHover;
 
-		static std::weak_ptr<ISizable> s_activeSizer;
+		static boost::weak_ptr<ISizable> s_activeSizer;
 		static Utils::Vector2 s_sizeVector;
 	};
 }

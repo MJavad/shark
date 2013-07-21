@@ -1,6 +1,6 @@
 #pragma once
 
-class ID3DInterface abstract : public std::enable_shared_from_this<ID3DInterface>
+class ID3DInterface abstract : public boost::enable_shared_from_this<ID3DInterface>
 {
 public:
 	virtual ~ID3DInterface() {};
@@ -9,12 +9,12 @@ public:
 
 protected:
 	template <typename T>
-	std::shared_ptr<T> get_this() {
-		return std::dynamic_pointer_cast<T>(shared_from_this());
+	boost::shared_ptr<T> get_this() {
+		return boost::dynamic_pointer_cast<T>(shared_from_this());
 	}
 
 	template <typename T>
-	std::shared_ptr<T> get_this() const {
-		return std::dynamic_pointer_cast<T>(shared_from_this());
+	boost::shared_ptr<T> get_this() const {
+		return boost::dynamic_pointer_cast<T>(shared_from_this());
 	}
 };

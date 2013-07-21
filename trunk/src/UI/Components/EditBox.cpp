@@ -15,7 +15,7 @@ namespace Components {
 	uint32 EditBox::s_selectPosition1 = 0;
 	uint32 EditBox::s_selectPosition2 = 0;
 
-	std::shared_ptr<EditBox> EditBox::Create(bool centerAlign,
+	boost::shared_ptr<EditBox> EditBox::Create(bool centerAlign,
 											 float width,
 											 float height,
 											 float horizontalRounding,
@@ -35,7 +35,7 @@ namespace Components {
 		pBorder->SetVerticalRounding(verticalRounding);
 		pBorder->SetPosition(Utils::Vector2(-1.0f, -1.0f));
 
-		const auto pEditBox = std::make_shared<EditBox>();
+		const auto pEditBox = boost::make_shared<EditBox>();
 		pEditBox->SetContent(std::move(pLabel));
 		pEditBox->SetBorder(std::move(pBorder));
 		pEditBox->SetWidth(width);

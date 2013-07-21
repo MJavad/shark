@@ -10,7 +10,7 @@ namespace Components {
 		Rectangle();
 		~Rectangle();
 
-		static std::shared_ptr<Rectangle> Create(float width, float height);
+		static boost::shared_ptr<Rectangle> Create(float width, float height);
 
 		virtual void OnRender(uint32 timePassed);
 
@@ -111,7 +111,7 @@ namespace Components {
 	private:
 		bool m_dropShadow;
 		Utils::Vector2 m_shadowDirection;
-		std::shared_ptr<D3DTexture> m_shadowTexture;
+		boost::shared_ptr<D3DTexture> m_shadowTexture;
 
 		float4 m_horizRoundings;
 		float4 m_vertRoundings;

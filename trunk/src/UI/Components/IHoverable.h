@@ -36,8 +36,8 @@ namespace Components {
 		}
 
 		// returning true = no hover
-		Utils::Event<bool (const std::shared_ptr<IHoverable>&)> OnHoverStartEvent;
-		Utils::Event<bool (const std::shared_ptr<IHoverable>&)> OnHoverEndEvent;
+		Utils::Event<bool (const boost::shared_ptr<IHoverable>&)> OnHoverStartEvent;
+		Utils::Event<bool (const boost::shared_ptr<IHoverable>&)> OnHoverEndEvent;
 
 	protected:
 		IHoverable() :

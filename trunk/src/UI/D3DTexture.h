@@ -5,7 +5,7 @@ namespace UI {
 	class D3DTexture
 	{
 	public:
-		D3DTexture(std::shared_ptr<ID3DTextureObject> pTextureObject) :
+		D3DTexture(boost::shared_ptr<ID3DTextureObject> pTextureObject) :
 			m_textureObject(std::move(pTextureObject)),
 			m_hasDescription(false) {}
 
@@ -27,12 +27,12 @@ namespace UI {
 		}
 
 		const TextureDescription& GetDescription() const { return m_textureDesc; }
-		std::shared_ptr<ID3DTextureObject> GetObject() const { return m_textureObject; }
+		boost::shared_ptr<ID3DTextureObject> GetObject() const { return m_textureObject; }
 		bool IsCreated() const { return m_textureObject != nullptr; }
 
 	protected:
 		bool m_hasDescription;
 		TextureDescription m_textureDesc;
-		std::shared_ptr<ID3DTextureObject> m_textureObject;
+		boost::shared_ptr<ID3DTextureObject> m_textureObject;
 	};
 }

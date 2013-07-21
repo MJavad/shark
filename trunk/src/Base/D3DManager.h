@@ -27,8 +27,8 @@ public:
 	ID3D11DeviceContext* GetDeviceContext11() const { return m_deviceContext11; }
 	IDXGISwapChain* GetSwapChain() const { return m_swapChain; }
 
-	void PushInterface(std::shared_ptr<ID3DInterface> pInterface);
-	void PopInterface(const std::shared_ptr<ID3DInterface> &pInterface) {
+	void PushInterface(boost::shared_ptr<ID3DInterface> pInterface);
+	void PopInterface(const boost::shared_ptr<ID3DInterface> &pInterface) {
 		m_interfaces.remove(pInterface);
 	}
 
@@ -40,17 +40,17 @@ public:
 	void PrepareRendering() const;
 	bool IsCreated() const { return m_renderTarget != nullptr; }
 
-	std::shared_ptr<IRenderTarget> GetRenderTarget() const { return m_renderTarget; }
-	std::list<std::shared_ptr<ID3DInterface>> GetInterfaces() const { return m_interfaces; }
-	std::shared_ptr<UI::ID3DSprite> GetSprite() const { return m_sprite; }
+	boost::shared_ptr<IRenderTarget> GetRenderTarget() const { return m_renderTarget; }
+	std::list<boost::shared_ptr<ID3DInterface>> GetInterfaces() const { return m_interfaces; }
+	boost::shared_ptr<UI::ID3DSprite> GetSprite() const { return m_sprite; }
 
-	std::shared_ptr<UI::D3DFont> GetFont(std::wstring fontName, uint32 height,
+	boost::shared_ptr<UI::D3DFont> GetFont(std::wstring fontName, uint32 height,
 		uint32 width = 0, uint32 weight = FW_NORMAL, bool italic = false);
 
-	std::shared_ptr<UI::D3DTexture> GetTextureFromFile(const std::wstring &fileName,
+	boost::shared_ptr<UI::D3DTexture> GetTextureFromFile(const std::wstring &fileName,
 		uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
 
-	std::shared_ptr<UI::D3DTexture> GetTextureFromResource(uint32 resourceId, HMODULE module = nullptr,
+	boost::shared_ptr<UI::D3DTexture> GetTextureFromResource(uint32 resourceId, HMODULE module = nullptr,
 		uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
 
 	Utils::Event<void (uint32)> OnUpdateEvent;
@@ -67,11 +67,11 @@ protected:
 	ID3D11Device *m_device11;
 	ID3D11DeviceContext *m_deviceContext11;
 	IDXGISwapChain *m_swapChain;
-	std::shared_ptr<UI::ID3DSprite> m_sprite;
-	std::shared_ptr<IRenderTarget> m_renderTarget;
-	std::list<std::shared_ptr<ID3DInterface>> m_interfaces;
-	std::list<std::weak_ptr<UI::D3DFont>> m_fonts;
-	std::list<std::weak_ptr<UI::D3DTexture>> m_textures;
+	boost::shared_ptr<UI::ID3DSprite> m_sprite;
+	boost::shared_ptr<IRenderTarget> m_renderTarget;
+	std::list<boost::shared_ptr<ID3DInterface>> m_interfaces;
+	std::list<boost::weak_ptr<UI::D3DFont>> m_fonts;
+	std::list<boost::weak_ptr<UI::D3DTexture>> m_textures;
 };
 
 #define sD3DMgr ::D3DManager::Instance()

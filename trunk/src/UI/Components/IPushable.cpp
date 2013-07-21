@@ -4,7 +4,7 @@
 
 namespace UI {
 namespace Components {
-	std::weak_ptr<IPushable> IPushable::s_activeClick;
+	boost::weak_ptr<IPushable> IPushable::s_activeClick;
 
 	void IPushable::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		Utils::Vector2 position(lParam);

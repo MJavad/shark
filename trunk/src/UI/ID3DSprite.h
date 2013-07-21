@@ -13,7 +13,7 @@ namespace UI {
 		virtual void OnLostDevice() const {}
 		virtual void OnResetDevice() const {}
 		virtual void Begin(uint32 flags) {}
-		virtual void Draw(const std::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,
+		virtual void Draw(const boost::shared_ptr<const D3DTexture> &pTexture, const RECT *pScreenRect,
 			const Utils::Vector3 *pCenter, const Utils::Vector3 *pPosition, const D3DXCOLOR &color) const = 0;
 		virtual void End() {}
 

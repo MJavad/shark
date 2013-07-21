@@ -26,13 +26,13 @@ namespace UI {
 		Utils::ThrowIfFailed(result);
 	}
 
-	std::shared_ptr<ID3DSurface> D3DTextureObject9::QuerySurface(uint32 uLevel) const {
+	boost::shared_ptr<ID3DSurface> D3DTextureObject9::QuerySurface(uint32 uLevel) const {
 		if (m_d3dTexture9 != nullptr) {
 			CComPtr<IDirect3DSurface9> pSurface = nullptr;
 			HRESULT result = m_d3dTexture9->GetSurfaceLevel(uLevel, &pSurface);
 
 			if (result == D3D_OK)
-				return std::make_shared<D3DSurface9>(pSurface);
+				return boost::make_shared<D3DSurface9>(pSurface);
 		}
 
 		return nullptr;

@@ -26,6 +26,6 @@ namespace UI {
 	{
 	public:
 		virtual ~ID3DTextureObject() {}
-		virtual std::shared_ptr<ID3DSurface> QuerySurface(uint32 uLevel) const = 0;
+		virtual boost::shared_ptr<ID3DSurface> QuerySurface(uint32 uLevel) const = 0;
 	};
 }

@@ -11,14 +11,14 @@ namespace Components {
 			D3DXMatrixIdentity(&m_transform);
 		}
 
-		static std::shared_ptr<Texture> Create(std::shared_ptr<D3DTexture> pTexture);
+		static boost::shared_ptr<Texture> Create(boost::shared_ptr<D3DTexture> pTexture);
 		virtual void OnRender(uint32 timePassed);
 
-		virtual std::shared_ptr<D3DTexture> GetTexture() const {
+		virtual boost::shared_ptr<D3DTexture> GetTexture() const {
 			return m_texture;
 		}
 
-		virtual void SetTexture(std::shared_ptr<D3DTexture> pTexture) {
+		virtual void SetTexture(boost::shared_ptr<D3DTexture> pTexture) {
 			m_texture = std::move(pTexture);
 		}
 
@@ -43,7 +43,7 @@ namespace Components {
 
 	private:
 		D3DXMATRIX m_transform;
-		std::shared_ptr<D3DTexture> m_texture;
+		boost::shared_ptr<D3DTexture> m_texture;
 		D3DXCOLOR m_color;
 	};
 }

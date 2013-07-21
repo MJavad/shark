@@ -11,10 +11,10 @@ namespace Components {
 	public:
 		ListBoxEntry() : m_isSelected(false) {}
 		
-		static std::shared_ptr<ListBoxEntry> Create(std::wstring textString = std::wstring());
+		static boost::shared_ptr<ListBoxEntry> Create(std::wstring textString = std::wstring());
 
 		virtual void OnRender(uint32 timePassed);
-		void RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const;
+		void RenderCachedFontBatch(const boost::shared_ptr<const ID3DSprite> &pSprite) const;
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
 		virtual void SetWidth(float width);
@@ -65,21 +65,21 @@ namespace Components {
 			Rectangle::SetGradientColors(m_isSelected ? m_selectedColors : m_deselectedColors);
 		}
 
-		virtual std::shared_ptr<Label> GetCaption() const {
+		virtual boost::shared_ptr<Label> GetCaption() const {
 			return m_caption;
 		}
 
-		virtual void SetCaption(std::shared_ptr<Label> pCaption) {
+		virtual void SetCaption(boost::shared_ptr<Label> pCaption) {
 			m_caption = std::move(pCaption);
 			if (m_caption != nullptr)
 				m_caption->SetUIParent(shared_from_this());
 		}
 
-		virtual std::shared_ptr<Rectangle> GetBorder() const {
+		virtual boost::shared_ptr<Rectangle> GetBorder() const {
 			return m_border;
 		}
 
-		virtual void SetBorder(std::shared_ptr<Rectangle> pBorder) {
+		virtual void SetBorder(boost::shared_ptr<Rectangle> pBorder) {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr) {
 				m_border->SetPosition(Utils::Vector2(-1.0f, -1.0f));
@@ -89,8 +89,8 @@ namespace Components {
 
 	private:
 		bool m_isSelected;
-		std::shared_ptr<Label> m_caption;
-		std::shared_ptr<Rectangle> m_border;
+		boost::shared_ptr<Label> m_caption;
+		boost::shared_ptr<Rectangle> m_border;
 		std::array<D3DXCOLOR, 4> m_deselectedColors, m_selectedColors;
 	};
 }

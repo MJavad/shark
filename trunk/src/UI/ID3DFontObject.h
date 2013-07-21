@@ -22,7 +22,7 @@ namespace UI {
 		virtual void OnLostDevice() const {}
 		virtual void OnResetDevice() const {}
 
-		virtual void DrawText(const std::shared_ptr<const ID3DSprite> &pSprite, std::wstring textString,
+		virtual void DrawText(const boost::shared_ptr<const ID3DSprite> &pSprite, std::wstring textString,
 			RECT &screenRect, uint32 flags, const D3DXCOLOR &color) const = 0;
 
 		virtual RECT GetTextExtent(std::wstring textString, RECT rect, uint32 flags) const = 0;

@@ -5,7 +5,7 @@ namespace UI {
 namespace Components {
 	Label::Label() : m_color(0xFFE0E0E0), m_formatFlags(0),
 		m_shouldCache(true), m_dropShadow(true), m_shadowDirection(2.0f, 2.0f) {
-		const auto callback = std::bind(&Label::_flushFontCache, this);
+		const auto callback = boost::bind(&Label::_flushFontCache, this);
 		m_lostDevice = sD3DMgr.OnDeviceLostEvent.connect(callback);
 		m_changeDevice = sD3DMgr.OnDeviceChangedEvent.connect(callback);
 	}
@@ -15,12 +15,12 @@ namespace Components {
 		sD3DMgr.OnDeviceChangedEvent -= m_changeDevice;
 	}
 
-	std::shared_ptr<Label> Label::Create(std::wstring textString,
+	boost::shared_ptr<Label> Label::Create(std::wstring textString,
 										 uint32 formatFlags,
 										 float width,
 										 float height)
 	{
-		const auto pLabel = std::make_shared<Label>();
+		const auto pLabel = boost::make_shared<Label>();
 		pLabel->SetText(std::move(textString));
 		pLabel->SetWidth(width);
 		pLabel->SetHeight(height);
@@ -119,7 +119,7 @@ namespace Components {
 		GetInterface()->ClipStack.Apply();
 	}
 
-	void Label::RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const {
+	void Label::RenderCachedFontBatch(const boost::shared_ptr<const ID3DSprite> &pSprite) const {
 		if (m_fontCache != nullptr) {
 			Utils::Vector2 textPosition = (GetScreenPosition() + m_textOffset).floor();
 			if (GetDropShadow()) {

@@ -5,11 +5,11 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<ItemsControl> ItemsControl::Create() {
-		return std::make_shared<ItemsControl>();
+	boost::shared_ptr<ItemsControl> ItemsControl::Create() {
+		return boost::make_shared<ItemsControl>();
 	}
 
-	bool ItemsControl::PushChild(std::shared_ptr<IComponent> pControl) {
+	bool ItemsControl::PushChild(boost::shared_ptr<IComponent> pControl) {
 		if (HasChild(pControl)) {
 			m_children.remove(pControl);
 			m_children.push_front(std::move(pControl));
@@ -34,7 +34,7 @@ namespace Components {
 		if (pClientInterface != nullptr)
 			pClientInterface->PopControl(pControl);
 
-		const auto pItemParent = std::dynamic_pointer_cast<ItemsControl>(pControl->GetUIParent());
+		const auto pItemParent = boost::dynamic_pointer_cast<ItemsControl>(pControl->GetUIParent());
 		if (pItemParent != nullptr)
 			pItemParent->m_children.remove(pControl);
 
@@ -43,7 +43,7 @@ namespace Components {
 		return true;
 	}
 
-	bool ItemsControl::PopChild(const std::shared_ptr<IComponent> &pControl) {
+	bool ItemsControl::PopChild(const boost::shared_ptr<IComponent> &pControl) {
 		if (!HasChild(pControl) || !pControl->OnParentChanged(nullptr))
 			return false;
 
@@ -79,7 +79,7 @@ namespace Components {
 			sWndProc.LastMessageHandled = bHandled;
 	}
 
-	bool ItemsControl::OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+	bool ItemsControl::OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
 		const auto pThis = shared_from_this();
 		if (pComponent == pThis)
 			return false;

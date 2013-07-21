@@ -5,7 +5,7 @@ namespace UI {
 	class ComponentInterface;
 
 namespace Components {
-	class IComponent abstract : public std::enable_shared_from_this<IComponent>
+	class IComponent abstract : public boost::enable_shared_from_this<IComponent>
 	{
 	public:
 		virtual ~IComponent();
@@ -13,15 +13,15 @@ namespace Components {
 		virtual void OnRender(uint32 timePassed) = 0;
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {}
 
-		std::list<std::shared_ptr<IComponent>> GetUIHierarchy();
-		std::list<std::shared_ptr<const IComponent>> GetUIHierarchy() const;
-		std::shared_ptr<ComponentInterface> GetInterface() const;
+		std::list<boost::shared_ptr<IComponent>> GetUIHierarchy();
+		std::list<boost::shared_ptr<const IComponent>> GetUIHierarchy() const;
+		boost::shared_ptr<ComponentInterface> GetInterface() const;
 		Utils::Vector2 GetScreenPosition() const;
 		D3DXCOLOR CalculateAbsoluteColor(const D3DXCOLOR &color) const;
 		std::array<D3DXCOLOR, 4> CalculateAbsoluteColor(const std::array<D3DXCOLOR, 4> &gradient) const;
 
 		bool IsVisible() const;
-		bool HasParent(const std::shared_ptr<const IComponent> &pParent) const;
+		bool HasParent(const boost::shared_ptr<const IComponent> &pParent) const;
 
 		void StopFade() { m_fadeActive = false; }
 		void FadeTo(uint32 fadeTime, const D3DXCOLOR &fadeColor);
@@ -66,27 +66,27 @@ namespace Components {
 			m_colorMod = colorMod;
 		}
 
-		virtual std::shared_ptr<IComponent> GetUIParent() const {
+		virtual boost::shared_ptr<IComponent> GetUIParent() const {
 			return m_parent.lock();
 		}
 
-		virtual void SetUIParent(std::shared_ptr<IComponent> pParent) {
+		virtual void SetUIParent(boost::shared_ptr<IComponent> pParent) {
 			m_parent = std::move(pParent);
 		}
 
-		virtual std::shared_ptr<ComponentInterface> GetClientInterface() const {
+		virtual boost::shared_ptr<ComponentInterface> GetClientInterface() const {
 			return m_interface.lock();
 		}
 
-		virtual void SetClientInterface(std::shared_ptr<ComponentInterface> pInterface) {
+		virtual void SetClientInterface(boost::shared_ptr<ComponentInterface> pInterface) {
 			m_interface = std::move(pInterface);
 		}
 
-		virtual bool OnParentChanged(const std::shared_ptr<IComponent> &pParent) {
+		virtual bool OnParentChanged(const boost::shared_ptr<IComponent> &pParent) {
 			return true;
 		}
 
-		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+		virtual bool OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
 			LOG_DEBUG("%08X: TabPressed triggered.", this);
 			const auto pParent = GetUIParent();
 			if (pParent != nullptr)
@@ -102,13 +102,13 @@ namespace Components {
 		virtual void OnUpdate(uint32 timePassed);
 
 		template <typename T>
-		std::shared_ptr<T> get_this() {
-			return std::dynamic_pointer_cast<T>(shared_from_this());
+		boost::shared_ptr<T> get_this() {
+			return boost::dynamic_pointer_cast<T>(shared_from_this());
 		}
 
 		template <typename T>
-		std::shared_ptr<const T> get_this() const {
-			return std::dynamic_pointer_cast<const T>(shared_from_this());
+		boost::shared_ptr<const T> get_this() const {
+			return boost::dynamic_pointer_cast<const T>(shared_from_this());
 		}
 
 	private:
@@ -125,8 +125,8 @@ namespace Components {
 
 		Utils::Vector2 m_position, m_childOffset;
 
-		std::weak_ptr<IComponent> m_parent;
-		std::weak_ptr<ComponentInterface> m_interface;
+		boost::weak_ptr<IComponent> m_parent;
+		boost::weak_ptr<ComponentInterface> m_interface;
 
 		Utils::SEventDelegate<void (uint32)> m_updateDelegate;
 	};

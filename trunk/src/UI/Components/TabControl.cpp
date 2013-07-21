@@ -4,11 +4,11 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<TabControl> TabControl::Create(float width,
+	boost::shared_ptr<TabControl> TabControl::Create(float width,
 												   float height,
 												   D3DXCOLOR dwColor)
 	{
-		const auto pTabControl = std::make_shared<TabControl>();
+		const auto pTabControl = boost::make_shared<TabControl>();
 		pTabControl->SetWidth(width);
 		pTabControl->SetHeight(height);
 		pTabControl->SetColor(dwColor);
@@ -108,8 +108,8 @@ namespace Components {
 			sWndProc.LastMessageHandled = bHandled;
 	}
 
-	void TabControl::AddTabPage(std::shared_ptr<TabPage> pTabPage) {
-		const auto pParent = std::dynamic_pointer_cast<TabControl>(pTabPage->GetUIParent());
+	void TabControl::AddTabPage(boost::shared_ptr<TabPage> pTabPage) {
+		const auto pParent = boost::dynamic_pointer_cast<TabControl>(pTabPage->GetUIParent());
 		if (pParent != nullptr)
 			pParent->RemoveTabPage(pTabPage);
 
@@ -123,7 +123,7 @@ namespace Components {
 		m_tabPages.push_back(std::move(pTabPage));
 	}
 
-	void TabControl::RemoveTabPage(const std::shared_ptr<TabPage> &pTabPage) {
+	void TabControl::RemoveTabPage(const boost::shared_ptr<TabPage> &pTabPage) {
 		const auto pThis = shared_from_this();
 		if (pTabPage->GetUIParent() != pThis)
 			return;
@@ -153,7 +153,7 @@ namespace Components {
 			pContent->Show(150);
 	}
 
-	uint32 TabControl::GetPageIndex(const std::shared_ptr<const TabPage> &pTabPage) const {
+	uint32 TabControl::GetPageIndex(const boost::shared_ptr<const TabPage> &pTabPage) const {
 		uint32 index = 0;
 		for (const auto &pCurrentPage: m_tabPages) {
 			if (pCurrentPage == pTabPage)
@@ -165,7 +165,7 @@ namespace Components {
 		return UINT_MAX;
 	}
 
-	bool TabControl::OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+	bool TabControl::OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
 		const auto pThis = shared_from_this();
 		if (pComponent == pThis)
 			return false;

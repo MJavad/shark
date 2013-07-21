@@ -17,7 +17,7 @@ namespace UI {
 			return m_stack.empty() || (PtInRect(&m_stack.top(), pt) != FALSE);
 		}
 
-		void SetRect(const RECT &rect, const std::function<void ()> &func) {
+		void SetRect(const RECT &rect, const boost::function<void ()> &func) {
 			Push(rect);
 			Apply();
 			func();

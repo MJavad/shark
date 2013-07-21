@@ -46,9 +46,9 @@ namespace Utils {
 		std::map<void*, SHookInformation> m_hooks;
 
 		static bool _dataCompare(const byte *pdata, const byte *pbMask, const char *pszMask);
-		void _detourResumeThread(const std::shared_ptr<Thread> &thread) const;
+		void _detourResumeThread(const boost::shared_ptr<Thread> &thread) const;
 		
-		void _detourUpdateThread(const std::shared_ptr<Thread> &thread,
+		void _detourUpdateThread(const boost::shared_ptr<Thread> &thread,
 								 const SHookInformation &hookInfo) const;
 	};
 }

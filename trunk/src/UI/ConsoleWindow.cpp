@@ -22,16 +22,15 @@ namespace UI {
 		m_controlGroup->SetVisibility(false);
 		m_controlGroup->SetPosition(Utils::Vector2(0.0f, -200.0f));
 
-		m_interface = std::make_shared<ComponentInterface>();
+		m_interface = boost::make_shared<ComponentInterface>();
 		m_interface->PushControl(m_controlGroup);
 		sD3DMgr.PushInterface(m_interface);
 
-		const auto updateDelegate = std::bind(&ConsoleWindow::UpdateWindow, this);
+		const auto updateDelegate = boost::bind(&ConsoleWindow::UpdateWindow, this);
 		sD3DMgr.OnDeviceResetEvent.connect(updateDelegate);
 		sD3DMgr.OnDeviceChangedEvent.connect(updateDelegate);
 
-		using namespace std::placeholders;
-		sWndProc.OnMessageReceivedEvent.connect(std::bind(
+		sWndProc.OnMessageReceivedEvent.connect(boost::bind(
 			&ConsoleWindow::_onMessageReceived, this, _1, _2, _3));
 
 		UpdateWindow();

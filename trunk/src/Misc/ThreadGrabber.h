@@ -67,7 +67,7 @@ namespace Utils
 
 			if (Thread32First(hSnapshot, &threadEntry) != FALSE) {
 				do if (threadEntry.th32OwnerProcessID == pid)
-					m_threads.push_back(std::make_shared<Thread>(threadEntry.th32ThreadID));
+					m_threads.push_back(boost::make_shared<Thread>(threadEntry.th32ThreadID));
 
 				while (Thread32Next(hSnapshot, &threadEntry) != FALSE);
 			}
@@ -76,11 +76,11 @@ namespace Utils
 			return true;
 		}
 
-		const std::list<std::shared_ptr<Thread>>& threads() const {
+		const std::list<boost::shared_ptr<Thread>>& threads() const {
 			return m_threads;
 		}
 
 	private:
-		std::list<std::shared_ptr<Thread>> m_threads;
+		std::list<boost::shared_ptr<Thread>> m_threads;
 	};
 }

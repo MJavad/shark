@@ -5,9 +5,9 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<TabPage> TabPage::Create(std::wstring textString, float width, float height) {
-		const auto pTabPage = std::make_shared<TabPage>();
-		pTabPage->SetContent(std::make_shared<ItemsControl>());
+	boost::shared_ptr<TabPage> TabPage::Create(std::wstring textString, float width, float height) {
+		const auto pTabPage = boost::make_shared<TabPage>();
+		pTabPage->SetContent(boost::make_shared<ItemsControl>());
 		pTabPage->SetCaption(Label::Create(std::move(textString), DT_CENTER | DT_VCENTER, width, height));
 
 		std::array<Utils::Vector2, 4> dimensions;
@@ -28,7 +28,7 @@ namespace Components {
 		pTabPage->SetVerticalRoundings(verticalRoundings);
 		pTabPage->SetHorizontalRoundings(horizontalRoundings);
 
-		const auto pBorder = std::make_shared<Rectangle>();
+		const auto pBorder = boost::make_shared<Rectangle>();
 		pBorder->SetColor(0xA02090CC);
 		pBorder->SetVerticalRoundings(verticalRoundings);
 		pBorder->SetHorizontalRoundings(horizontalRoundings);
@@ -85,10 +85,10 @@ namespace Components {
 			sWndProc.LastMessageHandled = bHandled;
 	}
 
-	bool TabPage::OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+	bool TabPage::OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
 		const auto pThis = shared_from_this();
 		const auto pContent = GetContent();
-		const auto pParent = std::dynamic_pointer_cast<TabControl>(GetUIParent());
+		const auto pParent = boost::dynamic_pointer_cast<TabControl>(GetUIParent());
 
 		if (pParent != nullptr) {
 			if (pContent != pComponent) {
@@ -112,7 +112,7 @@ namespace Components {
 	}
 
 	void TabPage::_notifyPushEvent(Utils::Vector2 *pPosition) {
-		const auto pParent = std::dynamic_pointer_cast<TabControl>(GetUIParent());
+		const auto pParent = boost::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
 			uint32 index = pParent->GetPageIndex(get_this<TabPage>());
 			pParent->SetActiveTab(index);
@@ -122,7 +122,7 @@ namespace Components {
 	}
 
 	void TabPage::_notifyClickEvent(Utils::Vector2 *pPosition) {
-		const auto pParent = std::dynamic_pointer_cast<TabControl>(GetUIParent());
+		const auto pParent = boost::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
 			uint32 index = pParent->GetPageIndex(get_this<TabPage>());
 			pParent->SetActiveTab(index);

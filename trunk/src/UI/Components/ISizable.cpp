@@ -7,7 +7,7 @@
 
 namespace UI {
 namespace Components {
-	std::weak_ptr<ISizable> ISizable::s_activeSizer;
+	boost::weak_ptr<ISizable> ISizable::s_activeSizer;
 	Utils::Vector2 ISizable::s_sizeVector;
 
 	ISizable::ISizable() : m_isGripVisible(true), m_isHovered(false), m_isSizeLimited(false) {

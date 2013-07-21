@@ -5,8 +5,8 @@
 
 namespace UI {
 namespace Components {
-	std::shared_ptr<ListBoxEntry> ListBoxEntry::Create(std::wstring textString) {
-		const auto pListBoxEntry = std::make_shared<ListBoxEntry>();
+	boost::shared_ptr<ListBoxEntry> ListBoxEntry::Create(std::wstring textString) {
+		const auto pListBoxEntry = boost::make_shared<ListBoxEntry>();
 		const auto pBorder = Rectangle::Create(0, 0);
 		const auto pCaption = Label::Create(std::move(textString), DT_VCENTER);
 
@@ -36,7 +36,7 @@ namespace Components {
 			pCaption->CreateCachedFontBatch();
 	}
 
-	void ListBoxEntry::RenderCachedFontBatch(const std::shared_ptr<const ID3DSprite> &pSprite) const {
+	void ListBoxEntry::RenderCachedFontBatch(const boost::shared_ptr<const ID3DSprite> &pSprite) const {
 		const auto pCaption = GetCaption();
 		if (pCaption != nullptr && pCaption->GetVisibility())
 			pCaption->RenderCachedFontBatch(pSprite);
@@ -45,7 +45,7 @@ namespace Components {
 	void ListBoxEntry::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		IHoverable::OnMessageReceived(uMsg, wParam, lParam);
 		
-		const auto pParent = std::dynamic_pointer_cast<ListBox>(GetUIParent());
+		const auto pParent = boost::dynamic_pointer_cast<ListBox>(GetUIParent());
 		if (sWndProc.LastMessageHandled ||
 			pParent == nullptr || !pParent->IsSelecting())
 			return;

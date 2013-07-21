@@ -11,35 +11,35 @@ namespace Components {
 	public:
 		EditBox() : m_scrollPosition(0.0f), m_maxLength(80) {}
 
-		static std::shared_ptr<EditBox> Create(bool centerAlign = false,
+		static boost::shared_ptr<EditBox> Create(bool centerAlign = false,
 			float width = 200.0f, float height = 25.0f,
 			float horizontalRounding = 6.0f, float verticalRounding = 3.0f);
 
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent) {
+		virtual bool OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
 			return IFocusable::OnTabPressed(pComponent);
 		}
 
 		virtual void SetWidth(float width);
 		virtual void SetHeight(float height);
 
-		virtual std::shared_ptr<Label> GetContent() const {
+		virtual boost::shared_ptr<Label> GetContent() const {
 			return m_content;
 		}
 
-		virtual void SetContent(std::shared_ptr<Label> pContent) {
+		virtual void SetContent(boost::shared_ptr<Label> pContent) {
 			m_content = std::move(pContent);
 			if (m_content != nullptr)
 				m_content->SetUIParent(shared_from_this());
 		}
 
-		virtual std::shared_ptr<Rectangle> GetBorder() const {
+		virtual boost::shared_ptr<Rectangle> GetBorder() const {
 			return m_border;
 		}
 
-		virtual void SetBorder(std::shared_ptr<Rectangle> pBorder) {
+		virtual void SetBorder(boost::shared_ptr<Rectangle> pBorder) {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr)
 				m_border->SetUIParent(shared_from_this());
@@ -49,7 +49,7 @@ namespace Components {
 		bool CopyToClipboard() const;
 		uint32 PasteFromClipboard();
 
-		Utils::Event<void (const std::shared_ptr<EditBox>&)> OnContentChangedEvent;
+		Utils::Event<void (const boost::shared_ptr<EditBox>&)> OnContentChangedEvent;
 
 	protected:
 		virtual void _notifyPushEvent(Utils::Vector2 *pPosition);
@@ -77,8 +77,8 @@ namespace Components {
 
 		uint32 m_maxLength;
 		float m_scrollPosition;
-		std::shared_ptr<Label> m_content;
-		std::shared_ptr<Rectangle> m_border;
+		boost::shared_ptr<Label> m_content;
+		boost::shared_ptr<Rectangle> m_border;
 
 		void _onChar(wchar_t c);
 		void _onKeyDown(uint32 keyCode);

@@ -7,20 +7,20 @@ namespace Components {
 	class TabPage : public Button
 	{
 	public:
-		static std::shared_ptr<TabPage> Create(std::wstring textString, float width, float height);
+		static boost::shared_ptr<TabPage> Create(std::wstring textString, float width, float height);
 		virtual void OnRender(uint32 timePassed);
 		void RenderChildren(uint32 timePassed);
 
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void SendMessageToChildren(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		virtual bool OnTabPressed(const std::shared_ptr<IComponent> &pComponent);
+		virtual bool OnTabPressed(const boost::shared_ptr<IComponent> &pComponent);
 
-		std::shared_ptr<ItemsControl> GetContent() const {
+		boost::shared_ptr<ItemsControl> GetContent() const {
 			return m_content;
 		}
 
-		void SetContent(std::shared_ptr<ItemsControl> pContent) {
+		void SetContent(boost::shared_ptr<ItemsControl> pContent) {
 			m_content = std::move(pContent);
 			if (m_content != nullptr)
 				m_content->SetUIParent(shared_from_this());
@@ -41,7 +41,7 @@ namespace Components {
 		}
 
 	private:
-		std::shared_ptr<ItemsControl> m_content;
+		boost::shared_ptr<ItemsControl> m_content;
 	};
 }
 }

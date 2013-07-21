@@ -12,9 +12,8 @@ namespace Components {
 							  m_prevMove(false),
 							  m_colorMod(1.0f, 1.0f, 1.0f, 1.0f)
 	{	// register for update...
-		using namespace std::placeholders;
 		m_updateDelegate = sD3DMgr.OnUpdateEvent.connect(
-			std::bind(&IComponent::OnUpdate, this, _1));
+			boost::bind(&IComponent::OnUpdate, this, _1));
 	}
 
 	IComponent::~IComponent() {
@@ -54,23 +53,23 @@ namespace Components {
 		}
 	}
 
-	std::list<std::shared_ptr<IComponent>> IComponent::GetUIHierarchy() {
-		std::list<std::shared_ptr<IComponent>> lstResult;
+	std::list<boost::shared_ptr<IComponent>> IComponent::GetUIHierarchy() {
+		std::list<boost::shared_ptr<IComponent>> lstResult;
 		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent())
 			lstResult.push_front(pParent);
 
 		return lstResult;
 	}
 
-	std::list<std::shared_ptr<const IComponent>> IComponent::GetUIHierarchy() const {
-		std::list<std::shared_ptr<const IComponent>> lstResult;
+	std::list<boost::shared_ptr<const IComponent>> IComponent::GetUIHierarchy() const {
+		std::list<boost::shared_ptr<const IComponent>> lstResult;
 		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent())
 			lstResult.push_front(pParent);
 
 		return lstResult;
 	}
 
-	std::shared_ptr<ComponentInterface> IComponent::GetInterface() const {
+	boost::shared_ptr<ComponentInterface> IComponent::GetInterface() const {
 		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			auto pInterface = pParent->GetClientInterface();
 			if (pInterface != nullptr)
@@ -89,7 +88,7 @@ namespace Components {
 	}
 
 	bool IComponent::IsVisible() const {
-		std::shared_ptr<ComponentInterface> pInterface = GetInterface();
+		boost::shared_ptr<ComponentInterface> pInterface = GetInterface();
 		if (pInterface == nullptr || !pInterface->Visible)
 			return false;
 
@@ -101,7 +100,7 @@ namespace Components {
 		return true;
 	}
 
-	bool IComponent::HasParent(const std::shared_ptr<const IComponent> &pParent) const {
+	bool IComponent::HasParent(const boost::shared_ptr<const IComponent> &pParent) const {
 		for (auto pCurrent = GetUIParent(); pCurrent != nullptr; pCurrent = pCurrent->GetUIParent()) {
 			if (pCurrent == pParent)
 				return true;

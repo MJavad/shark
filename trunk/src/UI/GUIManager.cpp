@@ -16,8 +16,8 @@ using namespace UI::Components;
 
 namespace UI {
 	void GUIManager::Initialize() {
-		const auto mainInterface = std::make_shared<ComponentInterface>();
-		const auto backInterface = std::make_shared<ComponentInterface>();
+		const auto mainInterface = boost::make_shared<ComponentInterface>();
+		const auto backInterface = boost::make_shared<ComponentInterface>();
 
 		const auto testFrame1 = CreateBasicFrame(L"[shark.dll] :: Test", 600, 600, 0xD0000000);
 		const auto testFrame2 = CreateBasicFrame(L"[shark.dll] :: Test", 140, 110, 0xD0000000);
@@ -35,7 +35,7 @@ namespace UI {
 		innerButton2->SetPosition(Utils::Vector2(20.0f, 75.0f));
 
 		innerButton2->OnClickEvent += []
-			(const std::shared_ptr<IPushable>&, Utils::Vector2*) {
+			(const boost::shared_ptr<IPushable>&, Utils::Vector2*) {
 				sEngine.InitializeShutdown();
 			};
 		
@@ -78,12 +78,12 @@ namespace UI {
 		innerListBox1->AddItem(ListBoxEntry::Create(L"Item #5"));
 
 		innerButton1->OnClickEvent += []
-			(const std::shared_ptr<IPushable> &pSender, Utils::Vector2*) {
+			(const boost::shared_ptr<IPushable> &pSender, Utils::Vector2*) {
 				pSender->GetUIParent()->Hide();
 			};
 
 		innerButton4->OnClickEvent += [testFrame1]
-			(const std::shared_ptr<IPushable> &, Utils::Vector2*) {
+			(const boost::shared_ptr<IPushable> &, Utils::Vector2*) {
 				testFrame1->Show();
 			};
 
@@ -108,7 +108,7 @@ namespace UI {
 		testFrame1->PushChild(editBox2);
 
 		tabButton1->OnClickEvent += [testFrame2, editBox2]
-			(const std::shared_ptr<IPushable>&, Utils::Vector2*) {
+			(const boost::shared_ptr<IPushable>&, Utils::Vector2*) {
 				testFrame2->SetVisibility(true);
 				testFrame2->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 				editBox2->Focus();
@@ -139,7 +139,7 @@ namespace UI {
 		sD3DMgr.PushInterface(mainInterface);
 	}
 
-	std::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float width, float height, const D3DXCOLOR &color) const {
+	boost::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float width, float height, const D3DXCOLOR &color) const {
 		const auto pFrame = Frame::Create(width, height);
 		pFrame->SetMinSize(Utils::Vector2(140.0f, 50.0f));
 		pFrame->SetMaxSize(Utils::Vector2(900.0f, 700.0f));
@@ -199,7 +199,7 @@ namespace UI {
 		pCloseButtonTextureHover->SetVisibility(false);
 		pCloseButtonTextureHover->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 
-		const auto pCloseButton = std::make_shared<Button>();
+		const auto pCloseButton = boost::make_shared<Button>();
 		pCloseButton->SetPosition(Utils::Vector2(width - 27.0f, 2.0f));
 		pCloseButton->SetRenderRect(false);
 		pCloseButton->SetWidth(23);
@@ -213,7 +213,7 @@ namespace UI {
 
 		pCloseButton->OnHoverStartEvent +=
 			[pCloseButtonTexture, pCloseButtonTextureHover]
-			(const std::shared_ptr<IHoverable>&) {
+			(const boost::shared_ptr<IHoverable>&) {
 				pCloseButtonTexture->Hide();
 				pCloseButtonTextureHover->Show();
 				return false;
@@ -221,25 +221,25 @@ namespace UI {
 
 		pCloseButton->OnHoverEndEvent +=
 			[pCloseButtonTexture, pCloseButtonTextureHover]
-			(const std::shared_ptr<IHoverable>&) {
+			(const boost::shared_ptr<IHoverable>&) {
 				pCloseButtonTextureHover->Hide();
 				pCloseButtonTexture->Show();
 				return false;
 			};
 
 		pCloseButton->OnClickEvent += []
-			(const std::shared_ptr<IPushable> &pSender, Utils::Vector2*) {
+			(const boost::shared_ptr<IPushable> &pSender, Utils::Vector2*) {
 				pSender->GetUIParent()->Hide();
 			};
 
 		pCloseButton->OnFocusStartEvent += []
-			(const std::shared_ptr<IFocusable>&) {
+			(const boost::shared_ptr<IFocusable>&) {
 				return true;
 			};
 
 		pFrame->OnResizeEvent += [pBackground, pWindowTitle, pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight, pCloseButton]
-			(const std::shared_ptr<ISizable>&, float width, float height) {
+			(const boost::shared_ptr<ISizable>&, float width, float height) {
 				pBackground->SetWidth(width);
 				pBackground->SetHeight(height);
 				pWindowTitle->SetWidth(width);
@@ -268,7 +268,7 @@ namespace UI {
 			};
 
 		pFrame->OnSetPositionEvent += [pBackground]
-			(const std::shared_ptr<Frame>&, const Utils::Vector2&) {
+			(const boost::shared_ptr<Frame>&, const Utils::Vector2&) {
 				RECT screenRect = {0};
 				const auto pRenderTarget = sD3DMgr.GetRenderTarget();
 				if (pRenderTarget != nullptr &&
@@ -284,7 +284,7 @@ namespace UI {
 
 		pFrame->OnFrameHighlightStartEvent += [pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight]
-			(const std::shared_ptr<Frame>&) {
+			(const boost::shared_ptr<Frame>&) {
 				D3DXCOLOR fadeIn(0.6f, 1.3f, 1.6f, 1.0f);
 				pHeaderBar->FadeTo(200, fadeIn);
 				pBackgroundLineTop->FadeTo(200, fadeIn);
@@ -295,7 +295,7 @@ namespace UI {
 
 		pFrame->OnFrameHighlightEndEvent += [pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight]
-			(const std::shared_ptr<Frame>&) {
+			(const boost::shared_ptr<Frame>&) {
 				D3DXCOLOR fadeOut(1.0f, 1.0f, 1.0f, 1.0f);
 				pHeaderBar->FadeTo(200, fadeOut);
 				pBackgroundLineTop->FadeTo(200, fadeOut);

@@ -5,7 +5,7 @@
 namespace UI {
 namespace Components {
 	Utils::Vector2 IDraggable::s_dragVector;
-	std::weak_ptr<IDraggable> IDraggable::s_activeDrag;
+	boost::weak_ptr<IDraggable> IDraggable::s_activeDrag;
 
 	void IDraggable::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		if (!IsVisible()) {

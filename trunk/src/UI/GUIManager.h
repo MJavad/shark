@@ -8,13 +8,13 @@ namespace UI {
 
 	public:
 		void Initialize();
-		std::shared_ptr<Components::Frame> CreateBasicFrame(std::wstring swTitle,
+		boost::shared_ptr<Components::Frame> CreateBasicFrame(std::wstring swTitle,
 			float width, float height, const D3DXCOLOR &color) const;
 
-		std::shared_ptr<ComponentInterface> GetInterface() const { return m_interface; }
+		boost::shared_ptr<ComponentInterface> GetInterface() const { return m_interface; }
 
 	protected:
-		std::shared_ptr<ComponentInterface> m_interface;
+		boost::shared_ptr<ComponentInterface> m_interface;
 	};
 }
 

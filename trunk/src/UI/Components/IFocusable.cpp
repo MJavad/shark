@@ -4,6 +4,6 @@
 
 namespace UI {
 namespace Components {
-	std::weak_ptr<IFocusable> IFocusable::s_activeFocus;
+	boost::weak_ptr<IFocusable> IFocusable::s_activeFocus;
 }
 }

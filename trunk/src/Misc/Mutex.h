@@ -25,7 +25,7 @@ namespace Utils
 			return TryEnterCriticalSection(&m_critSect) != FALSE;
 		}
 
-		void lock(const std::function<void ()> &func);
+		void lock(const boost::function<void ()> &func);
 
 	protected:
 		CRITICAL_SECTION m_critSect;
@@ -57,7 +57,7 @@ namespace Utils
 		LockGuard& operator=(const LockGuard&);
 	};
 
-	inline void Mutex::lock(const std::function<void ()> &func) {
+	inline void Mutex::lock(const boost::function<void ()> &func) {
 		LockGuard g(*this);
 		func();
 	}

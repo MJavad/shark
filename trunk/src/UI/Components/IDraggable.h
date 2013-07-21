@@ -22,7 +22,7 @@ namespace Components {
 			s_activeDrag.reset();
 		}
 
-		static std::shared_ptr<IDraggable> GetActiveDrag() {
+		static boost::shared_ptr<IDraggable> GetActiveDrag() {
 			return s_activeDrag.lock();
 		}
 
@@ -32,9 +32,9 @@ namespace Components {
 		}
 
 		// returning true = no drag
-		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragStartEvent;
-		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragEndEvent;
-		Utils::Event<bool (const std::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragMoveEvent;
+		Utils::Event<bool (const boost::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragStartEvent;
+		Utils::Event<bool (const boost::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragEndEvent;
+		Utils::Event<bool (const boost::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragMoveEvent;
 
 	protected:
 		virtual bool _notifyDragStartEvent(Utils::Vector2 *pPosition) {
@@ -52,7 +52,7 @@ namespace Components {
 		}
 
 	private:
-		static std::weak_ptr<IDraggable> s_activeDrag;
+		static boost::weak_ptr<IDraggable> s_activeDrag;
 		static Utils::Vector2 s_dragVector;
 	};
 }
