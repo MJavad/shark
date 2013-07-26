@@ -38,6 +38,10 @@ void Engine::OnShutDown() {
 	m_shutdownComplete.set();
 }
 
+void Engine::OnProcessDetach() {
+	sD3DMgr.Shutdown();
+}
+
 void Engine::OnWindowDestroy() {
 	sD3DMgr.ReleaseDeviceResources();
 }

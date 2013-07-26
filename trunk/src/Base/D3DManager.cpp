@@ -13,6 +13,20 @@ void D3DManager::Initialize() {
 		&D3DManager::OnMessageReceived, this, _1, _2, _3));
 }
 
+void D3DManager::Shutdown() {
+	Utils::LockGuard g(m_frameLock);
+	m_sprite.reset();
+	m_renderTarget.reset();
+	m_device9 = nullptr;
+	m_device11 = nullptr;
+	m_deviceContext11 = nullptr;
+	m_swapChain = nullptr;
+	m_skipNextFrame = true;
+	m_interfaces.clear();
+	m_fonts.clear();
+	m_textures.clear();
+}
+
 void D3DManager::ReleaseDeviceResources() {
 	Utils::LockGuard g(m_frameLock);
 	m_sprite.reset();

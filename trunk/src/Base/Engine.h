@@ -14,7 +14,7 @@ public:
 
 	void OnShutDown();
 	void OnPulse();
-	void OnProcessDetach() {}
+	void OnProcessDetach();
 	void OnWindowDestroy();
 
 	bool IsInitialized() const {

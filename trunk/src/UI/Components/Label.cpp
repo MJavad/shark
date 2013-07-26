@@ -237,6 +237,17 @@ namespace Components {
 			luabind::class_<Label, IRectComponent,
 							boost::shared_ptr<IComponent>>("Label")
 				.scope [ luabind::def("Create", &Label::CreateDefault) ]
+				.enum_("FormatFlags") [
+					luabind::value("AlignLeft", DT_LEFT),
+					luabind::value("AlignTop", DT_TOP),
+					luabind::value("AlignRight", DT_RIGHT),
+					luabind::value("AlignBottom", DT_BOTTOM),
+					luabind::value("AlignHCenter", DT_CENTER),
+					luabind::value("AlignVCenter", DT_VCENTER),
+					luabind::value("FormatSingleLine", DT_SINGLELINE),
+					luabind::value("FormatWordBreak", DT_WORDBREAK),
+					luabind::value("FormatNoClip", DT_NOCLIP)
+				]
 				.def("IsCached", &Label::IsCached)
 				.def("XToCP", &Label::XToCP)
 				.def("CPToX", &Label::CPToX)

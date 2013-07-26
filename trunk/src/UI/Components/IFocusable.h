@@ -72,11 +72,13 @@ namespace Components {
 
 		virtual bool _notifyFocusBeginEvent() {
 			LOG_DEBUG("%08X: FocusStart triggered.", this);
+			OnFocusBeginLuaWrap();
 			return OnFocusBeginEvent(get_this<IFocusable>());
 		}
 
 		virtual void _notifyFocusEndEvent() {
 			LOG_DEBUG("%08X: FocusEnd triggered.", this);
+			OnFocusEndLuaWrap();
 			OnFocusEndEvent(get_this<IFocusable>());
 		}
 

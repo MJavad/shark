@@ -88,23 +88,27 @@ namespace Utils {
 	}
 
 	void GetWordPositions(const std::wstring &string, uint32 position, uint32 *start, uint32 *end) {
-		if (start != nullptr && end != nullptr) {
-			*start = string.find_last_of(BreakingChars, position);
-			*end = string.find_first_of(BreakingChars, position);
+		uint32 first = string.find_last_of(BreakingChars, position);
+		uint32 last = string.find_first_of(BreakingChars, position);
 
-			if (*start == *end) {
-				*start = string.find_last_not_of(BreakingChars, position);
-				*end = string.find_first_not_of(BreakingChars, position);
-			}
-
-			if (*start != std::string::npos)
-				++(*start);
-			else
-				*start = 0;
-
-			if (*end == std::string::npos)
-				*end = string.length();
+		if (first == last && first != std::string::npos) {
+			first = string.find_last_not_of(BreakingChars, position);
+			last = string.find_first_not_of(BreakingChars, position);
 		}
+
+		if (first == std::string::npos)
+			first = 0;
+		else
+			++first;
+
+		if (last == std::string::npos)
+			last = string.length();
+
+		if (start != nullptr)
+			*start = first;
+
+		if (end != nullptr)
+			*end = last;
 	}
 
 	void ThrowIfFailed(HRESULT hResult) {
