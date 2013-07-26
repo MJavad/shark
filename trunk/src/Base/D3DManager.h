@@ -58,6 +58,8 @@ public:
 	Utils::Event<void ()> OnDeviceResetEvent;
 	Utils::Event<void ()> OnDeviceChangedEvent;
 
+	static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
+
 protected:
 	bool m_skipNextFrame;
 	uint32 m_lastFrame;

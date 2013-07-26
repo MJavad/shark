@@ -12,9 +12,19 @@ void Log::OutDebug(const std::wstring &swMessage) const {
 	sConsoleWindow.AddLine(swMessage);
 }
 
+void Log::OutDebug_UTF8(const std::string &sMessage) const {
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	OutDebug(conv.from_bytes(sMessage));
+}
+
 // TODO: Proper implementation
 void Log::OutMessage(const std::wstring &swMessage) const {
 	std::wcout << swMessage << std::endl;
+}
+
+void Log::OutMessage_UTF8(const std::string &sMessage) const {
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	OutMessage(conv.from_bytes(sMessage));
 }
 
 void Log::OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile,

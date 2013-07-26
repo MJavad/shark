@@ -15,7 +15,7 @@ namespace Components {
 
 		std::list<boost::shared_ptr<IComponent>> GetUIHierarchy();
 		std::list<boost::shared_ptr<const IComponent>> GetUIHierarchy() const;
-		boost::shared_ptr<ComponentInterface> GetInterface() const;
+		boost::shared_ptr<ComponentInterface> GetGlobalInterface() const;
 		Utils::Vector2 GetScreenPosition() const;
 		D3DXCOLOR CalculateAbsoluteColor(const D3DXCOLOR &color) const;
 		std::array<D3DXCOLOR, 4> CalculateAbsoluteColor(const std::array<D3DXCOLOR, 4> &gradient) const;
@@ -39,6 +39,11 @@ namespace Components {
 		}
 
 		virtual void SetVisibility(bool visible) {
+			if (!visible && m_fadeActive) {
+				m_fadeActive = false;
+				SetColorMod(m_fadeTo);
+			}
+
 			m_isVisible = visible;
 		}
 
@@ -74,11 +79,11 @@ namespace Components {
 			m_parent = std::move(pParent);
 		}
 
-		virtual boost::shared_ptr<ComponentInterface> GetClientInterface() const {
+		virtual boost::shared_ptr<ComponentInterface> GetLocalInterface() const {
 			return m_interface.lock();
 		}
 
-		virtual void SetClientInterface(boost::shared_ptr<ComponentInterface> pInterface) {
+		virtual void SetLocalInterface(boost::shared_ptr<ComponentInterface> pInterface) {
 			m_interface = std::move(pInterface);
 		}
 
@@ -96,6 +101,12 @@ namespace Components {
 		}
 
 		virtual void OnParentSizeChanged(float width, float height) {}
+
+		Utils::Vector2& GetPosition_Ref() {
+			return m_position;
+		}
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		IComponent();

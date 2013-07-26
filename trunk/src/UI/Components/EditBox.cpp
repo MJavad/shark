@@ -16,10 +16,10 @@ namespace Components {
 	uint32 EditBox::s_selectPosition2 = 0;
 
 	boost::shared_ptr<EditBox> EditBox::Create(bool centerAlign,
-											 float width,
-											 float height,
-											 float horizontalRounding,
-											 float verticalRounding)
+											   float width,
+											   float height,
+											   float horizontalRounding,
+											   float verticalRounding)
 	{
 		uint32 alignFlags = DT_VCENTER | DT_SINGLELINE;
 		if (centerAlign)
@@ -77,7 +77,7 @@ namespace Components {
 			return;
 
 		// label and selection is indent clipped
-		const auto pInterface = GetInterface();
+		const auto pInterface = GetGlobalInterface();
 		pInterface->ClipStack.Push(clipArea);
 		pInterface->ClipStack.Apply();
 
@@ -225,11 +225,11 @@ namespace Components {
 	}
 
 	bool EditBox::CopyToClipboard() const {
-		return Utils::OsClipboardPutString(GetCurrentText(), sWndProc.GetHWND());
+		return Utils::OsClipboardPutString(GetCurrentText());
 	}
 
 	uint32 EditBox::PasteFromClipboard() {
-		return _insertText(Utils::OsClipboardGetString(sWndProc.GetHWND()));
+		return _insertText(Utils::OsClipboardGetString());
 	}
 
 	void EditBox::_onChar(wchar_t c) {
@@ -610,8 +610,8 @@ namespace Components {
 		IPushable::_notifyReleaseEvent(pPosition);
 	}
 
-	bool EditBox::_notifyFocusStartEvent() {
-		bool result = IFocusable::_notifyFocusStartEvent();
+	bool EditBox::_notifyFocusBeginEvent() {
+		bool result = IFocusable::_notifyFocusBeginEvent();
 
 		if (!result) {
 			_resetCaret();
@@ -632,6 +632,19 @@ namespace Components {
 			pBorder->FadeTo(300, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 		IFocusable::_notifyFocusEndEvent();
+	}
+
+	void EditBox::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<EditBox,
+							luabind::bases<Rectangle, IFocusable, IPushable>,
+							boost::shared_ptr<IComponent>>("EditBox")
+				.scope [ luabind::def("Create", &EditBox::CreateDefault) ]
+				.def("GetCurrentText", &EditBox::GetCurrentText)
+				.def_readonly("contentChangedEvent", &EditBox::OnContentChangedLuaWrap)
+				.property("content", &EditBox::GetContent, &EditBox::SetContent)
+				.property("border", &EditBox::GetBorder, &EditBox::SetBorder)
+		];
 	}
 }
 }

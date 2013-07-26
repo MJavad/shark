@@ -4,6 +4,10 @@
 #include "Base/WndProc.h"
 
 namespace UI {
+	boost::shared_ptr<ComponentInterface> ComponentInterface::Create() {
+		return boost::make_shared<ComponentInterface>();
+	}
+
 	void ComponentInterface::OnRender(uint32 timePassed) {
 		if (!Visible)
 			return;
@@ -41,11 +45,11 @@ namespace UI {
 			return false;
 
 		// If it had a previous interface...
-		const auto pInterface = pControl->GetClientInterface();
+		const auto pInterface = pControl->GetLocalInterface();
 		if (pInterface != nullptr)
 			pInterface->m_components.remove(pControl);
 
-		pControl->SetClientInterface(get_this<ComponentInterface>());
+		pControl->SetLocalInterface(get_this<ComponentInterface>());
 		m_components.push_front(std::move(pControl));
 		return true;
 	}
@@ -54,11 +58,23 @@ namespace UI {
 		if (!_hasControl(pControl))
 			return;
 
-		pControl->SetClientInterface(nullptr);
+		pControl->SetLocalInterface(nullptr);
 		m_components.remove(pControl);
 	}
 
 	bool ComponentInterface::_hasControl(const boost::shared_ptr<Components::IComponent> &pControl) const {
-		return pControl->GetClientInterface().get() == this;
+		return pControl->GetLocalInterface().get() == this;
+	}
+
+	void ComponentInterface::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<ComponentInterface, ID3DInterface,
+							boost::shared_ptr<ID3DInterface>>("ComponentInterface")
+				.scope [ luabind::def("Create", &ComponentInterface::CreateDefault) ]
+				.def_readwrite("visible", &ComponentInterface::Visible)
+				.def_readonly("clipStack", &ComponentInterface::ClipStack)
+				.def("PushControl", &ComponentInterface::PushControl)
+				.def("PopControl", &ComponentInterface::PopControl)
+		];
 	}
 }

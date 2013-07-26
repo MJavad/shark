@@ -20,7 +20,7 @@ namespace Components {
 			return;
 
 		RECT sizerRect = GetSizerRect();
-		Utils::Vector3 position(float(sizerRect.left), float(sizerRect.top));
+		Utils::Vector3 position(float(sizerRect.left), float(sizerRect.top), 0.0f);
 
 		const auto pSprite = sD3DMgr.GetSprite();
 		if (pSprite != nullptr) {
@@ -55,7 +55,7 @@ namespace Components {
 				vSize.x += GetWidth();
 				vSize.y += GetHeight();
 
-				if (!_notifyResizeStartEvent(&position))
+				if (!_notifyResizeBeginEvent(&position))
 					StartSizing(vSize - position);
 
 				sWndProc.LastMessageHandled = true;
@@ -75,7 +75,7 @@ namespace Components {
 
 		case WM_MOUSEMOVE:
 			if (!sWndProc.LastMessageHandled && IsSizing() &&
-				GetInterface()->ClipStack.PtInClipArea(position)) {
+				GetGlobalInterface()->ClipStack.PtInClipArea(position)) {
 				Utils::Vector2 vSize = position - GetScreenPosition() + s_sizeVector;
 				Utils::Vector2 vMinSize = GetMinSize();
 
@@ -113,6 +113,23 @@ namespace Components {
 			sWndProc.LastMessageHandled |= m_isHovered;
 			break;
 		};
+	}
+
+	void ISizable::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<ISizable, IRectComponent,
+							boost::shared_ptr<IComponent>>("ISizable")
+				.def("PtInSizerRect", &ISizable::PtInSizerRect)
+				.def_readonly("resizeBeginEvent", &ISizable::OnResizeBeginLuaWrap)
+				.def_readonly("resizeEndEvent", &ISizable::OnResizeEndLuaWrap)
+				.def_readonly("resizeEvent", &ISizable::OnResizeLuaWrap)
+				.property("isSizing", &ISizable::IsSizing)
+				.property("gripVisible", &ISizable::GetGripVisibility, &ISizable::SetGripVisibility)
+				.property("minSize", &ISizable::GetMinSize, &ISizable::SetMinSize)
+				.property("maxSize", &ISizable::GetMaxSize, &ISizable::SetMaxSize)
+				.property("maxSizeLimited", &ISizable::GetSizeLimited, &ISizable::SetSizeLimited)
+				.property("sizerRect", &ISizable::GetSizerRect)
+		];
 	}
 }
 }

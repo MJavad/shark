@@ -1,14 +1,15 @@
 #include "Misc/stdafx.h"
 #include "Button.h"
 #include "Base/WndProc.h"
+#include "UI/GUIManager.h"
 
 namespace UI {
 namespace Components {
 	boost::shared_ptr<Button> Button::Create(std::wstring textString,
-										   float width,
-										   float height,
-										   float horizontalRounding,
-										   float verticalRounding)
+											 float width,
+											 float height,
+											 float horizontalRounding,
+											 float verticalRounding)
 	{
 		const auto pButton = boost::make_shared<Button>();
 		pButton->SetCaption(Label::Create(std::move(textString), DT_CENTER | DT_VCENTER));
@@ -40,7 +41,7 @@ namespace Components {
 		if (pBorder != nullptr && pBorder->GetVisibility())
 			pBorder->OnRender(timePassed);
 
-		if (GetRenderRect())
+		if (GetRenderBackground())
 			Rectangle::OnRender(timePassed);
 		
 		const auto pCaption = GetCaption();
@@ -129,9 +130,9 @@ namespace Components {
 		IPushable::_notifyReleaseEvent(pPosition);
 	}
 
-	bool Button::_notifyFocusStartEvent() {
+	bool Button::_notifyFocusBeginEvent() {
 		const auto pBorder = GetBorder();
-		bool result = IFocusable::_notifyFocusStartEvent();
+		bool result = IFocusable::_notifyFocusBeginEvent();
 
 		if (!result && pBorder != nullptr)
 			pBorder->FadeTo(100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
@@ -145,6 +146,20 @@ namespace Components {
 			pBorder->FadeTo(300, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 
 		IFocusable::_notifyFocusEndEvent();
+	}
+
+	void Button::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<Button,
+							luabind::bases<Rectangle, IHoverable, IFocusable, IPushable>,
+							boost::shared_ptr<IComponent>>("Button")
+				.scope [ luabind::def("Create", &Button::CreateDefault) ]
+				.def("AddTexture", &Button::AddTexture)
+				.def("RemoveTexture", &Button::RemoveTexture)
+				.property("caption", &Button::GetCaption, &Button::SetCaption)
+				.property("border", &Button::GetBorder, &Button::SetBorder)
+				.property("renderBackground", &Button::GetRenderBackground, &Button::SetRenderBackground)
+		];
 	}
 }
 }

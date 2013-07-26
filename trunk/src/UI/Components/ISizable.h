@@ -78,25 +78,35 @@ namespace Components {
 			return PtInRect(&sizeRect, vPoint) != FALSE;
 		}
 
+		// lua wrapper
+		Utils::Event<void ()> OnResizeBeginLuaWrap;
+		Utils::Event<void ()> OnResizeEndLuaWrap;
+		Utils::Event<void ()> OnResizeLuaWrap;
+
 		// returning true = no size
-		Utils::Event<bool (const boost::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeStartEvent;
+		Utils::Event<bool (const boost::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeBeginEvent;
 		Utils::Event<bool (const boost::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeEndEvent;
 		Utils::Event<bool (const boost::shared_ptr<ISizable>&, float, float)> OnResizeEvent;
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		ISizable();
 
-		virtual bool _notifyResizeStartEvent(Utils::Vector2 *pPosition) {
+		virtual bool _notifyResizeBeginEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: ResizeStart triggered.", this);
-			return OnResizeStartEvent(get_this<ISizable>(), pPosition);
+			OnResizeBeginLuaWrap();
+			return OnResizeBeginEvent(get_this<ISizable>(), pPosition);
 		}
 
 		virtual bool _notifyResizeEndEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: ResizeEnd triggered.", this);
+			OnResizeEndLuaWrap();
 			return OnResizeEndEvent(get_this<ISizable>(), pPosition);
 		}
 
 		virtual bool _notifyResizeEvent(float width, float height) {
+			OnResizeLuaWrap();
 			return OnResizeEvent(get_this<ISizable>(), width, height);
 		}
 

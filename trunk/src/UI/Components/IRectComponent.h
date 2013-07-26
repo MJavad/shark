@@ -30,6 +30,8 @@ namespace Components {
 		RECT GetFullRect() const;
 		RECT GetDisplayRect() const;
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
+
 	protected:
 		IRectComponent() : m_width(0), m_height(0) {}
 

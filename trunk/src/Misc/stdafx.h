@@ -4,7 +4,7 @@
 #pragma comment(lib, "d3dx9.lib")
 //#pragma comment(lib, "d3d11.lib") Not present in Windows XP...
 #pragma comment(lib, "Winmm.lib")
-#pragma warning(disable: 4100)
+#pragma warning(disable: 4100 4121)
 
 //#define VARIADIC_TEMPLATES_SUPPORTED
 
@@ -68,13 +68,17 @@ typedef signed char int8;
 #include <boost/algorithm/string.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/make_shared.hpp>
 #include <codecvt>
 #include <atlbase.h>
 #include <iostream>
+
+// lua & luabind
+#include "lua/lua.hpp"
+#include "luabind/luabind.hpp"
+#include "luabind/operator.hpp"
+#include "luabind/shared_ptr_converter.hpp"
 
 #include "TypeTraits.h"
 #include "Mutex.h"

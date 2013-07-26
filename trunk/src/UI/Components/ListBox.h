@@ -9,6 +9,11 @@ namespace Components {
 	{
 	public:
 		ListBox() : m_isSelecting(false), m_isMultiSelect(false) {}
+
+		static boost::shared_ptr<ListBox> CreateDefault() {
+			return Create();
+		}
+
 		static boost::shared_ptr<ListBox> Create(float width = 200.0f, float height = 160.0f);
 
 		virtual void OnRender(uint32 timePassed);
@@ -38,20 +43,20 @@ namespace Components {
 			m_entries.clear();
 		}
 		
-		virtual bool IsMultiSelect() const {
+		virtual bool GetMultiSelect() const {
 			return m_isMultiSelect;
 		}
 
-		virtual void SetMultiSelect(bool bEnabled) {
-			m_isMultiSelect = bEnabled;
+		virtual void SetMultiSelect(bool enabled) {
+			m_isMultiSelect = enabled;
 		}
 		
 		virtual bool IsSelecting() const {
 			return m_isSelecting;
 		}
 
-		virtual void SetSelecting(bool bSelecting) {
-			m_isSelecting = bSelecting;
+		virtual void SetSelecting(bool selecting) {
+			m_isSelecting = selecting;
 		}
 
 		virtual boost::shared_ptr<Rectangle> GetBorder() const {
@@ -65,6 +70,8 @@ namespace Components {
 				m_border->SetUIParent(shared_from_this());
 			}
 		}
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	private:
 		bool m_isSelecting, m_isMultiSelect;

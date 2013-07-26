@@ -7,7 +7,17 @@ namespace Components {
 	class TabPage : public Button
 	{
 	public:
-		static boost::shared_ptr<TabPage> Create(std::wstring textString, float width, float height);
+		TabPage() {}
+
+		static boost::shared_ptr<TabPage> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<TabPage> Create(
+			std::wstring textString = L"Default Page",
+			float width = 100.0f,
+			float height = 20.0f);
+
 		virtual void OnRender(uint32 timePassed);
 		void RenderChildren(uint32 timePassed);
 
@@ -26,13 +36,15 @@ namespace Components {
 				m_content->SetUIParent(shared_from_this());
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
+
 	protected:
 		virtual void _notifyPushEvent(Utils::Vector2 *pPosition);
 		virtual void _notifyClickEvent(Utils::Vector2 *pPosition);
 
-		virtual bool _notifyFocusStartEvent() {
+		virtual bool _notifyFocusBeginEvent() {
 			FadeTo(200, GetHoverColor());
-			return IFocusable::_notifyFocusStartEvent();
+			return IFocusable::_notifyFocusBeginEvent();
 		}
 
 		virtual void _notifyFocusEndEvent() {

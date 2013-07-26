@@ -17,11 +17,23 @@ namespace Components {
 		RECT fullRect = GetFullRect();
 		RECT dispRect = fullRect;
 
-		boost::shared_ptr<ComponentInterface> pInterface = GetInterface();
+		boost::shared_ptr<ComponentInterface> pInterface = GetGlobalInterface();
 		if (pInterface != nullptr && !pInterface->ClipStack.IsEmpty())
 			IntersectRect(&dispRect, &fullRect, pInterface->ClipStack.Top());
 
 		return dispRect;
+	}
+
+	void IRectComponent::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<IRectComponent, IComponent,
+							boost::shared_ptr<IComponent>>("IRectComponent")
+				.def("PtInBoundingRect", &IRectComponent::PtInBoundingRect)
+				.property("width", &IRectComponent::GetWidth, &IRectComponent::SetWidth)
+				.property("height", &IRectComponent::GetHeight, &IRectComponent::SetHeight)
+				.property("fullRect", &IRectComponent::GetFullRect)
+				.property("displayRect", &IRectComponent::GetDisplayRect)
+		];
 	}
 }
 }

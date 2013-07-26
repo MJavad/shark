@@ -41,7 +41,7 @@ namespace Components {
 			if (m_shadowTexture == nullptr)
 				CreateShadowTexture();
 
-			const RECT *pClipRect = GetInterface()->ClipStack.Top();
+			const RECT *pClipRect = GetGlobalInterface()->ClipStack.Top();
 			if (pClipRect != nullptr) {
 				RECT newClipRect = *pClipRect;
 				if (m_shadowDirection.x < 0.0f)
@@ -138,7 +138,21 @@ namespace Components {
 		}
 
 		pRenderTarget->SetRenderTargetSurface(pOldSurface);
-		GetInterface()->ClipStack.Apply();
+		GetGlobalInterface()->ClipStack.Apply();
+	}
+
+	void Rectangle::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<Rectangle, IRectComponent,
+							boost::shared_ptr<IComponent>>("Rectangle")
+				.scope [ luabind::def("Create", &Rectangle::CreateDefault) ]
+				.property("horizontalRoundings", &Rectangle::GetHorizontalRoundings, &Rectangle::SetHorizontalRoundings)
+				.property("verticalRoundings", &Rectangle::GetVerticalRoundings, &Rectangle::SetVerticalRoundings)
+				.property("colors", &Rectangle::GetGradientColors, &Rectangle::SetGradientColors)
+				.property("dropShadow", &Rectangle::GetDropShadow, &Rectangle::SetDropShadow)
+				.property("shadowDirection", &Rectangle::GetShadowDirection, &Rectangle::SetShadowDirection)
+				.property("dimensions", &Rectangle::GetDimensions, &Rectangle::SetDimensions)
+		];
 	}
 }
 }

@@ -69,9 +69,9 @@ namespace Components {
 		return lstResult;
 	}
 
-	boost::shared_ptr<ComponentInterface> IComponent::GetInterface() const {
+	boost::shared_ptr<ComponentInterface> IComponent::GetGlobalInterface() const {
 		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent()) {
-			auto pInterface = pParent->GetClientInterface();
+			auto pInterface = pParent->GetLocalInterface();
 			if (pInterface != nullptr)
 				return pInterface;
 		}
@@ -88,7 +88,7 @@ namespace Components {
 	}
 
 	bool IComponent::IsVisible() const {
-		boost::shared_ptr<ComponentInterface> pInterface = GetInterface();
+		boost::shared_ptr<ComponentInterface> pInterface = GetGlobalInterface();
 		if (pInterface == nullptr || !pInterface->Visible)
 			return false;
 
@@ -190,6 +190,29 @@ namespace Components {
 					return TIMER_STOP_EXECUTION;
 				});
 		}
+	}
+
+	void IComponent::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<IComponent, boost::shared_ptr<IComponent>>("IComponent")
+				.def("Hide", &IComponent::Hide)
+				.def("Show", &IComponent::Show)
+				.def("FadeTo", &IComponent::FadeTo)
+				.def("StopFade", &IComponent::StopFade)
+				.def("UndoFade", &IComponent::UndoFade)
+				.def("MoveTo", &IComponent::MoveTo)
+				.def("StopMove", &IComponent::StopMove)
+				.def("UndoMove", &IComponent::UndoMove)
+				.property("position", &IComponent::GetPosition_Ref, &IComponent::SetPosition)
+				.property("absolutePosition", &IComponent::GetScreenPosition)
+				.property("childOffset", &IComponent::GetChildOffset, &IComponent::SetChildOffset)
+				.property("visible", &IComponent::GetVisibility, &IComponent::SetVisibility)
+				.property("isVisible", &IComponent::IsVisible)
+				.property("colorModifier", &IComponent::GetColorMod, &IComponent::SetColorMod)
+				.property("uiParent", &IComponent::GetUIParent, &IComponent::SetUIParent)
+				.property("localInterface", &IComponent::GetLocalInterface, &IComponent::SetLocalInterface)
+				.property("globalInterface", &IComponent::GetGlobalInterface)
+		];
 	}
 }
 }

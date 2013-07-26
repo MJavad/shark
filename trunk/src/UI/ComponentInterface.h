@@ -11,6 +11,12 @@ namespace Components { class IComponent; }
 	public:
 		ComponentInterface() : Visible(true) {}
 
+		static boost::shared_ptr<ComponentInterface> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<ComponentInterface> Create();
+
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -19,6 +25,8 @@ namespace Components { class IComponent; }
 
 		bool Visible;
 		ClipStack ClipStack;
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		std::list<boost::shared_ptr<Components::IComponent>> m_components;

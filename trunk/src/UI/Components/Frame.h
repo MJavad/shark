@@ -11,7 +11,13 @@ namespace Components {
 		Frame() : m_sizable(true),
 			m_activeFocus(false) {}
 
-		static boost::shared_ptr<Frame> Create(float width, float height);
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Frame> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<Frame> Create(
+			float width = 100.0f, float height = 100.0f);
 
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -42,9 +48,11 @@ namespace Components {
 		}
 
 		// When it handled the most recent event
-		Utils::Event<void (const boost::shared_ptr<Frame>&)> OnFrameHighlightStartEvent;
+		Utils::Event<void (const boost::shared_ptr<Frame>&)> OnFrameHighlightBeginEvent;
 		Utils::Event<void (const boost::shared_ptr<Frame>&)> OnFrameHighlightEndEvent;
 		Utils::Event<void (const boost::shared_ptr<Frame>&, const Utils::Vector2&)> OnSetPositionEvent;
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	private:
 		bool m_sizable;

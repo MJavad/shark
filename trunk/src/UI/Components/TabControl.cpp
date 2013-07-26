@@ -5,8 +5,8 @@
 namespace UI {
 namespace Components {
 	boost::shared_ptr<TabControl> TabControl::Create(float width,
-												   float height,
-												   D3DXCOLOR dwColor)
+													 float height,
+													 D3DXCOLOR dwColor)
 	{
 		const auto pTabControl = boost::make_shared<TabControl>();
 		pTabControl->SetWidth(width);
@@ -22,7 +22,7 @@ namespace Components {
 		SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 		Rectangle::OnRender(timePassed);
 
-		const auto pInterface = GetInterface();
+		const auto pInterface = GetGlobalInterface();
 		pInterface->ClipStack.Push(GetFullRect());
 		pInterface->ClipStack.Apply();
 
@@ -95,7 +95,7 @@ namespace Components {
 		SetChildOffset(Utils::Vector2(0.0f, 0.0f));
 
 		if (IsValidTabIndex(m_activeTab)) {
-			const auto pInterface = GetInterface();
+			const auto pInterface = GetGlobalInterface();
 			pInterface->ClipStack.Push(GetFullRect());
 			m_tabPages[m_activeTab]->SendMessageToChildren(uMsg, wParam, lParam);
 			pInterface->ClipStack.Pop();
@@ -197,6 +197,19 @@ namespace Components {
 		}
 
 		return false;
+	}
+
+	void TabControl::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<TabControl, Rectangle,
+							boost::shared_ptr<IComponent>>("TabControl")
+				.scope [ luabind::def("Create", &TabControl::CreateDefault) ]
+				.def("AddTabPage", &TabControl::AddTabPage)
+				.def("RemoveTabPage", &TabControl::RemoveTabPage)
+				.def("GetPageIndex", &TabControl::GetPageIndex)
+				.def("IsValidPageIndex", &TabControl::IsValidTabIndex)
+				.property("activeTabIndex", &TabControl::GetActiveTab, &TabControl::SetActiveTab)
+		];
 	}
 }
 }

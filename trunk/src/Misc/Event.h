@@ -1,5 +1,6 @@
 #pragma once
 #include "TokenManager.h"
+#include "Base/Log.h"
 
 namespace Utils
 {
@@ -40,7 +41,9 @@ namespace Utils
 	template <typename FuncT>
 	struct SEventDelegate {
 		uint64 token;
+		bool isLuaCallback;
 		boost::function<FuncT> callback;
+		luabind::object luaFunction;
 	};
 
 	template <typename FuncT>
@@ -109,9 +112,29 @@ namespace Utils
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = false;
+			deleg.callback = std::move(func);
 			m_delegates[deleg.token] = deleg;
 			return deleg;
+		}
+
+		SEventDelegate<fnconv_t> connect_lua(const luabind::object &o) {
+			if (luabind::type(o) != LUA_TFUNCTION)
+				throw std::runtime_error("Invalid argument: Object is not a function!");
+
+			LockGuard g(m_mutex);
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = true;
+			deleg.luaFunction = o;
+			m_delegates[deleg.token] = deleg;
+			return deleg;
+		}
+
+		void remove_deleg(const SEventDelegate<fnconv_t> &deleg) {
+			remove(deleg.token);
 		}
 
 		void remove(const uint64 &token) {
@@ -130,6 +153,16 @@ namespace Utils
 			m_mutex.release();
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+			luabind::module(luaState.get()) [
+				luabind::class_<Event<fnconv_t>>("EventPH")
+					.def("AddCallback", &Event<fnconv_t>::connect_lua)
+					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
+					.def("ClearAll", &Event<fnconv_t>::clear)
+					.property("numCallbacks", &Event<fnconv_t>::size)
+			];
+		}
+
 	protected:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
@@ -142,8 +175,12 @@ namespace Utils
 			auto mDelegates = m_delegates;
 			m_mutex.release();
 
-			for (auto& pair: mDelegates)
-				pair.second.callback(args...);
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					luabind::call_function<void>(pair.second.luaFunction, args...);
+				else
+					pair.second.callback(args...);
+			}
 		}
 
 		template <typename T, typename CompT>
@@ -155,8 +192,13 @@ namespace Utils
 
 			std::vector<T> results;
 			results.reserve(mDelegates.size());
-			for (auto& pair: mDelegates)
-				results.push_back(pair.second.callback(args...));
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					results.push_back(luabind::call_function<T>(pair.second.luaFunction, args...));
+				else
+					results.push_back(pair.second.callback(args...));
+			}
+
 			return CompT::Comp<T>(results.cbegin(), results.cend());
 		}
 	};
@@ -228,9 +270,29 @@ namespace Utils
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = false;
+			deleg.callback = std::move(func);
 			m_delegates[deleg.token] = deleg;
 			return deleg;
+		}
+
+		SEventDelegate<fnconv_t> connect_lua(const luabind::object &o) {
+			if (luabind::type(o) != LUA_TFUNCTION)
+				throw std::runtime_error("Invalid argument: Object is not a function!");
+
+			LockGuard g(m_mutex);
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = true;
+			deleg.luaFunction = o;
+			m_delegates[deleg.token] = deleg;
+			return deleg;
+		}
+
+		void remove_deleg(const SEventDelegate<fnconv_t> &deleg) {
+			remove(deleg.token);
 		}
 
 		void remove(const uint64 &token) {
@@ -249,6 +311,17 @@ namespace Utils
 			m_mutex.release();
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+			luabind::module(luaState.get()) [
+				luabind::class_<SEventDelegate<fnconv_t>>("EventPHDelegate"),
+				luabind::class_<Event<fnconv_t>>("EventPH")
+					.def("AddCallback", &Event<fnconv_t>::connect_lua)
+					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
+					.def("ClearAll", &Event<fnconv_t>::clear)
+					.property("numCallbacks", &Event<fnconv_t>::size)
+			];
+		}
+
 	protected:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
@@ -261,8 +334,22 @@ namespace Utils
 			auto mDelegates = m_delegates;
 			m_mutex.release();
 
-			for (auto& pair: mDelegates)
-				pair.second.callback();
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback) {
+					try {
+						luabind::call_function<void>(pair.second.luaFunction);
+					}
+					catch (luabind::error &e) {
+						lua_gc(e.state(), LUA_GCCOLLECT, 0);
+						luabind::object o(luabind::from_stack(e.state(), -1));
+						std::ostringstream msg;
+						msg << "lua> runtime error: " << o;
+						sLog.OutDebug_UTF8(msg.str());
+					}
+				}
+				else
+					pair.second.callback();
+			}
 		}
 
 		template <typename T, typename CompT>
@@ -274,8 +361,13 @@ namespace Utils
 
 			std::vector<T> results;
 			results.reserve(mDelegates.size());
-			for (auto& pair: mDelegates)
-				results.push_back(pair.second.callback());
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					results.push_back(luabind::call_function<T>(pair.second.luaFunction));
+				else
+					results.push_back(pair.second.callback());
+			}
+
 			return CompT::Comp<T>(results.cbegin(), results.cend());
 		}
 	};
@@ -346,9 +438,29 @@ namespace Utils
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = false;
+			deleg.callback = std::move(func);
 			m_delegates[deleg.token] = deleg;
 			return deleg;
+		}
+
+		SEventDelegate<fnconv_t> connect_lua(const luabind::object &o) {
+			if (luabind::type(o) != LUA_TFUNCTION)
+				throw std::runtime_error("Invalid argument: Object is not a function!");
+
+			LockGuard g(m_mutex);
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = true;
+			deleg.luaFunction = o;
+			m_delegates[deleg.token] = deleg;
+			return deleg;
+		}
+
+		void remove_deleg(const SEventDelegate<fnconv_t> &deleg) {
+			remove(deleg.token);
 		}
 
 		void remove(const uint64 &token) {
@@ -367,6 +479,16 @@ namespace Utils
 			m_mutex.release();
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+			luabind::module(luaState.get()) [
+				luabind::class_<Event<fnconv_t>>("EventPH")
+					.def("AddCallback", &Event<fnconv_t>::connect_lua)
+					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
+					.def("ClearAll", &Event<fnconv_t>::clear)
+					.property("numCallbacks", &Event<fnconv_t>::size)
+			];
+		}
+
 	protected:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
@@ -379,8 +501,12 @@ namespace Utils
 			auto mDelegates = m_delegates;
 			m_mutex.release();
 
-			for (auto& pair: mDelegates)
-				pair.second.callback(a0);
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					luabind::call_function<void>(pair.second.luaFunction, a0);
+				else
+					pair.second.callback(a0);
+			}
 		}
 
 		template <typename T, typename CompT>
@@ -392,8 +518,13 @@ namespace Utils
 
 			std::vector<T> results;
 			results.reserve(mDelegates.size());
-			for (auto& pair: mDelegates)
-				results.push_back(pair.second.callback(a0));
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					results.push_back(luabind::call_function<T>(pair.second.luaFunction, a0));
+				else
+					results.push_back(pair.second.callback(a0));
+			}
+
 			return CompT::Comp<T>(results.cbegin(), results.cend());
 		}
 	};
@@ -464,9 +595,29 @@ namespace Utils
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = false;
+			deleg.callback = std::move(func);
 			m_delegates[deleg.token] = deleg;
 			return deleg;
+		}
+
+		SEventDelegate<fnconv_t> connect_lua(const luabind::object &o) {
+			if (luabind::type(o) != LUA_TFUNCTION)
+				throw std::runtime_error("Invalid argument: Object is not a function!");
+
+			LockGuard g(m_mutex);
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = true;
+			deleg.luaFunction = o;
+			m_delegates[deleg.token] = deleg;
+			return deleg;
+		}
+
+		void remove_deleg(const SEventDelegate<fnconv_t> &deleg) {
+			remove(deleg.token);
 		}
 
 		void remove(const uint64 &token) {
@@ -485,6 +636,16 @@ namespace Utils
 			m_mutex.release();
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+			luabind::module(luaState.get()) [
+				luabind::class_<Event<fnconv_t>>("EventPH")
+					.def("AddCallback", &Event<fnconv_t>::connect_lua)
+					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
+					.def("ClearAll", &Event<fnconv_t>::clear)
+					.property("numCallbacks", &Event<fnconv_t>::size)
+			];
+		}
+
 	protected:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
@@ -497,8 +658,12 @@ namespace Utils
 			auto mDelegates = m_delegates;
 			m_mutex.release();
 
-			for (auto& pair: mDelegates)
-				pair.second.callback(a0, a1);
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					luabind::call_function<void>(pair.second.luaFunction, a0, a1);
+				else
+					pair.second.callback(a0, a1);
+			}
 		}
 
 		template <typename T, typename CompT>
@@ -510,8 +675,13 @@ namespace Utils
 
 			std::vector<T> results;
 			results.reserve(mDelegates.size());
-			for (auto& pair: mDelegates)
-				results.push_back(pair.second.callback(a0, a1));
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					results.push_back(luabind::call_function<T>(pair.second.luaFunction, a0, a1));
+				else
+					results.push_back(pair.second.callback(a0, a1));
+			}
+
 			return CompT::Comp<T>(results.cbegin(), results.cend());
 		}
 	};
@@ -582,9 +752,29 @@ namespace Utils
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = false;
+			deleg.callback = std::move(func);
 			m_delegates[deleg.token] = deleg;
 			return deleg;
+		}
+
+		SEventDelegate<fnconv_t> connect_lua(const luabind::object &o) {
+			if (luabind::type(o) != LUA_TFUNCTION)
+				throw std::runtime_error("Invalid argument: Object is not a function!");
+
+			LockGuard g(m_mutex);
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = true;
+			deleg.luaFunction = o;
+			m_delegates[deleg.token] = deleg;
+			return deleg;
+		}
+
+		void remove_deleg(const SEventDelegate<fnconv_t> &deleg) {
+			remove(deleg.token);
 		}
 
 		void remove(const uint64 &token) {
@@ -603,6 +793,16 @@ namespace Utils
 			m_mutex.release();
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+			luabind::module(luaState.get()) [
+				luabind::class_<Event<fnconv_t>>("EventPH")
+					.def("AddCallback", &Event<fnconv_t>::connect_lua)
+					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
+					.def("ClearAll", &Event<fnconv_t>::clear)
+					.property("numCallbacks", &Event<fnconv_t>::size)
+			];
+		}
+
 	protected:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
@@ -615,8 +815,12 @@ namespace Utils
 			auto mDelegates = m_delegates;
 			m_mutex.release();
 
-			for (auto& pair: mDelegates)
-				pair.second.callback(a0, a1, a2);
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					luabind::call_function<void>(pair.second.luaFunction, a0, a1, a2);
+				else
+					pair.second.callback(a0, a1, a2);
+			}
 		}
 
 		template <typename T, typename CompT>
@@ -628,8 +832,13 @@ namespace Utils
 
 			std::vector<T> results;
 			results.reserve(mDelegates.size());
-			for (auto& pair: mDelegates)
-				results.push_back(pair.second.callback(a0, a1, a2));
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					results.push_back(luabind::call_function<T>(pair.second.luaFunction, a0, a1, a2));
+				else
+					results.push_back(pair.second.callback(a0, a1, a2));
+			}
+
 			return CompT::Comp<T>(results.cbegin(), results.cend());
 		}
 	};
@@ -700,9 +909,29 @@ namespace Utils
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
 			LockGuard g(m_mutex);
-			SEventDelegate<fnconv_t> deleg = { m_tokenMgr.get(), std::move(func) };
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = false;
+			deleg.callback = std::move(func);
 			m_delegates[deleg.token] = deleg;
 			return deleg;
+		}
+
+		SEventDelegate<fnconv_t> connect_lua(const luabind::object &o) {
+			if (luabind::type(o) != LUA_TFUNCTION)
+				throw std::runtime_error("Invalid argument: Object is not a function!");
+
+			LockGuard g(m_mutex);
+			SEventDelegate<fnconv_t> deleg;
+			deleg.token = m_tokenMgr.get();
+			deleg.isLuaCallback = true;
+			deleg.luaFunction = o;
+			m_delegates[deleg.token] = deleg;
+			return deleg;
+		}
+
+		void remove_deleg(const SEventDelegate<fnconv_t> &deleg) {
+			remove(deleg.token);
 		}
 
 		void remove(const uint64 &token) {
@@ -721,6 +950,16 @@ namespace Utils
 			m_mutex.release();
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+			luabind::module(luaState.get()) [
+				luabind::class_<Event<fnconv_t>>("EventPH")
+					.def("AddCallback", &Event<fnconv_t>::connect_lua)
+					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
+					.def("ClearAll", &Event<fnconv_t>::clear)
+					.property("numCallbacks", &Event<fnconv_t>::size)
+			];
+		}
+
 	protected:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
@@ -733,8 +972,12 @@ namespace Utils
 			auto mDelegates = m_delegates;
 			m_mutex.release();
 
-			for (auto& pair: mDelegates)
-				pair.second.callback(a0, a1, a2, a3);
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					luabind::call_function<void>(pair.second.luaFunction, a0, a1, a2, a3);
+				else
+					pair.second.callback(a0, a1, a2, a3);
+			}
 		}
 
 		template <typename T, typename CompT>
@@ -746,8 +989,13 @@ namespace Utils
 
 			std::vector<T> results;
 			results.reserve(mDelegates.size());
-			for (auto& pair: mDelegates)
-				results.push_back(pair.second.callback(a0, a1, a2, a3));
+			for (auto& pair: mDelegates) {
+				if (pair.second.isLuaCallback)
+					results.push_back(luabind::call_function<T>(pair.second.luaFunction, a0, a1, a2, a3));
+				else
+					results.push_back(pair.second.callback(a0, a1, a2, a3));
+			}
+
 			return CompT::Comp<T>(results.cbegin(), results.cend());
 		}
 	};

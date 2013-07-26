@@ -8,8 +8,13 @@ namespace Components {
 	{
 	public:
 		TabControl() : m_activeTab(0) {}
-		static boost::shared_ptr<TabControl> Create(float width,
-			float height, D3DXCOLOR dwColor = 0x90000000);
+
+		static boost::shared_ptr<TabControl> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<TabControl> Create(float width = 100.0f,
+			float height = 100.0f, D3DXCOLOR dwColor = 0x90000000);
 
 		virtual void OnRender(uint32 timePassed);
 		virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -33,6 +38,8 @@ namespace Components {
 
 		uint32 GetPageIndex(const boost::shared_ptr<const TabPage> &pTabPage) const;
 		virtual bool OnTabPressed(const boost::shared_ptr<IComponent> &pComponent);
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	private:
 		uint32 m_activeTab;

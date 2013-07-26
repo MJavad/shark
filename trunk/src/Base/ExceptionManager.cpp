@@ -173,6 +173,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 			pThrowInfo->pCatchableTypeArray != nullptr)
 		{
 			msgStrm << L"Extended information:\r\n";
+			static const std::type_info& luaInfo = typeid(luabind::error);
 			static const std::type_info& exceptionInfo = typeid(std::exception);
 			static const std::type_info& stringInfo = typeid(std::string);
 			static const std::type_info& wstringInfo = typeid(std::wstring);
@@ -191,6 +192,28 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 
 				if (i == 0)
 					pBaseType = pTypeInfo;
+
+				if (*pTypeInfo == luaInfo) {
+					std::string sTypeName(pBaseType->name());
+					msgStrm << L"Type: " << std::wstring(sTypeName.begin(), sTypeName.end()) << L"\r\n";
+
+					luabind::error *pError = reinterpret_cast<luabind::error*>(pmDisp);
+					if (pError != nullptr && pError->state() != nullptr) {
+						const char *pszMessage = pError->what();
+						std::string sMessage(pszMessage != nullptr ? pszMessage : "<null>");
+						msgStrm << L"Message: " << std::wstring(sMessage.begin(), sMessage.end()) << L"\r\n";
+
+						try {
+							std::ostringstream tostring;
+							tostring << luabind::object(luabind::from_stack(pError->state(), -1));
+							std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+							msgStrm << L"Lua: " << conv.from_bytes(tostring.str()) << L"\r\n";
+						}
+						catch (...) {
+						}
+					}
+					break;
+				}
 
 				if (*pTypeInfo == exceptionInfo) {
 					std::string sTypeName(pBaseType->name());

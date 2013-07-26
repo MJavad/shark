@@ -16,31 +16,43 @@ namespace Components {
 			return GetActiveClick().get() == this;
 		}
 
+		// lua wrapper
+		Utils::Event<void ()> OnClickLuaWrap;
+		Utils::Event<void ()> OnDblClickLuaWrap;
+		Utils::Event<void ()> OnPushLuaWrap;
+		Utils::Event<void ()> OnReleaseLuaWrap;
+
 		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnClickEvent;
 		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnDblClickEvent;
 		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnPushEvent;
 		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnReleaseEvent;
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		IPushable() : m_lastClick(0) {}
 
 		virtual void _notifyClickEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: Click triggered.", this);
+			OnClickLuaWrap();
 			OnClickEvent(get_this<IPushable>(), pPosition);
 		}
 
 		virtual void _notifyDblClickEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: DblClick triggered.", this);
+			OnDblClickLuaWrap();
 			OnDblClickEvent(get_this<IPushable>(), pPosition);
 		}
 
 		virtual void _notifyPushEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: Push triggered.", this);
+			OnPushLuaWrap();
 			OnPushEvent(get_this<IPushable>(), pPosition);
 		}
 
 		virtual void _notifyReleaseEvent(Utils::Vector2 *pPosition) {
 			LOG_DEBUG("%08X: Release triggered.", this);
+			OnReleaseLuaWrap();
 			OnReleaseEvent(get_this<IPushable>(), pPosition);
 		}
 

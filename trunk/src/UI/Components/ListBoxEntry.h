@@ -11,7 +11,11 @@ namespace Components {
 	public:
 		ListBoxEntry() : m_isSelected(false) {}
 		
-		static boost::shared_ptr<ListBoxEntry> Create(std::wstring textString = std::wstring());
+		static boost::shared_ptr<ListBoxEntry> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<ListBoxEntry> Create(std::wstring textString = L"Default Entry");
 
 		virtual void OnRender(uint32 timePassed);
 		void RenderCachedFontBatch(const boost::shared_ptr<const ID3DSprite> &pSprite) const;
@@ -44,6 +48,10 @@ namespace Components {
 				Rectangle::SetGradientColors(gradient);
 		}
 
+		virtual std::array<D3DXCOLOR, 4> GetSelectedGradientColors() const {
+			return m_selectedColors;
+		}
+
 		virtual void SetDeselectedColor(const D3DXCOLOR &color) {
 			m_deselectedColors.fill(color);
 			if (!m_isSelected)
@@ -56,12 +64,16 @@ namespace Components {
 				Rectangle::SetGradientColors(gradient);
 		}
 
+		virtual std::array<D3DXCOLOR, 4> GetDeselectedGradientColors() const {
+			return m_deselectedColors;
+		}
+
 		virtual bool GetSelected() const {
 			return m_isSelected;
 		}
 
-		virtual void SetSelected(bool bSelected) {
-			m_isSelected = bSelected;
+		virtual void SetSelected(bool selected) {
+			m_isSelected = selected;
 			Rectangle::SetGradientColors(m_isSelected ? m_selectedColors : m_deselectedColors);
 		}
 
@@ -86,6 +98,8 @@ namespace Components {
 				m_border->SetUIParent(shared_from_this());
 			}
 		}
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	private:
 		bool m_isSelected;

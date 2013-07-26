@@ -13,7 +13,7 @@ namespace Components {
 		{
 		case WM_LBUTTONDOWN:
 		case WM_LBUTTONDBLCLK:
-			if (!sWndProc.LastMessageHandled &&
+			if (!sWndProc.LastMessageHandled && IsVisible() &&
 				!IsPressed() && PtInBoundingRect(position)) {
 				const auto activeClick = GetActiveClick();
 				s_activeClick = get_this<IPushable>();
@@ -51,6 +51,18 @@ namespace Components {
 			}
 			break;
 		}
+	}
+
+	void IPushable::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<IPushable, IComponent,
+							boost::shared_ptr<IComponent>>("IPushable")
+				.def_readonly("clickEvent", &IPushable::OnClickLuaWrap)
+				.def_readonly("dblClickEvent", &IPushable::OnDblClickLuaWrap)
+				.def_readonly("pushEvent", &IPushable::OnPushLuaWrap)
+				.def_readonly("releaseEvent", &IPushable::OnReleaseLuaWrap)
+				.property("pressed", &IPushable::IsPressed)
+		];
 	}
 }
 }

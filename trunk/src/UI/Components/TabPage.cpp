@@ -130,5 +130,14 @@ namespace Components {
 
 		Button::_notifyClickEvent(pPosition);
 	}
+
+	void TabPage::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<TabPage, Button,
+							boost::shared_ptr<IComponent>>("TabPage")
+				.scope [ luabind::def("Create", &TabPage::CreateDefault) ]
+				.property("content", &TabPage::GetContent, &TabPage::SetContent)
+		];
+	}
 }
 }

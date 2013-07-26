@@ -26,6 +26,17 @@ namespace Components {
 				FadeTo(400, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 		}
+
+		void SetHovered(bool hovered) {
+			if (hovered)
+				StartHover();
+			else
+				ClearHover();
+		}
+
+		bool GetHovered() const {
+			return IsHovered();
+		}
 		
 		D3DXCOLOR GetHoverColor() const {
 			return m_hoverColor;
@@ -35,22 +46,30 @@ namespace Components {
 			m_hoverColor = hoverColor;
 		}
 
+		// lua wrapper
+		Utils::Event<void ()> OnHoverBeginLuaWrap;
+		Utils::Event<void ()> OnHoverEndLuaWrap;
+
 		// returning true = no hover
-		Utils::Event<bool (const boost::shared_ptr<IHoverable>&)> OnHoverStartEvent;
+		Utils::Event<bool (const boost::shared_ptr<IHoverable>&)> OnHoverBeginEvent;
 		Utils::Event<bool (const boost::shared_ptr<IHoverable>&)> OnHoverEndEvent;
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		IHoverable() :
 			m_isHovered(false),
 			m_hoverColor(1.5f, 1.5f, 1.5f, 1.4f) {}
 
-		virtual bool _notifyHoverStartEvent() {
+		virtual bool _notifyHoverBeginEvent() {
 			LOG_DEBUG("%08X: HoverStart triggered.", this);
-			return OnHoverStartEvent(get_this<IHoverable>());
+			OnHoverBeginLuaWrap();
+			return OnHoverBeginEvent(get_this<IHoverable>());
 		}
 
 		virtual bool _notifyHoverEndEvent() {
 			LOG_DEBUG("%08X: HoverEnd triggered.", this);
+			OnHoverEndLuaWrap();
 			return OnHoverEndEvent(get_this<IHoverable>());
 		}
 

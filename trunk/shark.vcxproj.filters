@@ -229,6 +229,12 @@
     <ClInclude Include="src\UI\ConsoleWindow.h">
       <Filter>Headers\UI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Base\LuaHandler.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base\ScriptObject.h">
+      <Filter>Headers\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
@@ -362,6 +368,18 @@
     </ClCompile>
     <ClCompile Include="src\UI\ConsoleWindow.cpp">
       <Filter>Sources\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\LuaHandler.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\ScriptObject.cpp">
+      <Filter>Sources\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Misc\Vector.cpp">
+      <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\ID3DInterface.cpp">
+      <Filter>Sources\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

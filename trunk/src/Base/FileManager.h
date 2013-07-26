@@ -19,10 +19,15 @@ public:
 		return m_moduleDirectory;
 	}
 
+	std::wstring GetScriptsDirectory() const {
+		return m_scriptsDirectory;
+	}
+
 private:
 	std::wstring m_moduleFileName;
 	std::wstring m_moduleDirectory;
 	std::wstring m_logsDirectory;
+	std::wstring m_scriptsDirectory;
 };
 
 #define sFileMgr ::FileManager::Instance()

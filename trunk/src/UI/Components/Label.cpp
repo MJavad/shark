@@ -16,9 +16,9 @@ namespace Components {
 	}
 
 	boost::shared_ptr<Label> Label::Create(std::wstring textString,
-										 uint32 formatFlags,
-										 float width,
-										 float height)
+										   uint32 formatFlags,
+										   float width,
+										   float height)
 	{
 		const auto pLabel = boost::make_shared<Label>();
 		pLabel->SetText(std::move(textString));
@@ -116,7 +116,7 @@ namespace Components {
 			pSprite->End();
 
 		pRenderTarget->SetRenderTargetSurface(pOldSurface);
-		GetInterface()->ClipStack.Apply();
+		GetGlobalInterface()->ClipStack.Apply();
 	}
 
 	void Label::RenderCachedFontBatch(const boost::shared_ptr<const ID3DSprite> &pSprite) const {
@@ -230,6 +230,24 @@ namespace Components {
 			m_textOffset.x = static_cast<float>(textExtent.left);
 			m_textOffset.y = static_cast<float>(textExtent.top);
 		}
+	}
+
+	void Label::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<Label, IRectComponent,
+							boost::shared_ptr<IComponent>>("Label")
+				.scope [ luabind::def("Create", &Label::CreateDefault) ]
+				.def("IsCached", &Label::IsCached)
+				.def("XToCP", &Label::XToCP)
+				.def("CPToX", &Label::CPToX)
+				.property("text", &Label::GetText_UTF8, &Label::SetText_UTF8)
+				.property("color", &Label::GetColor, &Label::SetColor)
+				.property("formatFlags", &Label::GetFormatFlags, &Label::SetFormatFlags)
+				.property("font", &Label::GetFont, &Label::SetFont)
+				.property("dropShadow", &Label::GetDropShadow, &Label::SetDropShadow)
+				.property("shadowDirection", &Label::GetShadowDirection, &Label::SetShadowDirection)
+				.property("useCache", &Label::GetUseCache, &Label::SetUseCache)
+		];
 	}
 }
 }

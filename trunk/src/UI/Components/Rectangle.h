@@ -10,7 +10,12 @@ namespace Components {
 		Rectangle();
 		~Rectangle();
 
-		static boost::shared_ptr<Rectangle> Create(float width, float height);
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Rectangle> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<Rectangle> Create(float width = 100.0f, float height = 100.0f);
 
 		virtual void OnRender(uint32 timePassed);
 
@@ -107,6 +112,7 @@ namespace Components {
 		}
 
 		void CreateShadowTexture();
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	private:
 		bool m_dropShadow;

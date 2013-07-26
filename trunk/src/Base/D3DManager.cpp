@@ -346,3 +346,14 @@ boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	LOG_DEBUG(L"Texture from resource %u created!", texDesc.resourceId);
 	return pTexture;
 }
+
+void D3DManager::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+	ID3DInterface::BindToLua(luaState);
+
+	luabind::module(luaState.get()) [
+		luabind::class_<D3DManager>("D3DManager")
+			.scope [ luabind::def("GetInstance", &D3DManager::Instance) ]
+			.def("PushInterface", &D3DManager::PushInterface)
+			.def("PopInterface", &D3DManager::PopInterface)
+	];
+}

@@ -14,7 +14,7 @@ namespace Components {
 	}
 
 	void Frame::OnRender(uint32 timePassed) {
-		GetInterface()->ClipStack.SetRect(GetFullRect(), [&]() {
+		GetGlobalInterface()->ClipStack.SetRect(GetFullRect(), [&]() {
 			ItemsControl::OnRender(timePassed);
 		});
 
@@ -44,7 +44,7 @@ namespace Components {
 			ISizable::OnMessageReceived(uMsg, wParam, lParam);
 
 		// Send message to all children and set clip area...
-		auto pInterface = GetInterface();
+		auto pInterface = GetGlobalInterface();
 		pInterface->ClipStack.Push(GetFullRect());
 		ItemsControl::OnMessageReceived(uMsg, wParam, lParam);
 		pInterface->ClipStack.Pop();
@@ -63,7 +63,7 @@ namespace Components {
 					if (sWndProc.LastMessageHandled ||
 						(uMsg != WM_CHAR && PtInBoundingRect(position))) {
 						const auto pParent = GetUIParent();
-						const auto pClientInterface = GetClientInterface();
+						const auto pClientInterface = GetLocalInterface();
 
 						if (pParent != nullptr) {
 							auto pItemControl = boost::dynamic_pointer_cast<ItemsControl>(pParent);
@@ -75,7 +75,7 @@ namespace Components {
 
 						if (!m_activeFocus) {
 							m_activeFocus = true;
-							OnFrameHighlightStartEvent(pThis);
+							OnFrameHighlightBeginEvent(pThis);
 						}
 
 						sWndProc.LastMessageHandled = true;
@@ -97,6 +97,16 @@ namespace Components {
 			}
 			break;
 		}
+	}
+
+	void Frame::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<Frame,
+							luabind::bases<ItemsControl, IDraggable, ISizable>,
+							boost::shared_ptr<IComponent>>("Frame")
+				.scope [ luabind::def("Create", &Frame::CreateDefault) ]
+				.property("sizable", &Frame::GetSizable, &Frame::SetSizable)
+		];
 	}
 }
 }

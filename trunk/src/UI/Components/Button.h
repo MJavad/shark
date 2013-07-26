@@ -6,15 +6,24 @@
 #include "IPushable.h"
 #include "Texture.h"
 #include "Base/D3DManager.h"
+#include "UI/GUIManager.h"
 
 namespace UI {
 namespace Components {
 	class Button : public Rectangle, public IHoverable, public IFocusable, public IPushable
 	{
 	public:
-		Button() : m_renderRect(true) {}
+		Button() : m_renderBackground(true) {}
 
-		static boost::shared_ptr<Button> Create(std::wstring textString = L"",
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Button> CreateDefault() {
+			const auto pButton = Create();
+			sGUIMgr.GetInterface()->PushControl(pButton);
+			return pButton;
+		}
+
+		static boost::shared_ptr<Button> Create(
+			std::wstring textString = L"Default Button",
 			float width = 100.0f, float height = 20.0f,
 			float horizontalRounding = 6.0f, float verticalRounding = 3.0f);
 
@@ -61,32 +70,34 @@ namespace Components {
 			m_textures.remove(pTexture);
 		}
 
-		bool GetRenderRect() const {
-			return m_renderRect;
+		bool GetRenderBackground() const {
+			return m_renderBackground;
 		}
 
-		void SetRenderRect(bool bRenderRect) {
-			m_renderRect = bRenderRect;
+		void SetRenderBackground(bool renderBackground) {
+			m_renderBackground = renderBackground;
 		}
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		virtual void _notifyPushEvent(Utils::Vector2 *pPosition);
 		virtual void _notifyClickEvent(Utils::Vector2 *pPosition);
 		virtual void _notifyReleaseEvent(Utils::Vector2 *pPosition);
 
-		virtual bool _notifyHoverStartEvent() {
-			return IHoverable::_notifyHoverStartEvent() || IsPressed();
+		virtual bool _notifyHoverBeginEvent() {
+			return IHoverable::_notifyHoverBeginEvent() || IsPressed();
 		}
 
 		virtual bool _notifyHoverEndEvent() {
 			return IHoverable::_notifyHoverEndEvent() || IsPressed();
 		}
 
-		virtual bool _notifyFocusStartEvent();
+		virtual bool _notifyFocusBeginEvent();
 		virtual void _notifyFocusEndEvent();
 
 	private:
-		bool m_renderRect;
+		bool m_renderBackground;
 		boost::shared_ptr<Label> m_caption;
 		boost::shared_ptr<Rectangle> m_border;
 		std::list<boost::shared_ptr<Texture>> m_textures;

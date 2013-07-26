@@ -6,7 +6,9 @@ class Log {
 public:
 	void Initialize();
 	void OutDebug(const std::wstring &swMessage) const;
+	void OutDebug_UTF8(const std::string &sMessage) const;
 	void OutMessage(const std::wstring &swMessage) const;
+	void OutMessage_UTF8(const std::string &sMessage) const;
 
 	void OutDebugFormatted(const wchar_t *pswzFunction, const wchar_t *pswzFile,
 		uint32 uLine, const char *pszFormat, ...) const;

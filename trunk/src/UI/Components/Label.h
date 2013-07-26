@@ -10,7 +10,12 @@ namespace Components {
 		Label();
 		~Label();
 
-		static boost::shared_ptr<Label> Create(std::wstring textString = L"",
+		static boost::shared_ptr<Label> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<Label> Create(
+			std::wstring textString = L"Default Label",
 			uint32 formatFlags = DT_LEFT | DT_TOP,
 			float width = 100.0f, float height = 20.0f);
 		
@@ -26,11 +31,21 @@ namespace Components {
 			return m_text;
 		}
 
+		std::string GetText_UTF8() const {
+			std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+			return conv.to_bytes(GetText());
+		}
+
 		virtual void SetText(std::wstring textString) {
 			if (m_text != textString) {
 				m_text = std::move(textString);
 				_flushFontCache();
 			}
+		}
+
+		void SetText_UTF8(const std::string &textString) {
+			std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+			SetText(conv.from_bytes(textString));
 		}
 
 		virtual D3DXCOLOR GetColor() const {
@@ -95,6 +110,8 @@ namespace Components {
 
 		uint32 XToCP(int32 x) const;
 		int32 CPToX(uint32 cp) const;
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 		
 	private:
 		std::wstring m_text;

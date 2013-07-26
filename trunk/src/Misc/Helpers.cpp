@@ -1,10 +1,11 @@
 #include "Misc/stdafx.h"
 #include "Helpers.h"
+#include "Base/WndProc.h"
 
 namespace Utils {
-	std::wstring OsClipboardGetString(HWND hWndNewOwner) {
+	std::wstring OsClipboardGetString() {
 		std::wstring result;
-		if (OpenClipboard(hWndNewOwner) != FALSE) {
+		if (OpenClipboard(sWndProc.GetHWND()) != FALSE) {
 			HANDLE globalMem = GetClipboardData(CF_UNICODETEXT);
 			if (globalMem != nullptr) {
 				wchar_t *pswzBuffer = reinterpret_cast<wchar_t*>(GlobalLock(globalMem));
@@ -20,7 +21,12 @@ namespace Utils {
 		return result;
 	}
 
-	bool OsClipboardPutString(const std::wstring &string, HWND hWndNewOwner) {
+	std::string OsClipboardGetString_UTF8() {
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+		return conv.to_bytes(OsClipboardGetString());
+	}
+
+	bool OsClipboardPutString(const std::wstring &string) {
 		SIZE_T bufferSize = (string.length() + 1) * sizeof(wchar_t);
 		HGLOBAL globalMem = GlobalAlloc(GHND, bufferSize);
 		if (globalMem == nullptr)
@@ -32,7 +38,7 @@ namespace Utils {
 			wcsncpy(pswzBuffer, string.data(), string.length());
 			GlobalUnlock(globalMem);
 
-			if (OpenClipboard(hWndNewOwner) != FALSE) {
+			if (OpenClipboard(sWndProc.GetHWND()) != FALSE) {
 				EmptyClipboard();
 				if (SetClipboardData(CF_UNICODETEXT, globalMem) != nullptr)
 					success = true;
@@ -45,6 +51,11 @@ namespace Utils {
 			GlobalFree(globalMem);
 
 		return success;
+	}
+
+	bool OsClipboardPutString_UTF8(const std::string &string) {
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+		return OsClipboardPutString(conv.from_bytes(string));
 	}
 
 	/* Strings Util */
@@ -69,6 +80,13 @@ namespace Utils {
 		return (end != std::string::npos ? end : string.length());
 	}
 
+	std::wstring GetWordAt(const std::wstring &string, uint32 position) {
+		uint32 wordStart = 0;
+		uint32 wordEnd = 0;
+		GetWordPositions(string, position, &wordStart, &wordEnd);
+		return string.substr(wordStart, wordEnd - wordStart);
+	}
+
 	void GetWordPositions(const std::wstring &string, uint32 position, uint32 *start, uint32 *end) {
 		if (start != nullptr && end != nullptr) {
 			*start = string.find_last_of(BreakingChars, position);
@@ -87,13 +105,6 @@ namespace Utils {
 			if (*end == std::string::npos)
 				*end = string.length();
 		}
-	}
-
-	std::wstring GetWordAt(const std::wstring &string, uint32 position) {
-		uint32 wordStart = 0;
-		uint32 wordEnd = 0;
-		GetWordPositions(string, position, &wordStart, &wordEnd);
-		return string.substr(wordStart, wordEnd - wordStart);
 	}
 
 	void ThrowIfFailed(HRESULT hResult) {

@@ -30,7 +30,7 @@ namespace Components {
 		if (!pControl->OnParentChanged(pThis))
 			return false;
 
-		const auto pClientInterface = pControl->GetClientInterface();
+		const auto pClientInterface = pControl->GetLocalInterface();
 		if (pClientInterface != nullptr)
 			pClientInterface->PopControl(pControl);
 
@@ -111,6 +111,17 @@ namespace Components {
 		}
 
 		return false;
+	}
+
+	void ItemsControl::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<ItemsControl, IComponent,
+							boost::shared_ptr<IComponent>>("ItemsControl")
+				.scope [ luabind::def("Create", &ItemsControl::CreateDefault) ]
+				.def("PushChild", &ItemsControl::PushChild)
+				.def("PopChild", &ItemsControl::PopChild)
+				.def("HasChild", &ItemsControl::HasChild)
+		];
 	}
 }
 }

@@ -11,7 +11,13 @@ namespace Components {
 	public:
 		EditBox() : m_scrollPosition(0.0f), m_maxLength(80) {}
 
-		static boost::shared_ptr<EditBox> Create(bool centerAlign = false,
+		// wrapper for luabind ctor
+		static boost::shared_ptr<EditBox> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<EditBox> Create(
+			bool centerAlign = false,
 			float width = 200.0f, float height = 25.0f,
 			float horizontalRounding = 6.0f, float verticalRounding = 3.0f);
 
@@ -49,18 +55,24 @@ namespace Components {
 		bool CopyToClipboard() const;
 		uint32 PasteFromClipboard();
 
+		// lua wrapper
+		Utils::Event<void ()> OnContentChangedLuaWrap;
+
 		Utils::Event<void (const boost::shared_ptr<EditBox>&)> OnContentChangedEvent;
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		virtual void _notifyPushEvent(Utils::Vector2 *pPosition);
 		virtual void _notifyDblClickEvent(Utils::Vector2 *pPosition);
 		virtual void _notifyReleaseEvent(Utils::Vector2 *pPosition);
 
-		virtual bool _notifyFocusStartEvent();
+		virtual bool _notifyFocusBeginEvent();
 		virtual void _notifyFocusEndEvent();
 
 		virtual void _notifyContentChangedEvent() {
 			LOG_DEBUG("%08X: ContentChanged triggered.", this);
+			OnContentChangedLuaWrap();
 			OnContentChangedEvent(get_this<EditBox>());
 		}
 

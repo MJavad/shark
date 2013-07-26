@@ -86,5 +86,19 @@ namespace Components {
 		if (pBorder != nullptr)
 			pBorder->SetHeight(height + 2.0f);
 	}
+
+	void ListBoxEntry::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<ListBoxEntry,
+							luabind::bases<Rectangle, IHoverable>,
+							boost::shared_ptr<IComponent>>("ListBoxEntry")
+				.scope [ luabind::def("Create", &ListBoxEntry::CreateDefault) ]
+				.property("selectedColors", &ListBoxEntry::GetSelectedGradientColors, &ListBoxEntry::SetSelectedGradientColors)
+				.property("deselectedColors", &ListBoxEntry::GetDeselectedGradientColors, &ListBoxEntry::SetDeselectedGradientColors)
+				.property("selected", &ListBoxEntry::GetSelected, &ListBoxEntry::SetSelected)
+				.property("caption", &ListBoxEntry::GetCaption, &ListBoxEntry::SetCaption)
+				.property("border", &ListBoxEntry::GetBorder, &ListBoxEntry::SetBorder)
+		];
+	}
 }
 }

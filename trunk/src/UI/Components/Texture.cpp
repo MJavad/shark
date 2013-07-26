@@ -36,5 +36,16 @@ namespace Components {
 			sD3DMgr.GetRenderTarget()->DrawSprite(vScreen, pTexture, dimensions, gradient);
 		}
 	}
+
+	void Texture::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<Texture, IRectComponent,
+							boost::shared_ptr<IComponent>>("TextureControl")
+				.scope [ luabind::def("Create", &Texture::CreateDefault) ]
+				.property("texture", &Texture::GetTexture, &Texture::SetTexture)
+				.property("transform", &Texture::GetTransform, &Texture::SetTransform)
+				.property("color", &Texture::GetColor, &Texture::SetColor)
+		];
+	}
 }
 }

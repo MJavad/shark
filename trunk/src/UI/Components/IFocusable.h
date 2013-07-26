@@ -21,7 +21,7 @@ namespace Components {
 				activeFocus->_notifyFocusEndEvent();
 
 			s_activeFocus = get_this<IFocusable>();
-			return !_notifyFocusStartEvent();
+			return !_notifyFocusBeginEvent();
 		}
 
 		virtual void Unfocus() {
@@ -30,6 +30,17 @@ namespace Components {
 
 			s_activeFocus.reset();
 			_notifyFocusEndEvent();
+		}
+
+		void SetFocus(bool focus) {
+			if (focus)
+				Focus();
+			else
+				Unfocus();
+		}
+
+		bool GetFocus() const {
+			return IsFocused();
 		}
 
 		static boost::shared_ptr<IFocusable> GetActiveFocus() {
@@ -47,13 +58,21 @@ namespace Components {
 			return IComponent::OnTabPressed(pComponent);
 		}
 
-		Utils::Event<bool (const boost::shared_ptr<IFocusable>&)> OnFocusStartEvent;
+		// lua wrapper
+		Utils::Event<void ()> OnFocusBeginLuaWrap;
+		Utils::Event<void ()> OnFocusEndLuaWrap;
+
+		Utils::Event<bool (const boost::shared_ptr<IFocusable>&)> OnFocusBeginEvent;
 		Utils::Event<void (const boost::shared_ptr<IFocusable>&)> OnFocusEndEvent;
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
+
 	protected:
-		virtual bool _notifyFocusStartEvent() {
+		IFocusable() {}
+
+		virtual bool _notifyFocusBeginEvent() {
 			LOG_DEBUG("%08X: FocusStart triggered.", this);
-			return OnFocusStartEvent(get_this<IFocusable>());
+			return OnFocusBeginEvent(get_this<IFocusable>());
 		}
 
 		virtual void _notifyFocusEndEvent() {

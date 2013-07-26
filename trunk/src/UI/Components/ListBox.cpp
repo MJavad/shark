@@ -105,7 +105,7 @@ namespace Components {
 	}
 
 	void ListBox::SelectItem(const boost::shared_ptr<ListBoxEntry> &pItem) {
-		if (!IsMultiSelect())
+		if (!GetMultiSelect())
 			DeselectAll();
 
 		pItem->SetSelected(true);
@@ -118,6 +118,23 @@ namespace Components {
 	void ListBox::DeselectAll() {
 		for (const auto &pListBoxEntry: m_entries)
 			pListBoxEntry->SetSelected(false);
+	}
+
+	void ListBox::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		luabind::module(luaState.get()) [
+			luabind::class_<ListBox, Rectangle,
+							boost::shared_ptr<IComponent>>("ListBox")
+				.scope [ luabind::def("Create", &ListBox::CreateDefault) ]
+				.def("SelectItem", &ListBox::SelectItem)
+				.def("DeselectItem", &ListBox::DeselectItem)
+				.def("DeselectAll", &ListBox::DeselectAll)
+				.def("AddItem", &ListBox::AddItem)
+				.def("RemoveItem", &ListBox::RemoveItem)
+				.def("Clear", &ListBox::RemoveAll)
+				.def("RemoveAll", &ListBox::RemoveAll)
+				.property("multiSelect", &ListBox::GetMultiSelect, &ListBox::SetMultiSelect)
+				.property("border", &ListBox::GetBorder, &ListBox::SetBorder)
+		];
 	}
 }
 }

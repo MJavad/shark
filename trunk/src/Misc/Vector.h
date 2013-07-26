@@ -13,9 +13,11 @@ namespace Utils
 			y = static_cast<float>(GET_Y_LPARAM(lParam));
 		}
 
-		Vector2(const float &x = 0.0f, const float &y = 0.0f) : x(x), y(y) { }
-		Vector2(const D3DXVECTOR2 &vec) : x(vec.x), y(vec.y) { }
-		Vector2(const D3DXVECTOR3 &vec) : x(vec.x), y(vec.y) { }
+		Vector2() : x(0), y(0) {}
+		Vector2(float x) : x(x), y(0.0f) {}
+		Vector2(float x, float y) : x(x), y(y) {}
+		Vector2(const D3DXVECTOR2 &vec) : x(vec.x), y(vec.y) {}
+		Vector2(const D3DXVECTOR3 &vec) : x(vec.x), y(vec.y) {}
 
 		operator D3DXVECTOR2() const { return D3DXVECTOR2(x, y); }
 		operator D3DXVECTOR3() const { return D3DXVECTOR3(x, y, 0.0f); }
@@ -88,11 +90,19 @@ namespace Utils
 		}
 
 		bool operator < (const Vector2 &other) const {
-			return (x < other.x) || (y < other.y);
+			return (x < other.x) && (y < other.y);
 		}
 
 		bool operator > (const Vector2 &other) const {
-			return (x > other.x) || (y > other.y);
+			return (x > other.x) && (y > other.y);
+		}
+
+		bool operator <= (const Vector2 &other) const {
+			return (x <= other.x) && (y <= other.y);
+		}
+
+		bool operator >= (const Vector2 &other) const {
+			return (x >= other.x) && (y >= other.y);
 		}
 
 		operator bool() const {
@@ -150,6 +160,8 @@ namespace Utils
 			return fAngle;
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
+
 		float x, y;
 	};
 
@@ -161,13 +173,14 @@ namespace Utils
 			y = static_cast<float>(GET_Y_LPARAM(lParam));
 		}
 
-		Vector3(const float &x = 0.0f,
-				const float &y = 0.0f,
-				const float &z = 0.0f) : x(x), y(y), z(z) { }
+		Vector3() : x(0), y(0), z(0) {}
+		Vector3(float x) : x(x), y(0.0f), z(0.0f) {}
+		Vector3(float x, float y) : x(x), y(y), z(0.0f) {}
+		Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-		Vector3(const Vector2 &vec) : x(vec.x), y(vec.y), z(0.0f) { }
-		Vector3(const D3DXVECTOR2 &vec) : x(vec.x), y(vec.y), z(0.0f) { }
-		Vector3(const D3DXVECTOR3 &vec) : x(vec.x), y(vec.y), z(vec.z) { }
+		Vector3(const Vector2 &vec) : x(vec.x), y(vec.y), z(0.0f) {}
+		Vector3(const D3DXVECTOR2 &vec) : x(vec.x), y(vec.y), z(0.0f) {}
+		Vector3(const D3DXVECTOR3 &vec) : x(vec.x), y(vec.y), z(vec.z) {}
 
 		operator Vector2() const { return Vector2(x, y); }
 		operator D3DXVECTOR2() const { return D3DXVECTOR2(x, y); }
@@ -249,11 +262,19 @@ namespace Utils
 		}
 
 		bool operator < (const Vector3 &other) const {
-			return (x < other.x) || (y < other.y) || (z < other.z);
+			return (x < other.x) && (y < other.y) && (z < other.z);
 		}
 
 		bool operator > (const Vector3 &other) const {
-			return (x > other.x) || (y > other.y) || (z > other.z);
+			return (x > other.x) && (y > other.y) && (z > other.z);
+		}
+
+		bool operator <= (const Vector3 &other) const {
+			return (x <= other.x) && (y <= other.y) && (z <= other.z);
+		}
+
+		bool operator >= (const Vector3 &other) const {
+			return (x >= other.x) && (y >= other.y) && (z >= other.z);
 		}
 
 		operator bool() const {
@@ -333,6 +354,11 @@ namespace Utils
 			return fAngle;
 		}
 
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
+
 		float x, y, z;
 	};
 }
+
+std::ostream& operator << (std::ostream &o, const Utils::Vector2 &v);
+std::ostream& operator << (std::ostream &o, const Utils::Vector3 &v);

@@ -16,6 +16,7 @@
     <ClInclude Include="src\Base\ExceptionManager.h" />
     <ClInclude Include="src\Base\FileManager.h" />
     <ClInclude Include="src\Base\Log.h" />
+    <ClInclude Include="src\Base\LuaHandler.h" />
     <ClInclude Include="src\Base\RenderTarget11.h" />
     <ClInclude Include="src\Base\RenderTarget9.h" />
     <ClInclude Include="src\Base\D3DManager.h" />
@@ -25,6 +26,7 @@
     <ClInclude Include="src\Base\ID3DInterface.h" />
     <ClInclude Include="src\Base\IRenderTarget.h" />
     <ClInclude Include="src\Base\Offsets.h" />
+    <ClInclude Include="src\Base\ScriptObject.h" />
     <ClInclude Include="src\Base\WndProc.h" />
     <ClInclude Include="src\Misc\Color.h" />
     <ClInclude Include="src\Misc\Event.h" />
@@ -80,7 +82,9 @@
     <ClCompile Include="src\Base\Engine.cpp" />
     <ClCompile Include="src\Base\ExceptionManager.cpp" />
     <ClCompile Include="src\Base\FileManager.cpp" />
+    <ClCompile Include="src\Base\ID3DInterface.cpp" />
     <ClCompile Include="src\Base\Log.cpp" />
+    <ClCompile Include="src\Base\LuaHandler.cpp" />
     <ClCompile Include="src\Base\RenderTarget11.cpp" />
     <ClCompile Include="src\Base\RenderTarget9.cpp" />
     <ClCompile Include="src\Base\D3DManager.cpp" />
@@ -88,6 +92,7 @@
     <ClCompile Include="src\Base\Detours.cpp" />
     <ClCompile Include="src\Base\DllEntry.cpp" />
     <ClCompile Include="src\Base\Offsets.cpp" />
+    <ClCompile Include="src\Base\ScriptObject.cpp" />
     <ClCompile Include="src\Base\WndProc.cpp" />
     <ClCompile Include="src\Misc\ByteBuffer.cpp" />
     <ClCompile Include="src\Misc\Helpers.cpp" />
@@ -97,6 +102,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Misc\Vector.cpp" />
     <ClCompile Include="src\UI\ComponentInterface.cpp" />
     <ClCompile Include="src\UI\Components\Button.cpp" />
     <ClCompile Include="src\UI\Components\EditBox.cpp" />
@@ -224,12 +230,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;.\src</IncludePath>
+    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;.\src;.\libs</IncludePath>
     <LibraryPath>$(LibraryPath);$(DXSDK_DIR)Lib\x86;.\libs</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;.\src</IncludePath>
+    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;.\src;.\libs</IncludePath>
     <LibraryPath>$(LibraryPath);$(DXSDK_DIR)Lib\x86;.\libs</LibraryPath>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -240,11 +246,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SHARK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>Misc/stdafx.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>shark.def</ModuleDefinitionFile>
+      <AdditionalDependencies>.\libs\lua\lua.debug.x86.lib;.\libs\luabind\luabind.debug.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -258,7 +266,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <CallingConvention>FastCall</CallingConvention>
+      <CallingConvention>Cdecl</CallingConvention>
       <PrecompiledHeaderFile>Misc/stdafx.h</PrecompiledHeaderFile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
@@ -268,6 +276,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>shark.def</ModuleDefinitionFile>
+      <AdditionalDependencies>.\libs\lua\lua.release.x86.lib;.\libs\luabind\luabind.release.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

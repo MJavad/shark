@@ -11,7 +11,11 @@ namespace Components {
 			D3DXMatrixIdentity(&m_transform);
 		}
 
-		static boost::shared_ptr<Texture> Create(boost::shared_ptr<D3DTexture> pTexture);
+		static boost::shared_ptr<Texture> CreateDefault() {
+			return Create();
+		}
+
+		static boost::shared_ptr<Texture> Create(boost::shared_ptr<D3DTexture> pTexture = nullptr);
 		virtual void OnRender(uint32 timePassed);
 
 		virtual boost::shared_ptr<D3DTexture> GetTexture() const {
@@ -40,6 +44,8 @@ namespace Components {
 		virtual void SetColor(const D3DXCOLOR &color) {
 			m_color = color;
 		}
+
+		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	private:
 		D3DXMATRIX m_transform;

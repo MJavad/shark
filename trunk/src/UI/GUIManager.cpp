@@ -12,12 +12,15 @@
 #include "Base/Engine.h"
 #include "Base/FileManager.h"
 
+#include "Base/LuaHandler.h"
+
 using namespace UI::Components;
 
 namespace UI {
 	void GUIManager::Initialize() {
 		const auto mainInterface = boost::make_shared<ComponentInterface>();
 		const auto backInterface = boost::make_shared<ComponentInterface>();
+		m_interface = mainInterface;
 
 		const auto testFrame1 = CreateBasicFrame(L"[shark.dll] :: Test", 600, 600, 0xD0000000);
 		const auto testFrame2 = CreateBasicFrame(L"[shark.dll] :: Test", 140, 110, 0xD0000000);
@@ -109,10 +112,8 @@ namespace UI {
 
 		tabButton1->OnClickEvent += [testFrame2, editBox2]
 			(const boost::shared_ptr<IPushable>&, Utils::Vector2*) {
-				testFrame2->SetVisibility(true);
-				testFrame2->SetColorMod(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-				editBox2->Focus();
-				throw std::runtime_error("Testing...");
+				std::wstring scriptsDir(sFileMgr.GetScriptsDirectory());
+				sLuaHandler.LoadFromFile(scriptsDir + L"\\test.lua");
 			};
 
 		testFrame1->PushChild(tabControl);
@@ -139,7 +140,7 @@ namespace UI {
 		sD3DMgr.PushInterface(mainInterface);
 	}
 
-	boost::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring swTitle, float width, float height, const D3DXCOLOR &color) const {
+	boost::shared_ptr<Frame> GUIManager::CreateBasicFrame(std::wstring windowTitle, float width, float height, const D3DXCOLOR &color) const {
 		const auto pFrame = Frame::Create(width, height);
 		pFrame->SetMinSize(Utils::Vector2(140.0f, 50.0f));
 		pFrame->SetMaxSize(Utils::Vector2(900.0f, 700.0f));
@@ -167,7 +168,7 @@ namespace UI {
 		pHeaderBar->SetHorizontalRoundings(frameRoundings);
 		pFrame->PushChild(pHeaderBar);
 
-		const auto pWindowTitle = Label::Create(std::move(swTitle), DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE, width);
+		const auto pWindowTitle = Label::Create(std::move(windowTitle), DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE, width);
 		pWindowTitle->SetPosition(Utils::Vector2(0.0f, 5.0f));
 		pWindowTitle->SetColor(0x90FFFFFF);
 		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, 0, FW_BOLD));
@@ -201,7 +202,7 @@ namespace UI {
 
 		const auto pCloseButton = boost::make_shared<Button>();
 		pCloseButton->SetPosition(Utils::Vector2(width - 27.0f, 2.0f));
-		pCloseButton->SetRenderRect(false);
+		pCloseButton->SetRenderBackground(false);
 		pCloseButton->SetWidth(23);
 		pCloseButton->SetHeight(23);
 		pCloseButton->AddTexture(pCloseButtonTexture);
@@ -211,7 +212,7 @@ namespace UI {
 
 		// Register default events for frames...
 
-		pCloseButton->OnHoverStartEvent +=
+		pCloseButton->OnHoverBeginEvent +=
 			[pCloseButtonTexture, pCloseButtonTextureHover]
 			(const boost::shared_ptr<IHoverable>&) {
 				pCloseButtonTexture->Hide();
@@ -232,7 +233,7 @@ namespace UI {
 				pSender->GetUIParent()->Hide();
 			};
 
-		pCloseButton->OnFocusStartEvent += []
+		pCloseButton->OnFocusBeginEvent += []
 			(const boost::shared_ptr<IFocusable>&) {
 				return true;
 			};
@@ -282,7 +283,7 @@ namespace UI {
 				}
 			};
 
-		pFrame->OnFrameHighlightStartEvent += [pHeaderBar, pBackgroundLineTop,
+		pFrame->OnFrameHighlightBeginEvent += [pHeaderBar, pBackgroundLineTop,
 			pBackgroundLineLeft, pBackgroundLineBottom, pBackgroundLineRight]
 			(const boost::shared_ptr<Frame>&) {
 				D3DXCOLOR fadeIn(0.6f, 1.3f, 1.6f, 1.0f);
@@ -305,5 +306,45 @@ namespace UI {
 			};
 
 		return pFrame;
+	}
+
+	boost::shared_ptr<Components::Frame> GUIManager::CreateBasicFrame_UTF8(
+		const std::string &windowTitle, float width, float height, const D3DXCOLOR &color) const {
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+		return CreateBasicFrame(conv.from_bytes(windowTitle), width, height, color);
+	}
+
+	void GUIManager::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
+		// Bind abstract base interfaces
+		IComponent::BindToLua(luaState);
+		IRectComponent::BindToLua(luaState);
+		IFocusable::BindToLua(luaState);
+		IHoverable::BindToLua(luaState);
+		IPushable::BindToLua(luaState);
+		ISizable::BindToLua(luaState);
+		IDraggable::BindToLua(luaState);
+
+		// Bind components
+		ItemsControl::BindToLua(luaState);
+		Texture::BindToLua(luaState);
+		Rectangle::BindToLua(luaState);
+		Label::BindToLua(luaState);
+		Button::BindToLua(luaState);
+		EditBox::BindToLua(luaState);
+		Frame::BindToLua(luaState);
+		ListBoxEntry::BindToLua(luaState);
+		ListBox::BindToLua(luaState);
+		TabPage::BindToLua(luaState);
+		TabControl::BindToLua(luaState);
+
+		// Bind component interface
+		ComponentInterface::BindToLua(luaState);
+
+		luabind::module(luaState.get()) [
+			luabind::class_<GUIManager>("GUIManager")
+				.scope [ luabind::def("GetInstance", &GUIManager::Instance) ]
+				.def("GetInterface", &GUIManager::GetInterface)
+				.def("CreateBasicFrame", &GUIManager::CreateBasicFrame_UTF8)
+		];
 	}
 }
