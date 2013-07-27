@@ -19,7 +19,7 @@ namespace Utils
 		TimerDispatcher() : m_mutex(), m_tokenMgr(), m_timers() {}
 
 		STimerDispatchEvt AddTimer(uint32 interval, const boost::function<uint32 (const STimerDispatchEvt&)> &callback) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			STimerDispatchEvt deleg = { m_tokenMgr.get(), interval, timeGetTime(), callback };
 			m_timers[deleg.token] = deleg;
 			return deleg;
@@ -30,7 +30,7 @@ namespace Utils
 		}
 
 		void RemoveTimer(const uint64 &token) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			auto itr = m_timers.find(token);
 			if (itr != m_timers.end()) {
 				m_tokenMgr.remove(token);
@@ -57,7 +57,7 @@ namespace Utils
 
 				uint32 retval = evt.callback(evt);
 
-				LockGuard g(m_mutex);
+				ScopedLock g(m_mutex);
 				auto itr = m_timers.find(pair.first);
 				if (itr != m_timers.end()) {
 					STimerDispatchEvt *ref = &itr->second;

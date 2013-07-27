@@ -97,7 +97,7 @@ namespace Utils
 		}
 
 		uint32 size() const {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			return m_delegates.size();
 		}
 
@@ -111,7 +111,7 @@ namespace Utils
 		}
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = false;
@@ -124,7 +124,7 @@ namespace Utils
 			if (luabind::type(o) != LUA_TFUNCTION)
 				throw std::runtime_error("Invalid argument: Object is not a function!");
 
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = true;
@@ -138,7 +138,7 @@ namespace Utils
 		}
 
 		void remove(const uint64 &token) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			auto itr = m_delegates.find(token);
 			if (itr != m_delegates.end()) {
 				m_tokenMgr.remove(token);
@@ -255,7 +255,7 @@ namespace Utils
 		}
 
 		uint32 size() const {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			return m_delegates.size();
 		}
 
@@ -269,7 +269,7 @@ namespace Utils
 		}
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = false;
@@ -282,7 +282,7 @@ namespace Utils
 			if (luabind::type(o) != LUA_TFUNCTION)
 				throw std::runtime_error("Invalid argument: Object is not a function!");
 
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = true;
@@ -296,7 +296,7 @@ namespace Utils
 		}
 
 		void remove(const uint64 &token) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			auto itr = m_delegates.find(token);
 			if (itr != m_delegates.end()) {
 				m_tokenMgr.remove(token);
@@ -423,7 +423,7 @@ namespace Utils
 		}
 
 		uint32 size() const {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			return m_delegates.size();
 		}
 
@@ -437,7 +437,7 @@ namespace Utils
 		}
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = false;
@@ -450,7 +450,7 @@ namespace Utils
 			if (luabind::type(o) != LUA_TFUNCTION)
 				throw std::runtime_error("Invalid argument: Object is not a function!");
 
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = true;
@@ -464,7 +464,7 @@ namespace Utils
 		}
 
 		void remove(const uint64 &token) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			auto itr = m_delegates.find(token);
 			if (itr != m_delegates.end()) {
 				m_tokenMgr.remove(token);
@@ -580,7 +580,7 @@ namespace Utils
 		}
 
 		uint32 size() const {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			return m_delegates.size();
 		}
 
@@ -594,7 +594,7 @@ namespace Utils
 		}
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = false;
@@ -607,7 +607,7 @@ namespace Utils
 			if (luabind::type(o) != LUA_TFUNCTION)
 				throw std::runtime_error("Invalid argument: Object is not a function!");
 
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = true;
@@ -621,7 +621,7 @@ namespace Utils
 		}
 
 		void remove(const uint64 &token) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			auto itr = m_delegates.find(token);
 			if (itr != m_delegates.end()) {
 				m_tokenMgr.remove(token);
@@ -737,7 +737,7 @@ namespace Utils
 		}
 
 		uint32 size() const {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			return m_delegates.size();
 		}
 
@@ -751,7 +751,7 @@ namespace Utils
 		}
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = false;
@@ -764,7 +764,7 @@ namespace Utils
 			if (luabind::type(o) != LUA_TFUNCTION)
 				throw std::runtime_error("Invalid argument: Object is not a function!");
 
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = true;
@@ -778,7 +778,7 @@ namespace Utils
 		}
 
 		void remove(const uint64 &token) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			auto itr = m_delegates.find(token);
 			if (itr != m_delegates.end()) {
 				m_tokenMgr.remove(token);
@@ -894,7 +894,7 @@ namespace Utils
 		}
 
 		uint32 size() const {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			return m_delegates.size();
 		}
 
@@ -908,7 +908,7 @@ namespace Utils
 		}
 
 		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = false;
@@ -921,7 +921,7 @@ namespace Utils
 			if (luabind::type(o) != LUA_TFUNCTION)
 				throw std::runtime_error("Invalid argument: Object is not a function!");
 
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
 			deleg.isLuaCallback = true;
@@ -935,7 +935,7 @@ namespace Utils
 		}
 
 		void remove(const uint64 &token) {
-			LockGuard g(m_mutex);
+			ScopedLock g(m_mutex);
 			auto itr = m_delegates.find(token);
 			if (itr != m_delegates.end()) {
 				m_tokenMgr.remove(token);

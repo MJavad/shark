@@ -34,31 +34,31 @@ namespace Utils
 		Mutex& operator=(const Mutex&);
 	};
 
-	class LockGuard
+	class ScopedLock
 	{
 	public:
-		LockGuard(Mutex &mutex) :
+		ScopedLock(Mutex &mutex) :
 			m_mutex(&mutex) {
 			m_mutex->acquire();
 		}
 
-		LockGuard(const LockGuard &other) :
+		ScopedLock(const ScopedLock &other) :
 			m_mutex(other.m_mutex) {
 			m_mutex->acquire();
 		}
 
-		~LockGuard() {
+		~ScopedLock() {
 			m_mutex->release();
 		}
 
 	protected:
 		Mutex* m_mutex;
 
-		LockGuard& operator=(const LockGuard&);
+		ScopedLock& operator=(const ScopedLock&);
 	};
 
 	inline void Mutex::lock(const boost::function<void ()> &func) {
-		LockGuard g(*this);
+		ScopedLock g(*this);
 		func();
 	}
 }

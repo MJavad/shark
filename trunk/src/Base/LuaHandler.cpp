@@ -82,7 +82,7 @@ boost::shared_ptr<ScriptObject> LuaHandler::LoadFromFile(const std::wstring &fil
 	if (!luaL_dofile(luaState.get(), fileName_utf8.c_str()))
 		luabind::call_function<void>(luaState.get(), "Load");
 	else
-		throw std::exception(PopError(luaState.get()).c_str());
+		throw std::runtime_error(PopError(luaState.get()).c_str());
 
 	m_scriptObjects.push_back(scriptObject);
 	return scriptObject;
