@@ -274,7 +274,8 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &position,
 		stroke, stroke / rectangleExtent.x, 0.0f, 0.0f
 	};
 
-	m_device9->SetPixelShaderConstantF(0, shaderParams, sizeof(shaderParams) / 4);
+	const uint32 arraySize = sizeof(shaderParams) / sizeof(float);
+	m_device9->SetPixelShaderConstantF(0, shaderParams, arraySize / 4);
 
 	m_device9->SetVertexDeclaration(m_uiVertexShaderDecl);
 	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(UIVertex));
@@ -326,7 +327,8 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &position,
 		verticalRadius._1, verticalRadius._2, verticalRadius._3, verticalRadius._4
 	};
 
-	m_device9->SetPixelShaderConstantF(0, shaderParams, sizeof(shaderParams) / 4);
+	const uint32 arraySize = sizeof(shaderParams) / sizeof(float);
+	m_device9->SetPixelShaderConstantF(0, shaderParams, arraySize / 4);
 
 	m_device9->SetVertexDeclaration(m_uiVertexShaderDecl);
 	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(UIVertex));
@@ -377,7 +379,8 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
 		rectangleExtent.x, rectangleExtent.y, 0.0f, 0.0f
 	};
 
-	m_device9->SetPixelShaderConstantF(0, shaderParams, sizeof(shaderParams) / 4);
+	const uint32 arraySize = sizeof(shaderParams) / sizeof(float);
+	m_device9->SetPixelShaderConstantF(0, shaderParams, arraySize / 4);
 
 	m_device9->SetVertexDeclaration(m_uiVertexShaderDecl);
 	m_device9->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(UIVertex));

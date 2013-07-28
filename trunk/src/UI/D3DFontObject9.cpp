@@ -37,7 +37,7 @@ namespace UI {
 			uint32 length = textString.length();
 			if (length != 0 && textString.back() == L' ')
 			{
-				 // this hack only works for single line align
+				// this hack only works for single line align
 				if ((flags & DT_SINGLELINE) == DT_SINGLELINE) {
 					flags &= ~(DT_CENTER | DT_VCENTER | DT_RIGHT | DT_BOTTOM);
 					screenRect = GetTextExtent(textString, screenRect, flags);
