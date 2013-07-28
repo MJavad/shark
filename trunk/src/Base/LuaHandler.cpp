@@ -2,7 +2,8 @@
 #include "LuaHandler.h"
 
 #include "UI/GUIManager.h"
-#include "Base/D3DManager.h"
+#include "D3DManager.h"
+#include "FileManager.h"
 
 /* IMPORTANT:
 	All classes which are exposed to lua using luabind MUST define a constructor, otherwise it will lead to heap corruption!
@@ -73,11 +74,33 @@ boost::shared_ptr<ScriptObject> LuaHandler::CreateNewObject() const {
 	return scriptObject;
 }
 
+bool LuaHandler::ScriptLoaded(std::wstring fileName) const {
+	// do a lowercase comparision
+	std::transform(fileName.begin(), fileName.end(),
+				   fileName.begin(), std::tolower);
+
+	for (const auto& scriptObject: m_scriptObjects) {
+		std::wstring currentFile = scriptObject->GetScriptName();
+		std::transform(currentFile.begin(), currentFile.end(),
+					   currentFile.begin(), std::tolower);
+
+		if (fileName == currentFile)
+			return true;
+	}
+
+	return false;
+}
+
 boost::shared_ptr<ScriptObject> LuaHandler::LoadFromFile(const std::wstring &fileName) {
+	if (ScriptLoaded(fileName))
+		throw std::runtime_error("The script you tried to load is already loaded!");
+
 	const auto scriptObject = CreateNewObject();
 	const auto& luaState = scriptObject->GetLuaState();
+	scriptObject->SetScriptName(fileName);
+
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-	std::string fileName_utf8 = conv.to_bytes(fileName);
+	std::string fileName_utf8 = conv.to_bytes(sFileMgr.GetScriptsDirectory() + L'\\' + fileName);
 
 	if (!luaL_dofile(luaState.get(), fileName_utf8.c_str()))
 		luabind::call_function<void>(luaState.get(), "Load");

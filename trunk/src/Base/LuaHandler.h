@@ -7,6 +7,7 @@ class LuaHandler {
 public:
 	void Initialize();
 
+	bool ScriptLoaded(std::wstring fileName) const;
 	boost::shared_ptr<ScriptObject> CreateNewObject() const;
 	boost::shared_ptr<ScriptObject> LoadFromFile(const std::wstring &fileName);
 

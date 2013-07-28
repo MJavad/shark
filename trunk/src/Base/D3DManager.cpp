@@ -226,26 +226,29 @@ void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 boost::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
-	uint32 height, uint32 width, uint32 weight, bool italic)
+												   uint32 height,
+												   uint32 weight,
+												   bool italic)
 {
-	size_t dwFontFace = std::hash<std::wstring>()(fontName);
+	size_t fontNameHash = std::hash<std::wstring>() (fontName);
 	for (auto itr = m_fonts.begin(), end = m_fonts.end(); itr != end;) {
 		if (itr->expired()) {
 			itr = m_fonts.erase(itr);
 			continue;
 		}
 
-		const auto pFont = (itr++)->lock();
-		const auto &fontDesc = pFont->GetDescription();
-		if (std::hash<std::wstring>()(fontDesc.faceName) == dwFontFace &&
-			fontDesc.height == height && fontDesc.width == width &&
-			fontDesc.weight == weight && fontDesc.italic == italic)
-			return pFont;
+		const auto font = (itr++)->lock();
+		const auto &fontDesc = font->GetDescription();
+		if (fontDesc.faceNameHash == fontNameHash &&
+			fontDesc.height == height &&
+			fontDesc.weight == weight &&
+			fontDesc.italic == italic)
+			return font;
 	}
 
 	UI::FontDescription fontDesc;
 	fontDesc.height = height;
-	fontDesc.width = width;
+	fontDesc.width = 0;
 	fontDesc.weight = weight;
 	fontDesc.italic = italic;
 	fontDesc.mipLevels = 1;
@@ -254,39 +257,51 @@ boost::shared_ptr<UI::D3DFont> D3DManager::GetFont(std::wstring fontName,
 	fontDesc.quality = ANTIALIASED_QUALITY;
 	fontDesc.pitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
 	fontDesc.faceName = std::move(fontName);
+	fontDesc.faceNameHash = fontNameHash;
 
-	auto pFont = boost::make_shared<UI::D3DFont>(fontDesc);
-	m_fonts.push_back(pFont);
+	auto font = boost::make_shared<UI::D3DFont>(fontDesc);
+	m_fonts.push_back(font);
 
 	if (m_device9 != nullptr)
-		pFont->SetDevice(m_device9);
+		font->SetDevice(m_device9);
 
 	LOG_DEBUG(L"Font '%s' created!", fontDesc.faceName.c_str());
-	return pFont;
+	return font;
 }
 
-boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
-	const std::wstring &fileName, uint32 width, uint32 height)
+boost::shared_ptr<UI::D3DFont> D3DManager::GetFont_UTF8(const std::string &fontName,
+														uint32 height,
+														uint32 weight,
+														bool italic)
 {
-	size_t fileNameHash = std::hash<std::wstring>()(fileName);
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	return GetFont(conv.from_bytes(fontName), height, weight, italic);
+}
+
+boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(std::wstring fileName,
+																 uint32 width,
+																 uint32 height)
+{
+	size_t fileNameHash = std::hash<std::wstring>() (fileName);
 	for (auto itr = m_textures.begin(), end = m_textures.end(); itr != end;) {
 		if (itr->expired()) {
 			itr = m_textures.erase(itr);
 			continue;
 		}
 
-		const auto pTexture = (itr++)->lock();
-		const auto &texDesc = pTexture->GetDescription();
+		const auto texture = (itr++)->lock();
+		const auto &texDesc = texture->GetDescription();
 		if (texDesc.type == UI::TEXTURE_FROM_FILE &&
-			std::hash<std::wstring>()(texDesc.filePath) == fileNameHash &&
+			texDesc.filePathHash == fileNameHash &&
 			texDesc.width == width &&
 			texDesc.height == height)
-			return pTexture;
+			return texture;
 	}
 	
 	UI::TextureDescription texDesc;
 	texDesc.type = UI::TEXTURE_FROM_FILE;
-	texDesc.filePath = fileName;
+	texDesc.filePath = std::move(fileName);
+	texDesc.filePathHash = fileNameHash;
 	texDesc.resourceId = 0;
 	texDesc.resourceModule = nullptr;
 	texDesc.width = width;
@@ -299,18 +314,34 @@ boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile(
 	texDesc.colorKey = D3DXCOLOR(0, 0, 0, 0);
 	texDesc.usage = 0;
 
-	auto pTexture = boost::make_shared<UI::D3DTexture>(texDesc);
-	m_textures.push_back(pTexture);
+	auto textureObject = boost::make_shared<UI::D3DTexture>(texDesc);
+	m_textures.push_back(textureObject);
 
 	if (m_device9 != nullptr)
-		pTexture->SetDevice(m_device9);
+		textureObject->SetDevice(m_device9);
 
 	LOG_DEBUG(L"Texture from file '%s' created!", texDesc.filePath.c_str());
-	return pTexture;
+	return textureObject;
 }
 
-boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
-	uint32 resourceId, HMODULE module, uint32 width, uint32 height)
+boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromFile_UTF8(const std::string &fileName,
+																	  uint32 width,
+																	  uint32 height)
+{
+	if (width == 0)
+		width = D3DX_DEFAULT_NONPOW2;
+
+	if (height == 0)
+		height = D3DX_DEFAULT_NONPOW2;
+
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	return GetTextureFromFile(conv.from_bytes(fileName), width, height);
+}
+
+boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(uint32 resourceId,
+																	 HMODULE module,
+																	 uint32 width,
+																	 uint32 height)
 {
 	if (module == nullptr)
 		module = sEngine.GetInstance();
@@ -321,18 +352,19 @@ boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 			continue;
 		}
 
-		const auto pTexture = (itr++)->lock();
-		const auto &texDesc = pTexture->GetDescription();
+		const auto texture = (itr++)->lock();
+		const auto &texDesc = texture->GetDescription();
 		if (texDesc.type == UI::TEXTURE_FROM_RESOURCE &&
 			texDesc.resourceId == resourceId &&
 			texDesc.resourceModule == module &&
 			texDesc.width == width &&
 			texDesc.height == height)
-			return pTexture;
+			return texture;
 	}
 
 	UI::TextureDescription texDesc;
 	texDesc.type = UI::TEXTURE_FROM_RESOURCE;
+	texDesc.filePathHash = 0;
 	texDesc.resourceId = resourceId;
 	texDesc.resourceModule = module;
 	texDesc.width = width;
@@ -345,23 +377,44 @@ boost::shared_ptr<UI::D3DTexture> D3DManager::GetTextureFromResource(
 	texDesc.colorKey = D3DXCOLOR(0, 0, 0, 0);
 	texDesc.usage = 0;
 
-	auto pTexture = boost::make_shared<UI::D3DTexture>(texDesc);
-	m_textures.push_back(pTexture);
+	auto texture = boost::make_shared<UI::D3DTexture>(texDesc);
+	m_textures.push_back(texture);
 
 	if (m_device9 != nullptr)
-		pTexture->SetDevice(m_device9);
+		texture->SetDevice(m_device9);
 
 	LOG_DEBUG(L"Texture from resource %u created!", texDesc.resourceId);
-	return pTexture;
+	return texture;
 }
 
 void D3DManager::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 	ID3DInterface::BindToLua(luaState);
 
+	class nothing { nothing() {} };
+
 	luabind::module(luaState.get()) [
+		luabind::class_<nothing>("FontWeight")
+			.enum_("Constants") [
+				luabind::value("Normal", FW_NORMAL),
+				luabind::value("DontCare", FW_DONTCARE),
+				luabind::value("SemiBold", FW_SEMIBOLD),
+				luabind::value("Bold", FW_BOLD),
+				luabind::value("Medium", FW_MEDIUM),
+				luabind::value("ExtraBold", FW_EXTRABOLD),
+				luabind::value("ExtraLight", FW_EXTRALIGHT),
+				luabind::value("Heavy", FW_HEAVY),
+				luabind::value("Light", FW_LIGHT),
+				luabind::value("Thin", FW_THIN)
+			],
+
+		luabind::class_<UI::D3DFont, boost::shared_ptr<UI::D3DFont>>("D3DFont"),
+		luabind::class_<UI::D3DTexture, boost::shared_ptr<UI::D3DTexture>>("D3DTexture"),
+
 		luabind::class_<D3DManager>("D3DManager")
 			.scope [ luabind::def("GetInstance", &D3DManager::Instance) ]
 			.def("PushInterface", &D3DManager::PushInterface)
 			.def("PopInterface", &D3DManager::PopInterface)
+			.def("GetFont", &D3DManager::GetFont_UTF8)
+			.def("GetTexture", &D3DManager::GetTextureFromFile_UTF8)
 	];
 }

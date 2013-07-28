@@ -10,6 +10,7 @@ namespace UI {
 	struct TextureDescription {
 		TextureType type;
 		std::wstring filePath;
+		uint32 filePathHash;
 		uint32 resourceId;
 		HMODULE resourceModule;
 		uint32 width, height;

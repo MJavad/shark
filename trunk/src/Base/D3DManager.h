@@ -45,10 +45,16 @@ public:
 	std::list<boost::shared_ptr<ID3DInterface>> GetInterfaces() const { return m_interfaces; }
 	boost::shared_ptr<UI::ID3DSprite> GetSprite() const { return m_sprite; }
 
-	boost::shared_ptr<UI::D3DFont> GetFont(std::wstring fontName, uint32 height,
-		uint32 width = 0, uint32 weight = FW_NORMAL, bool italic = false);
+	boost::shared_ptr<UI::D3DFont> GetFont(std::wstring fontName,
+		uint32 height, uint32 weight = FW_NORMAL, bool italic = false);
 
-	boost::shared_ptr<UI::D3DTexture> GetTextureFromFile(const std::wstring &fileName,
+	boost::shared_ptr<UI::D3DFont> GetFont_UTF8(const std::string &fontName,
+		uint32 height, uint32 weight = FW_NORMAL, bool italic = false);
+
+	boost::shared_ptr<UI::D3DTexture> GetTextureFromFile(std::wstring fileName,
+		uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
+
+	boost::shared_ptr<UI::D3DTexture> GetTextureFromFile_UTF8(const std::string &fileName,
 		uint32 width = D3DX_DEFAULT_NONPOW2, uint32 height = D3DX_DEFAULT_NONPOW2);
 
 	boost::shared_ptr<UI::D3DTexture> GetTextureFromResource(uint32 resourceId, HMODULE module = nullptr,

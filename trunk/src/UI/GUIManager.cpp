@@ -112,8 +112,7 @@ namespace UI {
 
 		tabButton1->OnClickEvent += [testFrame2, editBox2]
 			(const boost::shared_ptr<IPushable>&, Utils::Vector2*) {
-				std::wstring scriptsDir(sFileMgr.GetScriptsDirectory());
-				sLuaHandler.LoadFromFile(scriptsDir + L"\\test.lua");
+				sLuaHandler.LoadFromFile(L"test.lua");
 			};
 
 		testFrame1->PushChild(tabControl);
@@ -171,7 +170,7 @@ namespace UI {
 		const auto pWindowTitle = Label::Create(std::move(windowTitle), DT_CENTER | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE, width);
 		pWindowTitle->SetPosition(Utils::Vector2(0.0f, 5.0f));
 		pWindowTitle->SetColor(0x90FFFFFF);
-		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, 0, FW_BOLD));
+		pWindowTitle->SetFont(sD3DMgr.GetFont(L"Corbel", 15, FW_BOLD));
 		pFrame->PushChild(pWindowTitle);
 
 		const auto pBackgroundLineTop = Rectangle::Create(width, 1.0f);
