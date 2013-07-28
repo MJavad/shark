@@ -149,7 +149,7 @@ namespace Components {
 				vCaret.y = vScreen.y + (controlHeight / 2.0f - textHeight / 2.0f);
 
 				// increase clipping area by 3 px, so the caret can render at the end
-				clipArea.right += 3;
+				clipArea.right += 4;
 				pInterface->ClipStack.Pop();
 				pInterface->ClipStack.Push(clipArea);
 				pInterface->ClipStack.Apply();
@@ -404,6 +404,7 @@ namespace Components {
 			if ((pContent->GetFormatFlags() & DT_CENTER) == DT_CENTER)
 				scrollOffset /= 2.0f;
 
+			scrollOffset = floor(scrollOffset + 0.5f);
 			scrollUpdate = (scrollOffset < m_scrollPosition);
 			if (scrollUpdate)
 				m_scrollPosition = scrollOffset;
@@ -415,6 +416,7 @@ namespace Components {
 			if ((pContent->GetFormatFlags() & DT_CENTER) == DT_CENTER)
 				scrollOffset /= 2.0f;
 
+			scrollOffset = floor(scrollOffset + 0.5f);
 			scrollUpdate = (scrollOffset > m_scrollPosition);
 			if (scrollUpdate)
 				m_scrollPosition = scrollOffset;
@@ -556,6 +558,7 @@ namespace Components {
 							textRect, DT_LEFT | DT_TOP | DT_SINGLELINE);
 
 						m_scrollPosition -= (textRect.right - textRect.left) / 2.0f;
+						m_scrollPosition = floor(m_scrollPosition + 0.5f);
 						if (m_scrollPosition < 0.0f)
 							m_scrollPosition = 0.0f;
 					}
