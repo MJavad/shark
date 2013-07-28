@@ -80,13 +80,11 @@ namespace Components {
 			m_hoverColor(1.5f, 1.5f, 1.5f, 1.4f) {}
 
 		virtual bool _notifyHoverBeginEvent() {
-			LOG_DEBUG("%08X: HoverStart triggered.", this);
 			OnHoverBeginLuaWrap();
 			return OnHoverBeginEvent(get_this<IHoverable>());
 		}
 
 		virtual bool _notifyHoverEndEvent() {
-			LOG_DEBUG("%08X: HoverEnd triggered.", this);
 			OnHoverEndLuaWrap();
 			return OnHoverEndEvent(get_this<IHoverable>());
 		}

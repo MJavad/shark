@@ -75,7 +75,6 @@ namespace Components {
 
 		// lua wrapper
 		Utils::Event<void ()> OnContentChangedLuaWrap;
-
 		Utils::Event<void (const boost::shared_ptr<EditBox>&)> OnContentChangedEvent;
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
@@ -89,7 +88,6 @@ namespace Components {
 		virtual void _notifyFocusEndEvent();
 
 		virtual void _notifyContentChangedEvent() {
-			LOG_DEBUG("%08X: ContentChanged triggered.", this);
 			OnContentChangedLuaWrap();
 			OnContentChangedEvent(get_this<EditBox>());
 		}

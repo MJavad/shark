@@ -69,13 +69,11 @@ namespace Components {
 		IDraggable() {}
 
 		virtual bool _notifyDragBeginEvent(Utils::Vector2 *pPosition) {
-			LOG_DEBUG("%08X: DragStart triggered.", this);
 			OnDragBeginLuaWrap();
 			return OnDragBeginEvent(get_this<IDraggable>(), pPosition);
 		}
 
 		virtual bool _notifyDragEndEvent(Utils::Vector2 *pPosition) {
-			LOG_DEBUG("%08X: DragEnd triggered.", this);
 			OnDragEndLuaWrap();
 			return OnDragEndEvent(get_this<IDraggable>(), pPosition);
 		}

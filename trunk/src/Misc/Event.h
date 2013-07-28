@@ -173,7 +173,8 @@ namespace Utils
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 			luabind::module(luaState.get()) [
-				luabind::class_<Event<fnconv_t>>("EventPH")
+				luabind::class_<SEventDelegate<fnconv_t>>(),
+				luabind::class_<Event<fnconv_t>>()
 					.def("AddCallback", &Event<fnconv_t>::connect_lua)
 					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
 					.def("ClearAll", &Event<fnconv_t>::clear)
@@ -181,7 +182,7 @@ namespace Utils
 			];
 		}
 
-	protected:
+	private:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
 		std::map<uint64, SEventDelegate<fnconv_t>> m_delegates;
@@ -331,8 +332,8 @@ namespace Utils
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 			luabind::module(luaState.get()) [
-				luabind::class_<SEventDelegate<fnconv_t>>("EventPHDelegate"),
-				luabind::class_<Event<fnconv_t>>("EventPH")
+				luabind::class_<SEventDelegate<fnconv_t>>(),
+				luabind::class_<Event<fnconv_t>>()
 					.def("AddCallback", &Event<fnconv_t>::connect_lua)
 					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
 					.def("ClearAll", &Event<fnconv_t>::clear)
@@ -340,7 +341,7 @@ namespace Utils
 			];
 		}
 
-	protected:
+	private:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
 		std::map<uint64, SEventDelegate<fnconv_t>> m_delegates;
@@ -353,18 +354,8 @@ namespace Utils
 			m_mutex.release();
 
 			for (auto& pair: mDelegates) {
-				if (pair.second.isLuaCallback) {
-					try {
-						luabind::call_function<void>(pair.second.luaFunction);
-					}
-					catch (luabind::error &e) {
-						lua_gc(e.state(), LUA_GCCOLLECT, 0);
-						luabind::object o(luabind::from_stack(e.state(), -1));
-						std::ostringstream msg;
-						msg << "lua> runtime error: " << o;
-						sLog.OutDebug_UTF8(msg.str());
-					}
-				}
+				if (pair.second.isLuaCallback)
+					luabind::call_function<void>(pair.second.luaFunction);
 				else
 					pair.second.callback();
 			}
@@ -499,7 +490,8 @@ namespace Utils
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 			luabind::module(luaState.get()) [
-				luabind::class_<Event<fnconv_t>>("EventPH")
+				luabind::class_<SEventDelegate<fnconv_t>>(),
+				luabind::class_<Event<fnconv_t>>()
 					.def("AddCallback", &Event<fnconv_t>::connect_lua)
 					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
 					.def("ClearAll", &Event<fnconv_t>::clear)
@@ -507,7 +499,7 @@ namespace Utils
 			];
 		}
 
-	protected:
+	private:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
 		std::map<uint64, SEventDelegate<fnconv_t>> m_delegates;
@@ -656,7 +648,8 @@ namespace Utils
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 			luabind::module(luaState.get()) [
-				luabind::class_<Event<fnconv_t>>("EventPH")
+				luabind::class_<SEventDelegate<fnconv_t>>(),
+				luabind::class_<Event<fnconv_t>>()
 					.def("AddCallback", &Event<fnconv_t>::connect_lua)
 					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
 					.def("ClearAll", &Event<fnconv_t>::clear)
@@ -664,7 +657,7 @@ namespace Utils
 			];
 		}
 
-	protected:
+	private:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
 		std::map<uint64, SEventDelegate<fnconv_t>> m_delegates;
@@ -813,7 +806,8 @@ namespace Utils
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 			luabind::module(luaState.get()) [
-				luabind::class_<Event<fnconv_t>>("EventPH")
+				luabind::class_<SEventDelegate<fnconv_t>>(),
+				luabind::class_<Event<fnconv_t>>()
 					.def("AddCallback", &Event<fnconv_t>::connect_lua)
 					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
 					.def("ClearAll", &Event<fnconv_t>::clear)
@@ -821,7 +815,7 @@ namespace Utils
 			];
 		}
 
-	protected:
+	private:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
 		std::map<uint64, SEventDelegate<fnconv_t>> m_delegates;
@@ -970,7 +964,8 @@ namespace Utils
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 			luabind::module(luaState.get()) [
-				luabind::class_<Event<fnconv_t>>("EventPH")
+				luabind::class_<SEventDelegate<fnconv_t>>(),
+				luabind::class_<Event<fnconv_t>>()
 					.def("AddCallback", &Event<fnconv_t>::connect_lua)
 					.def("RemoveCallback", &Event<fnconv_t>::remove_deleg)
 					.def("ClearAll", &Event<fnconv_t>::clear)
@@ -978,7 +973,7 @@ namespace Utils
 			];
 		}
 
-	protected:
+	private:
 		TokenManager m_tokenMgr;
 		mutable Mutex m_mutex;
 		std::map<uint64, SEventDelegate<fnconv_t>> m_delegates;

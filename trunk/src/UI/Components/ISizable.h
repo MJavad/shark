@@ -112,13 +112,11 @@ namespace Components {
 		ISizable();
 
 		virtual bool _notifyResizeBeginEvent(Utils::Vector2 *pPosition) {
-			LOG_DEBUG("%08X: ResizeStart triggered.", this);
 			OnResizeBeginLuaWrap();
 			return OnResizeBeginEvent(get_this<ISizable>(), pPosition);
 		}
 
 		virtual bool _notifyResizeEndEvent(Utils::Vector2 *pPosition) {
-			LOG_DEBUG("%08X: ResizeEnd triggered.", this);
 			OnResizeEndLuaWrap();
 			return OnResizeEndEvent(get_this<ISizable>(), pPosition);
 		}
