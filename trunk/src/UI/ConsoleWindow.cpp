@@ -24,10 +24,9 @@
 namespace UI {
 	void ConsoleWindow::Initialize() {
 		m_isInitialized = true;
-		m_consoleLabel = Components::Label::Create();
+		m_consoleLabel = Components::Label::Create(L"", DT_LEFT | DT_BOTTOM | DT_NOCLIP);
 		m_consoleLabel->SetDropShadow(false);
 		m_consoleLabel->SetFont(sD3DMgr.GetFont(L"Consolas", 16));
-		m_consoleLabel->SetFormatFlags(DT_LEFT | DT_BOTTOM | DT_NOCLIP);
 		m_consoleLabel->SetHeight(200.0f);
 
 		m_windowBackground = Components::Rectangle::Create(0.0f, 0.0f);
