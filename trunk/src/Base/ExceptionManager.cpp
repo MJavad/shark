@@ -424,7 +424,7 @@ LONG WINAPI ExceptionManager::_filter(PEXCEPTION_POINTERS pInfo)
 			  << std::setfill(L'0') << std::setw(2)
 			  << now->tm_mon + 1 << L'-'
 			  << std::setfill(L'0') << std::setw(2)
-			  << now->tm_mday << '_'
+			  << now->tm_mday << L'_'
 			  << std::setfill(L'0') << std::setw(2)
 			  << now->tm_hour
 			  << std::setfill(L'0') << std::setw(2)
