@@ -47,7 +47,7 @@ RenderTarget9::RenderTarget9(IDirect3DDevice9 *pDevice) : m_device9(pDevice) {
 	m_stateBlock = _createStateBlock(D3DSBT_ALL);
 	m_defaultStateBlock = _createDefaultStateBlock();
 
-	D3DVERTEXELEMENT9 vertexElem[] = {
+	const D3DVERTEXELEMENT9 vertexElem[] = {
 		{0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{0, 12, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
 		{0, 20, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
@@ -234,7 +234,7 @@ void RenderTarget9::FillRectangle(const Utils::Vector2 &position,
 								  const std::array<Utils::Vector2, 4> &dimensions,
 								  const std::array<D3DXCOLOR, 4> &gradient) const
 {
-	RHWDiffuseVertex vertices[] = {
+	const RHWDiffuseVertex vertices[] = {
 		{ position.x + dimensions[0].x, position.y + dimensions[0].y, 0, 1, gradient[0] },
 		{ position.x + dimensions[1].x, position.y + dimensions[1].y, 0, 1, gradient[1] },
 		{ position.x + dimensions[2].x, position.y + dimensions[2].y, 0, 1, gradient[2] },
@@ -252,7 +252,7 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &position,
 										 const std::array<D3DXCOLOR, 4> &gradient,
 										 float stroke) const
 {
-	UIVertex vertices[] = {
+	const UIVertex vertices[] = {
 		{ position.x + dimensions[0].x - 2, position.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
 		{ position.x + dimensions[1].x + 2, position.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
 		{ position.x + dimensions[2].x + 2, position.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
@@ -278,7 +278,7 @@ void RenderTarget9::DrawRoundedRectangle(const Utils::Vector2 &position,
 	rectangleExtent.x = GetDimensionWidth(dimensions) + 4.0f;
 	rectangleExtent.y = GetDimensionHeight(dimensions) + 4.0f;
 
-	float shaderParams[] = {
+	const float shaderParams[] = {
 		// rectangle and viewport extent
 		rectangleExtent.x, rectangleExtent.y, viewportExtent.x, viewportExtent.y,
 
@@ -308,7 +308,7 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &position,
 										 const float4 &verticalRadius,
 										 const std::array<D3DXCOLOR, 4> &gradient) const
 {
-	UIVertex vertices[] = {
+	const UIVertex vertices[] = {
 		{ position.x + dimensions[0].x - 2, position.y + dimensions[0].y - 2, 0, 0, 0, gradient[0] },
 		{ position.x + dimensions[1].x + 2, position.y + dimensions[1].y - 2, 0, 1, 0, gradient[1] },
 		{ position.x + dimensions[2].x + 2, position.y + dimensions[2].y + 2, 0, 1, 1, gradient[2] },
@@ -334,7 +334,7 @@ void RenderTarget9::FillRoundedRectangle(const Utils::Vector2 &position,
 	rectangleExtent.x = GetDimensionWidth(dimensions) + 4.0f;
 	rectangleExtent.y = GetDimensionHeight(dimensions) + 4.0f;
 
-	float shaderParams[] = {
+	const float shaderParams[] = {
 		// rectangle and viewport extent
 		rectangleExtent.x, rectangleExtent.y, viewportExtent.x, viewportExtent.y,
 
@@ -360,7 +360,7 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
 									  const std::array<Utils::Vector2, 4> &dimensions,
 									  const std::array<D3DXCOLOR, 4> &gradient) const
 {
-	UIVertex vertices[] = {
+	const UIVertex vertices[] = {
 		{ position.x + dimensions[0].x, position.y + dimensions[0].y, 0, 0, 0, gradient[0] },
 		{ position.x + dimensions[1].x, position.y + dimensions[1].y, 0, 1, 0, gradient[1] },
 		{ position.x + dimensions[2].x, position.y + dimensions[2].y, 0, 1, 1, gradient[2] },
@@ -369,6 +369,7 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
 
 	const auto textureObject = boost::dynamic_pointer_cast
 		<const UI::D3DTextureObject9>(pTexture->GetObject());
+
 	if (textureObject == nullptr)
 		return;
 
@@ -392,7 +393,7 @@ void RenderTarget9::DrawBlurredSprite(const Utils::Vector2 &position,
 	rectangleExtent.x = GetDimensionWidth(dimensions);
 	rectangleExtent.y = GetDimensionHeight(dimensions);
 
-	float shaderParams[] = {
+	const float shaderParams[] = {
 		// rectangle extent
 		rectangleExtent.x, rectangleExtent.y, 0.0f, 0.0f
 	};
@@ -413,7 +414,7 @@ void RenderTarget9::DrawSprite(const Utils::Vector2 &position,
 							   const std::array<Utils::Vector2, 4> &dimensions,
 							   const std::array<D3DXCOLOR, 4> &gradient) const
 {
-	RHWDiffuseTextureVertex vertices[] = {
+	const RHWDiffuseTextureVertex vertices[] = {
 		{ position.x + dimensions[0].x, position.y + dimensions[0].y, 0, 1, gradient[0], 0, 0 },
 		{ position.x + dimensions[1].x, position.y + dimensions[1].y, 0, 1, gradient[1], 1, 0 },
 		{ position.x + dimensions[2].x, position.y + dimensions[2].y, 0, 1, gradient[2], 1, 1 },
