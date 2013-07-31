@@ -73,7 +73,7 @@ namespace Components {
 
 	std::list<boost::shared_ptr<IComponent>> IComponent::GetUIHierarchy() {
 		std::list<boost::shared_ptr<IComponent>> lstResult;
-		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent())
+		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent())
 			lstResult.push_front(pParent);
 
 		return lstResult;
@@ -81,14 +81,14 @@ namespace Components {
 
 	std::list<boost::shared_ptr<const IComponent>> IComponent::GetUIHierarchy() const {
 		std::list<boost::shared_ptr<const IComponent>> lstResult;
-		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent())
+		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent())
 			lstResult.push_front(pParent);
 
 		return lstResult;
 	}
 
 	boost::shared_ptr<ComponentInterface> IComponent::GetGlobalInterface() const {
-		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent()) {
+		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			auto pInterface = pParent->GetLocalInterface();
 			if (pInterface != nullptr)
 				return pInterface;
@@ -110,7 +110,7 @@ namespace Components {
 		if (pInterface == nullptr || !pInterface->Visible)
 			return false;
 
-		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent()) {
+		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			if (!pParent->GetVisibility())
 				return false;
 		}
@@ -129,7 +129,7 @@ namespace Components {
 
 	D3DXCOLOR IComponent::CalculateAbsoluteColor(const D3DXCOLOR &color) const {
 		D3DXCOLOR result(color);
-		for (auto pParent = shared_from_this(); pParent != nullptr; pParent = pParent->GetUIParent()) {
+		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			const auto colorMod = pParent->GetColorMod();
 			result.a *= colorMod.a;
 			result.r *= colorMod.r;

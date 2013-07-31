@@ -51,7 +51,7 @@ namespace Components {
 		void SetContent(boost::shared_ptr<ItemsControl> pContent) {
 			m_content = std::move(pContent);
 			if (m_content != nullptr)
-				m_content->SetUIParent(shared_from_this());
+				m_content->SetUIParent(get_this<IComponent>());
 		}
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);

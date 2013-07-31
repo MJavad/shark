@@ -39,4 +39,14 @@ protected:
 	boost::shared_ptr<T> get_this() const {
 		return boost::dynamic_pointer_cast<T>(shared_from_this());
 	}
+
+	template <>
+	boost::shared_ptr<ID3DInterface> get_this() {
+		return shared_from_this();
+	}
+
+	template <>
+	boost::shared_ptr<const ID3DInterface> get_this() const {
+		return shared_from_this();
+	}
 };

@@ -46,7 +46,7 @@ namespace Components {
 		
 		virtual void AddItem(boost::shared_ptr<ListBoxEntry> pItem) {
 			pItem->SetWidth(GetWidth());
-			pItem->SetUIParent(shared_from_this());
+			pItem->SetUIParent(get_this<IComponent>());
 			m_entries.push_back(std::move(pItem));
 		}
 
@@ -85,7 +85,7 @@ namespace Components {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr) {
 				m_border->SetPosition(Utils::Vector2(-1.0f, -1.0f));
-				m_border->SetUIParent(shared_from_this());
+				m_border->SetUIParent(get_this<IComponent>());
 			}
 		}
 

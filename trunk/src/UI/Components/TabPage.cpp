@@ -104,7 +104,7 @@ namespace Components {
 	}
 
 	bool TabPage::OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
-		const auto pThis = shared_from_this();
+		const auto pThis = get_this<IComponent>();
 		const auto pContent = GetContent();
 		const auto pParent = boost::dynamic_pointer_cast<TabControl>(GetUIParent());
 

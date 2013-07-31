@@ -113,7 +113,7 @@ namespace Components {
 			LOG_DEBUG("%08X: TabPressed triggered.", this);
 			const auto pParent = GetUIParent();
 			if (pParent != nullptr)
-				return pParent->OnTabPressed(shared_from_this());
+				return pParent->OnTabPressed(get_this<IComponent>());
 
 			return false;
 		}
@@ -138,6 +138,16 @@ namespace Components {
 		template <typename T>
 		boost::shared_ptr<const T> get_this() const {
 			return boost::dynamic_pointer_cast<const T>(shared_from_this());
+		}
+
+		template <>
+		boost::shared_ptr<IComponent> get_this() {
+			return shared_from_this();
+		}
+
+		template <>
+		boost::shared_ptr<const IComponent> get_this() const {
+			return shared_from_this();
 		}
 
 	private:

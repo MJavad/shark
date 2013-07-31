@@ -34,7 +34,7 @@ namespace Components {
 			return true;
 		}
 
-		const auto pThis = shared_from_this();
+		const auto pThis = get_this<IComponent>();
 		for (auto pParent = pControl; pParent != nullptr; pParent = pParent->GetUIParent()) {
 			if (pParent == pThis)
 				return false;
@@ -98,7 +98,7 @@ namespace Components {
 	}
 
 	bool ItemsControl::OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
-		const auto pThis = shared_from_this();
+		const auto pThis = get_this<IComponent>();
 		if (pComponent == pThis)
 			return false;
 

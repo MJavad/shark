@@ -102,7 +102,7 @@ namespace Components {
 		virtual void SetCaption(boost::shared_ptr<Label> pCaption) {
 			m_caption = std::move(pCaption);
 			if (m_caption != nullptr)
-				m_caption->SetUIParent(shared_from_this());
+				m_caption->SetUIParent(get_this<IComponent>());
 		}
 
 		virtual boost::shared_ptr<Rectangle> GetBorder() const {
@@ -113,7 +113,7 @@ namespace Components {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr) {
 				m_border->SetPosition(Utils::Vector2(-1.0f, -1.0f));
-				m_border->SetUIParent(shared_from_this());
+				m_border->SetUIParent(get_this<IComponent>());
 			}
 		}
 

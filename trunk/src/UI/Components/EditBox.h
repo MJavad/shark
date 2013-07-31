@@ -56,7 +56,7 @@ namespace Components {
 		virtual void SetContent(boost::shared_ptr<Label> pContent) {
 			m_content = std::move(pContent);
 			if (m_content != nullptr)
-				m_content->SetUIParent(shared_from_this());
+				m_content->SetUIParent(get_this<IComponent>());
 		}
 
 		virtual boost::shared_ptr<Rectangle> GetBorder() const {
@@ -66,7 +66,7 @@ namespace Components {
 		virtual void SetBorder(boost::shared_ptr<Rectangle> pBorder) {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr)
-				m_border->SetUIParent(shared_from_this());
+				m_border->SetUIParent(get_this<IComponent>());
 		}
 
 		std::wstring GetCurrentText() const;
