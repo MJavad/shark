@@ -35,9 +35,7 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Button> CreateDefault() {
-			const auto pButton = Create();
-			sGUIMgr.GetInterface()->PushControl(pButton);
-			return pButton;
+			return Create();
 		}
 
 		static boost::shared_ptr<Button> Create(
