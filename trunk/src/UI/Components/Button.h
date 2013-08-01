@@ -23,8 +23,6 @@
 #include "IFocusable.h"
 #include "IPushable.h"
 #include "Texture.h"
-#include "Base/D3DManager.h"
-#include "UI/GUIManager.h"
 
 namespace UI {
 namespace Components {
