@@ -26,7 +26,7 @@ namespace Components {
 		memset(&m_horizRoundings, 0, sizeof(m_horizRoundings));
 		memset(&m_vertRoundings, 0, sizeof(m_vertRoundings));
 
-		const auto callback = boost::bind(&Rectangle::_flushTextureCache, this);
+		const auto callback = std::bind(&Rectangle::_flushTextureCache, this);
 		m_lostDevice = sD3DMgr.OnDeviceLostEvent.connect(callback);
 		m_changeDevice = sD3DMgr.OnDeviceChangedEvent.connect(callback);
 	}

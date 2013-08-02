@@ -18,7 +18,7 @@
 
 #pragma once
 
-class ScriptObject {
+class ScriptObject : public virtual Utils::IDynamicObject {
 public:
 	ScriptObject();
 

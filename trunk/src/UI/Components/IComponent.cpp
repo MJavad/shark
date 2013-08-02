@@ -31,7 +31,7 @@ namespace Components {
 							  m_colorMod(1.0f, 1.0f, 1.0f, 1.0f)
 	{	// register for update...
 		m_updateDelegate = sD3DMgr.OnUpdateEvent.connect(
-			boost::bind(&IComponent::OnUpdate, this, _1));
+			std::bind(&IComponent::OnUpdate, this, std::placeholders::_1));
 	}
 
 	IComponent::~IComponent() {

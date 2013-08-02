@@ -18,11 +18,34 @@
 
 #pragma once
 
-namespace UI {
-	class ID3DSurface abstract : public virtual Utils::IDynamicObject
+namespace Utils {
+	class IDynamicObject abstract : 
+		public boost::enable_shared_from_this<IDynamicObject>
 	{
+	protected:
+		IDynamicObject() {}
+
+		template <typename T>
+		boost::shared_ptr<T> get_this() {
+			return boost::dynamic_pointer_cast<T>(shared_from_this());
+		}
+
+		template <typename T>
+		boost::shared_ptr<const T> get_this() const {
+			return boost::dynamic_pointer_cast<const T>(shared_from_this());
+		}
+
+		template <>
+		boost::shared_ptr<IDynamicObject> get_this() {
+			return shared_from_this();
+		}
+
+		template <>
+		boost::shared_ptr<const IDynamicObject> get_this() const {
+			return shared_from_this();
+		}
+
 	public:
-		virtual ~ID3DSurface() {}
-		virtual HDC GetDC() const = 0;
+		virtual ~IDynamicObject() {}
 	};
 }

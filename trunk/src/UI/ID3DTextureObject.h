@@ -41,7 +41,7 @@ namespace UI {
 		D3DXCOLOR colorKey;
 	};
 
-	class ID3DTextureObject abstract
+	class ID3DTextureObject abstract : public virtual Utils::IDynamicObject
 	{
 	public:
 		virtual ~ID3DTextureObject() {}

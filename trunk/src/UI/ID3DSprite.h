@@ -20,7 +20,7 @@
 #include "D3DTexture.h"
 
 namespace UI {
-	class ID3DSprite abstract
+	class ID3DSprite abstract : public virtual Utils::IDynamicObject
 	{
 	public:
 		ID3DSprite() {

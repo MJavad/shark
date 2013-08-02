@@ -99,6 +99,7 @@ typedef signed char int8;
 #include "luabind/operator.hpp"
 #include "luabind/shared_ptr_converter.hpp"
 
+#include "IDynamicObject.h"
 #include "TypeTraits.h"
 #include "Mutex.h"
 #include "Color.h"

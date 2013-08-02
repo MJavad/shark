@@ -20,7 +20,7 @@
 #include "ID3DFontObject.h"
 
 namespace UI {
-	class D3DFont
+	class D3DFont : public virtual Utils::IDynamicObject
 	{
 	public:
 		D3DFont(const FontDescription &fontDesc): m_fontDesc(fontDesc) {}

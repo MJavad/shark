@@ -27,8 +27,11 @@
 #include "UI/Components/IFocusable.h"
 
 void D3DManager::Initialize() {
-	sWndProc.OnMessageReceivedEvent.connect(boost::bind(
-		&D3DManager::OnMessageReceived, this, _1, _2, _3));
+	sWndProc.OnMessageReceivedEvent.connect(
+		std::bind(&D3DManager::OnMessageReceived, this,
+			std::placeholders::_1,
+			std::placeholders::_2,
+			std::placeholders::_3));
 }
 
 void D3DManager::Shutdown() {

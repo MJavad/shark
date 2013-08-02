@@ -27,7 +27,7 @@ namespace Utils
 		uint64 token;
 		uint32 interval;
 		uint32 creation_time;
-		boost::function<uint32 (const STimerDispatchEvt&)> callback;
+		std::function<uint32 (const STimerDispatchEvt&)> callback;
 	};
 
 	// Threadsafe
@@ -36,7 +36,7 @@ namespace Utils
 	public:
 		TimerDispatcher() : m_mutex(), m_tokenMgr(), m_timers() {}
 
-		STimerDispatchEvt AddTimer(uint32 interval, const boost::function<uint32 (const STimerDispatchEvt&)> &callback) {
+		STimerDispatchEvt AddTimer(uint32 interval, const std::function<uint32 (const STimerDispatchEvt&)> &callback) {
 			ScopedLock g(m_mutex);
 			STimerDispatchEvt deleg = { m_tokenMgr.get(), interval, timeGetTime(), callback };
 			m_timers[deleg.token] = deleg;

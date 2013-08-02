@@ -33,6 +33,7 @@
     <ClInclude Include="src\Misc\Handle.h" />
     <ClInclude Include="src\Misc\Heap.h" />
     <ClInclude Include="src\Misc\Helpers.h" />
+    <ClInclude Include="src\Misc\IDynamicObject.h" />
     <ClInclude Include="src\Misc\SharkMemory.h" />
     <ClInclude Include="src\Misc\ByteBuffer.h" />
     <ClInclude Include="src\Misc\Signal.h" />

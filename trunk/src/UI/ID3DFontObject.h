@@ -34,7 +34,7 @@ namespace UI {
 		uint32 faceNameHash;
 	};
 
-	class ID3DFontObject abstract
+	class ID3DFontObject abstract : public virtual Utils::IDynamicObject
 	{
 	public:
 		virtual ~ID3DFontObject() {}

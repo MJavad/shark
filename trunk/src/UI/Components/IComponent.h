@@ -23,7 +23,7 @@ namespace UI {
 	class ComponentInterface;
 
 namespace Components {
-	class IComponent abstract : public boost::enable_shared_from_this<IComponent>
+	class IComponent abstract : public virtual Utils::IDynamicObject
 	{
 	public:
 		virtual ~IComponent();
@@ -129,26 +129,6 @@ namespace Components {
 	protected:
 		IComponent();
 		virtual void OnUpdate(uint32 timePassed);
-
-		template <typename T>
-		boost::shared_ptr<T> get_this() {
-			return boost::dynamic_pointer_cast<T>(shared_from_this());
-		}
-
-		template <typename T>
-		boost::shared_ptr<const T> get_this() const {
-			return boost::dynamic_pointer_cast<const T>(shared_from_this());
-		}
-
-		template <>
-		boost::shared_ptr<IComponent> get_this() {
-			return shared_from_this();
-		}
-
-		template <>
-		boost::shared_ptr<const IComponent> get_this() const {
-			return shared_from_this();
-		}
 
 	private:
 		bool m_isVisible;

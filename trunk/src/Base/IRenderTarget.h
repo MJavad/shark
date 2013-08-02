@@ -20,7 +20,7 @@
 #include "UI/D3DTexture.h"
 #include "UI/ID3DSurface.h"
 
-class IRenderTarget abstract
+class IRenderTarget abstract : public virtual Utils::IDynamicObject
 {
 public:
 	virtual ~IRenderTarget() {}
@@ -45,8 +45,8 @@ public:
 	static std::array<Utils::Vector2, 4> MakeDimension(float width, float height) {
 		std::array<Utils::Vector2, 4> dimension;
 		dimension[0].x = 0;       dimension[0].y = 0;
-		dimension[1].x = width;  dimension[1].y = 0;
-		dimension[2].x = width;  dimension[2].y = height;
+		dimension[1].x = width;   dimension[1].y = 0;
+		dimension[2].x = width;   dimension[2].y = height;
 		dimension[3].x = 0;       dimension[3].y = height;
 		return dimension;
 	}

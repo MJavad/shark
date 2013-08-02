@@ -20,7 +20,7 @@
 #include "ID3DTextureObject.h"
 
 namespace UI {
-	class D3DTexture
+	class D3DTexture : public virtual Utils::IDynamicObject
 	{
 	public:
 		D3DTexture(boost::shared_ptr<ID3DTextureObject> pTextureObject) :

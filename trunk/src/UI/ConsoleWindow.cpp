@@ -43,12 +43,15 @@ namespace UI {
 		m_interface->PushControl(m_controlGroup);
 		sD3DMgr.PushInterface(m_interface);
 
-		const auto updateDelegate = boost::bind(&ConsoleWindow::UpdateWindow, this);
+		const auto updateDelegate = std::bind(&ConsoleWindow::UpdateWindow, this);
 		sD3DMgr.OnDeviceResetEvent.connect(updateDelegate);
 		sD3DMgr.OnDeviceChangedEvent.connect(updateDelegate);
 
-		sWndProc.OnMessageReceivedEvent.connect(boost::bind(
-			&ConsoleWindow::_onMessageReceived, this, _1, _2, _3));
+		sWndProc.OnMessageReceivedEvent.connect(
+			std::bind(&ConsoleWindow::_onMessageReceived, this,
+				std::placeholders::_1,
+				std::placeholders::_2,
+				std::placeholders::_3));
 
 		UpdateWindow();
 	}

@@ -60,7 +60,7 @@ namespace Utils
 	struct SEventDelegate {
 		uint64 token;
 		bool isLuaCallback;
-		boost::function<FuncT> callback;
+		std::function<FuncT> callback;
 		luabind::object luaFunction;
 	};
 
@@ -76,7 +76,7 @@ namespace Utils
 		typedef R fnconv_t(Args...);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(boost::function<fnconv_t> func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
 			connect(std::move(func));
 		}
@@ -119,7 +119,7 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
 			return connect(std::move(func));
 		}
 
@@ -128,7 +128,7 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
@@ -235,7 +235,7 @@ namespace Utils
 		typedef R fnconv_t(void);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(boost::function<fnconv_t> func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
 			connect(std::move(func));
 		}
@@ -278,7 +278,7 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
 			return connect(std::move(func));
 		}
 
@@ -287,7 +287,7 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
@@ -393,7 +393,7 @@ namespace Utils
 		typedef R fnconv_t(A0);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(boost::function<fnconv_t> func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
 			connect(std::move(func));
 		}
@@ -436,7 +436,7 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
 			return connect(std::move(func));
 		}
 
@@ -445,7 +445,7 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
@@ -551,7 +551,7 @@ namespace Utils
 		typedef R fnconv_t(A0, A1);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(boost::function<fnconv_t> func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
 			connect(std::move(func));
 		}
@@ -594,7 +594,7 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
 			return connect(std::move(func));
 		}
 
@@ -603,7 +603,7 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
@@ -709,7 +709,7 @@ namespace Utils
 		typedef R fnconv_t(A0, A1, A2);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(boost::function<fnconv_t> func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
 			connect(std::move(func));
 		}
@@ -752,7 +752,7 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
 			return connect(std::move(func));
 		}
 
@@ -761,7 +761,7 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();
@@ -867,7 +867,7 @@ namespace Utils
 		typedef R fnconv_t(A0, A1, A2, A3);
 		Event() : m_tokenMgr(), m_mutex(), m_delegates() {}
 
-		Event(boost::function<fnconv_t> func) :
+		Event(std::function<fnconv_t> func) :
 			m_mutex(), m_tokenMgr(), m_delegates() {
 			connect(std::move(func));
 		}
@@ -910,7 +910,7 @@ namespace Utils
 			return m_delegates.size();
 		}
 
-		SEventDelegate<fnconv_t> operator+=(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> operator+=(std::function<fnconv_t> func) {
 			return connect(std::move(func));
 		}
 
@@ -919,7 +919,7 @@ namespace Utils
 			return *this;
 		}
 
-		SEventDelegate<fnconv_t> connect(boost::function<fnconv_t> func) {
+		SEventDelegate<fnconv_t> connect(std::function<fnconv_t> func) {
 			ScopedLock g(m_mutex);
 			SEventDelegate<fnconv_t> deleg;
 			deleg.token = m_tokenMgr.get();

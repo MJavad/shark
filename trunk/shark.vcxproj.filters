@@ -235,6 +235,9 @@
     <ClInclude Include="src\Base\ScriptObject.h">
       <Filter>Headers\Base</Filter>
     </ClInclude>
+    <ClInclude Include="src\Misc\IDynamicObject.h">
+      <Filter>Headers\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Misc\stdafx.cpp">
