@@ -135,7 +135,7 @@ namespace Components {
 		luabind::module(luaState.get()) [
 			luabind::class_<ItemsControl, IComponent,
 							boost::shared_ptr<IComponent>>("ItemsControl")
-				.scope [ luabind::def("Create", &ItemsControl::CreateDefault) ]
+				.scope [ luabind::def("Create", &ItemsControl::_createLua) ]
 				.def("PushChild", &ItemsControl::PushChild)
 				.def("PopChild", &ItemsControl::PopChild)
 				.def("HasChild", &ItemsControl::HasChild)

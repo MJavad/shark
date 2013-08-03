@@ -26,7 +26,10 @@
 
 namespace UI {
 namespace Components {
-	class Button : public Rectangle, public IHoverable, public IFocusable, public IPushable
+	class Button : public virtual Rectangle,
+				   public virtual IHoverable,
+				   public virtual IFocusable,
+				   public virtual IPushable
 	{
 	public:
 		Button() : m_renderBackground(true) {}

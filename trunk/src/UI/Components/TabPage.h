@@ -22,7 +22,7 @@
 
 namespace UI {
 namespace Components {
-	class TabPage : public Button
+	class TabPage : public virtual Button
 	{
 	public:
 		TabPage() {}

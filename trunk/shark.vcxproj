@@ -34,6 +34,7 @@
     <ClInclude Include="src\Misc\Heap.h" />
     <ClInclude Include="src\Misc\Helpers.h" />
     <ClInclude Include="src\Misc\IDynamicObject.h" />
+    <ClInclude Include="src\Misc\LuaEvent.h" />
     <ClInclude Include="src\Misc\SharkMemory.h" />
     <ClInclude Include="src\Misc\ByteBuffer.h" />
     <ClInclude Include="src\Misc\Signal.h" />
@@ -247,13 +248,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SHARK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>Misc/stdafx.h</PrecompiledHeaderFile>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>shark.def</ModuleDefinitionFile>
       <AdditionalDependencies>.\libs\lua\lua.debug.x86.lib;.\libs\luabind\luabind.debug.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

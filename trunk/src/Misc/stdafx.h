@@ -87,8 +87,8 @@ typedef signed char int8;
 #include <boost/range/algorithm/replace_if.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <codecvt>
 #include <atlbase.h>
 #include <iostream>
@@ -99,12 +99,14 @@ typedef signed char int8;
 #include "luabind/operator.hpp"
 #include "luabind/shared_ptr_converter.hpp"
 
+#include "Singleton.h"
+#include "Base/Log.h"
+
 #include "IDynamicObject.h"
 #include "TypeTraits.h"
 #include "Mutex.h"
 #include "Color.h"
 #include "Vector.h"
-#include "Singleton.h"
 #include "ByteBuffer.h"
 #include "Event.h"
 #include "Handle.h"
@@ -113,7 +115,6 @@ typedef signed char int8;
 #include "TimerDispatcher.h"
 #include "ThreadGrabber.h"
 #include "Helpers.h"
-#include "Base/Log.h"
 #include "SharkMemory.h"
 
 #undef DrawText

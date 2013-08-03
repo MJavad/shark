@@ -22,7 +22,7 @@
 
 namespace UI {
 namespace Components {
-	class Label : public IRectComponent
+	class Label : public virtual IRectComponent
 	{
 	public:
 		Label();

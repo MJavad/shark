@@ -21,10 +21,13 @@
 #include "Rectangle.h"
 #include "IFocusable.h"
 #include "IPushable.h"
+#include "Misc/LuaEvent.h"
 
 namespace UI {
 namespace Components {
-	class EditBox : public Rectangle, public IFocusable, public IPushable
+	class EditBox : public virtual Rectangle,
+					public virtual IFocusable,
+					public virtual IPushable
 	{
 	public:
 		EditBox() : m_scrollPosition(0.0f), m_maxLength(80) {}
@@ -69,7 +72,7 @@ namespace Components {
 		uint32 PasteFromClipboard();
 
 		// lua wrapper
-		Utils::Event<void ()> OnContentChangedLuaWrap;
+		Utils::LuaEvent<void ()> OnContentChangedLuaWrap;
 		Utils::Event<void (const boost::shared_ptr<EditBox>&)> OnContentChangedEvent;
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);

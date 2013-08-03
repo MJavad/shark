@@ -23,7 +23,9 @@
 
 namespace UI {
 namespace Components {
-	class Frame : public ItemsControl, public IDraggable, public ISizable
+	class Frame : public virtual ItemsControl,
+				  public virtual IDraggable,
+				  public virtual ISizable
 	{
 	public:
 		Frame() : m_sizable(true),

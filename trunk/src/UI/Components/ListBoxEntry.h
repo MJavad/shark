@@ -24,7 +24,8 @@
 
 namespace UI {
 namespace Components {
-	class ListBoxEntry : public Rectangle, public IHoverable
+	class ListBoxEntry : public virtual Rectangle,
+						 public virtual IHoverable
 	{
 	public:
 		ListBoxEntry() : m_isSelected(false) {}

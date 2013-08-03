@@ -221,7 +221,7 @@ namespace Components {
 		luabind::module(luaState.get()) [
 			luabind::class_<TabControl, Rectangle,
 							boost::shared_ptr<IComponent>>("TabControl")
-				.scope [ luabind::def("Create", &TabControl::CreateDefault) ]
+				.scope [ luabind::def("Create", &TabControl::_createLua) ]
 				.def("AddTabPage", &TabControl::AddTabPage)
 				.def("RemoveTabPage", &TabControl::RemoveTabPage)
 				.def("GetPageIndex", &TabControl::GetPageIndex)

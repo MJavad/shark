@@ -142,7 +142,7 @@ namespace Components {
 		luabind::module(luaState.get()) [
 			luabind::class_<ListBox, Rectangle,
 							boost::shared_ptr<IComponent>>("ListBox")
-				.scope [ luabind::def("Create", &ListBox::CreateDefault) ]
+				.scope [ luabind::def("Create", &ListBox::_createLua) ]
 				.def("SelectItem", &ListBox::SelectItem)
 				.def("DeselectItem", &ListBox::DeselectItem)
 				.def("DeselectAll", &ListBox::DeselectAll)

@@ -19,6 +19,7 @@
 #pragma once
 #include "IComponent.h"
 #include "IRectComponent.h"
+#include "Misc/LuaEvent.h"
 
 namespace UI {
 namespace Components {
@@ -77,8 +78,8 @@ namespace Components {
 		}
 
 		// lua wrapper
-		Utils::Event<void ()> OnFocusBeginLuaWrap;
-		Utils::Event<void ()> OnFocusEndLuaWrap;
+		Utils::LuaEvent<void ()> OnFocusBeginLuaWrap;
+		Utils::LuaEvent<void ()> OnFocusEndLuaWrap;
 
 		Utils::Event<bool (const boost::shared_ptr<IFocusable>&)> OnFocusBeginEvent;
 		Utils::Event<void (const boost::shared_ptr<IFocusable>&)> OnFocusEndEvent;

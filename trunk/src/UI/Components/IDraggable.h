@@ -19,6 +19,7 @@
 #pragma once
 #include "IComponent.h"
 #include "IRectComponent.h"
+#include "Misc/LuaEvent.h"
 
 namespace UI {
 namespace Components {
@@ -54,9 +55,9 @@ namespace Components {
 		}
 
 		// lua wrapper
-		Utils::Event<void ()> OnDragBeginLuaWrap;
-		Utils::Event<void ()> OnDragEndLuaWrap;
-		Utils::Event<void ()> OnDragMoveLuaWrap;
+		Utils::LuaEvent<void ()> OnDragBeginLuaWrap;
+		Utils::LuaEvent<void ()> OnDragEndLuaWrap;
+		Utils::LuaEvent<void ()> OnDragMoveLuaWrap;
 
 		// returning true = no drag
 		Utils::Event<bool (const boost::shared_ptr<IDraggable>&, Utils::Vector2*)> OnDragBeginEvent;

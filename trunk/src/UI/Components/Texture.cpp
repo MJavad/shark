@@ -59,7 +59,7 @@ namespace Components {
 		luabind::module(luaState.get()) [
 			luabind::class_<Texture, IRectComponent,
 							boost::shared_ptr<IComponent>>("TextureControl")
-				.scope [ luabind::def("Create", &Texture::CreateDefault) ]
+				.scope [ luabind::def("Create", &Texture::_createLua) ]
 				.property("texture", &Texture::GetTexture, &Texture::SetTexture)
 				.property("transform", &Texture::GetTransform, &Texture::SetTransform)
 				.property("color", &Texture::GetColor, &Texture::SetColor)

@@ -24,10 +24,10 @@
 namespace UI {
 namespace Components {
 	boost::shared_ptr<Button> Button::Create(std::wstring textString,
-											 float width,
-											 float height,
-											 float horizontalRounding,
-											 float verticalRounding)
+										   float width,
+										   float height,
+										   float horizontalRounding,
+										   float verticalRounding)
 	{
 		const auto pButton = boost::make_shared<Button>();
 		pButton->SetCaption(Label::Create(std::move(textString), DT_CENTER | DT_VCENTER));

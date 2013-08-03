@@ -88,7 +88,7 @@ namespace UI {
 		luabind::module(luaState.get()) [
 			luabind::class_<ComponentInterface, ID3DInterface,
 							boost::shared_ptr<ID3DInterface>>("ComponentInterface")
-				.scope [ luabind::def("Create", &ComponentInterface::CreateDefault) ]
+				.scope [ luabind::def("Create", &ComponentInterface::_createLua) ]
 				.def_readwrite("visible", &ComponentInterface::Visible)
 				.def_readonly("clipStack", &ComponentInterface::ClipStack)
 				.def("PushControl", &ComponentInterface::PushControl)

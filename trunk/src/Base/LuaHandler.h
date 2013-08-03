@@ -28,11 +28,83 @@ public:
 	bool ScriptLoaded(std::wstring fileName) const;
 	boost::shared_ptr<ScriptObject> CreateNewObject() const;
 	boost::shared_ptr<ScriptObject> LoadFromFile(const std::wstring &fileName);
+	boost::shared_ptr<ScriptObject> GetObjectByInterpreter(lua_State *L) const;
+
+	void InvalidateScript(const boost::shared_ptr<ScriptObject> &scriptObject) {
+		m_activeObjects.remove(scriptObject);
+	}
+
+	boost::shared_ptr<ScriptObject> GetActiveScript() const {
+		return m_activeScript.lock();
+	}
 
 	std::string PopError(lua_State *L) const;
 
+
+	template <typename R /*, typename... Args*/>
+	R ExecuteFunction(const boost::shared_ptr<ScriptObject> &scriptObject,
+					  const std::string &functionName
+					  /*, const Args&... args*/) {
+		try {
+			m_activeScript = scriptObject;
+			R value = luabind::call_function<R>(
+				scriptObject->GetLuaState().get(),
+				functionName.c_str() /*, args...*/);
+
+			return value;
+		}
+		catch (luabind::error &e) {
+			std::string luaError = PopError(e.state());
+			throw std::runtime_error(luaError.c_str());
+		}
+	}
+
+	template </*typename... Args*/>
+	void ExecuteFunction<void /*, Args...*/>(const boost::shared_ptr<ScriptObject> &scriptObject,
+											 const std::string &functionName
+											 /*, const Args&... args*/) {
+		try {
+			m_activeScript = scriptObject;
+			luabind::call_function<void>(
+				scriptObject->GetLuaState().get(),
+				functionName.c_str() /*, args...*/);
+		}
+		catch (luabind::error &e) {
+			std::string luaError = PopError(e.state());
+			throw std::runtime_error(luaError.c_str());
+		}
+	}
+
+	template <typename R /*, typename... Args*/>
+	R ExecuteFunction(const luabind::object &function
+					  /*, const Args&... args*/) {
+		try {
+			m_activeScript = GetObjectByInterpreter(function.interpreter());
+			R value = luabind::call_function<R>(function /*, args...*/);
+			return value;
+		}
+		catch (luabind::error &e) {
+			std::string luaError = PopError(e.state());
+			throw std::runtime_error(luaError.c_str());
+		}
+	}
+
+	template </*typename... Args*/>
+	void ExecuteFunction<void /*, Args...*/>(const luabind::object &function
+											 /*, const Args&... args*/) {
+		try {
+			m_activeScript = GetObjectByInterpreter(function.interpreter());
+			luabind::call_function<void>(function /*, args...*/);
+		}
+		catch (luabind::error &e) {
+			std::string luaError = PopError(e.state());
+			throw std::runtime_error(luaError.c_str());
+		}
+	}
+
 private:
-	std::list<boost::shared_ptr<ScriptObject>> m_scriptObjects;
+	boost::weak_ptr<ScriptObject> m_activeScript;
+	std::list<boost::shared_ptr<ScriptObject>> m_activeObjects;
 };
 
 #define sLuaHandler ::LuaHandler::Instance()

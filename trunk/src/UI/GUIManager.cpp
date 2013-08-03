@@ -33,6 +33,7 @@
 #include "Base/LuaHandler.h"
 
 using namespace UI::Components;
+boost::shared_ptr<ScriptObject> gScript;
 
 namespace UI {
 	void GUIManager::Initialize() {
@@ -130,7 +131,8 @@ namespace UI {
 
 		tabButton1->OnClickEvent += [testFrame2, editBox2]
 			(const boost::shared_ptr<IPushable>&, Utils::Vector2*) {
-				sLuaHandler.LoadFromFile(L"test.lua");
+				if (gScript == nullptr)
+					gScript = sLuaHandler.LoadFromFile(L"test.lua");
 			};
 
 		testFrame1->PushChild(tabControl);

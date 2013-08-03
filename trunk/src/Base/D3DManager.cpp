@@ -230,7 +230,7 @@ void D3DManager::OnResetDevice() {
 void D3DManager::OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	Utils::ScopedLock g(m_frameLock);
 	const auto lstInterfaces = m_interfaces;
-	for( auto itr = lstInterfaces.begin(), end = lstInterfaces.end(); itr != end; ++itr )
+	for (auto itr = lstInterfaces.begin(), end = lstInterfaces.end(); itr != end; ++itr)
 		(*itr)->OnMessageReceived(uMsg, wParam, lParam);
 
 	if (!sWndProc.LastMessageHandled &&

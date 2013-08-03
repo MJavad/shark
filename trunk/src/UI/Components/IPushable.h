@@ -18,6 +18,7 @@
 
 #pragma once
 #include "IRectComponent.h"
+#include "Misc/LuaEvent.h"
 
 namespace UI {
 namespace Components {
@@ -35,10 +36,10 @@ namespace Components {
 		}
 
 		// lua wrapper
-		Utils::Event<void ()> OnClickLuaWrap;
-		Utils::Event<void ()> OnDblClickLuaWrap;
-		Utils::Event<void ()> OnPushLuaWrap;
-		Utils::Event<void ()> OnReleaseLuaWrap;
+		Utils::LuaEvent<void ()> OnClickLuaWrap;
+		Utils::LuaEvent<void ()> OnDblClickLuaWrap;
+		Utils::LuaEvent<void ()> OnPushLuaWrap;
+		Utils::LuaEvent<void ()> OnReleaseLuaWrap;
 
 		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnClickEvent;
 		Utils::Event<void (const boost::shared_ptr<IPushable>&, Utils::Vector2*)> OnDblClickEvent;

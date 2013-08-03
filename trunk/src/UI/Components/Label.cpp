@@ -254,7 +254,7 @@ namespace Components {
 		luabind::module(luaState.get()) [
 			luabind::class_<Label, IRectComponent,
 							boost::shared_ptr<IComponent>>("Label")
-				.scope [ luabind::def("Create", &Label::CreateDefault) ]
+				.scope [ luabind::def("Create", &Label::_createLua) ]
 				.enum_("FormatFlags") [
 					luabind::value("AlignLeft", DT_LEFT),
 					luabind::value("AlignTop", DT_TOP),

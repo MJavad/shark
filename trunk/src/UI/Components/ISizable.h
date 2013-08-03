@@ -20,6 +20,7 @@
 #include "IComponent.h"
 #include "IRectComponent.h"
 #include "UI/D3DTexture.h"
+#include "Misc/LuaEvent.h"
 
 namespace UI {
 namespace Components {
@@ -97,9 +98,9 @@ namespace Components {
 		}
 
 		// lua wrapper
-		Utils::Event<void ()> OnResizeBeginLuaWrap;
-		Utils::Event<void ()> OnResizeEndLuaWrap;
-		Utils::Event<void ()> OnResizeLuaWrap;
+		Utils::LuaEvent<void ()> OnResizeBeginLuaWrap;
+		Utils::LuaEvent<void ()> OnResizeEndLuaWrap;
+		Utils::LuaEvent<void ()> OnResizeLuaWrap;
 
 		// returning true = no size
 		Utils::Event<bool (const boost::shared_ptr<ISizable>&, Utils::Vector2*)> OnResizeBeginEvent;

@@ -110,7 +110,7 @@ namespace Components {
 			luabind::class_<ListBoxEntry,
 							luabind::bases<Rectangle, IHoverable>,
 							boost::shared_ptr<IComponent>>("ListBoxEntry")
-				.scope [ luabind::def("Create", &ListBoxEntry::CreateDefault) ]
+				.scope [ luabind::def("Create", &ListBoxEntry::_createLua) ]
 				.property("selectedColors", &ListBoxEntry::GetSelectedGradientColors, &ListBoxEntry::SetSelectedGradientColors)
 				.property("deselectedColors", &ListBoxEntry::GetDeselectedGradientColors, &ListBoxEntry::SetDeselectedGradientColors)
 				.property("selected", &ListBoxEntry::GetSelected, &ListBoxEntry::SetSelected)

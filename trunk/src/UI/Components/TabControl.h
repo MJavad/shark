@@ -22,7 +22,7 @@
 
 namespace UI {
 namespace Components {
-	class TabControl : public Rectangle
+	class TabControl : public virtual Rectangle
 	{
 	public:
 		TabControl() : m_activeTab(0) {}

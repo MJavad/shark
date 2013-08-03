@@ -163,7 +163,7 @@ namespace Components {
 		luabind::module(luaState.get()) [
 			luabind::class_<Rectangle, IRectComponent,
 							boost::shared_ptr<IComponent>>("Rectangle")
-				.scope [ luabind::def("Create", &Rectangle::CreateDefault) ]
+				.scope [ luabind::def("Create", &Rectangle::_createLua) ]
 				.property("horizontalRoundings", &Rectangle::GetHorizontalRoundings, &Rectangle::SetHorizontalRoundings)
 				.property("verticalRoundings", &Rectangle::GetVerticalRoundings, &Rectangle::SetVerticalRoundings)
 				.property("colors", &Rectangle::GetGradientColors, &Rectangle::SetGradientColors)

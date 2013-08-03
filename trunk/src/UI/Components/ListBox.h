@@ -23,7 +23,7 @@
 
 namespace UI {
 namespace Components {
-	class ListBox : public Rectangle
+	class ListBox : public virtual Rectangle
 	{
 	public:
 		ListBox() : m_isSelecting(false), m_isMultiSelect(false) {}

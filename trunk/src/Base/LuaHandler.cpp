@@ -18,6 +18,7 @@
 
 #include "Misc/stdafx.h"
 #include "LuaHandler.h"
+#include "Misc/LuaEvent.h"
 
 #include "UI/GUIManager.h"
 #include "D3DManager.h"
@@ -30,17 +31,7 @@
 */
 
 void LuaHandler::Initialize() {
-	luabind::set_pcall_callback([] (lua_State *L) {
-		luabind::object o(luabind::from_stack(L, -1));
-		std::ostringstream msg;
-		msg << "lua> runtime error: " << o;
-		sLog.OutDebug_UTF8(msg.str());
 
-		luabind::object trace(luabind::globals(L) ["debug"] ["traceback"]);
-		std::string stacktrace = luabind::call_function<std::string>(trace);
-		sLog.OutDebug_UTF8(std::string("lua> ") + stacktrace);
-		return 1;
-	});
 }
 
 boost::shared_ptr<ScriptObject> LuaHandler::CreateNewObject() const {
@@ -82,7 +73,7 @@ boost::shared_ptr<ScriptObject> LuaHandler::CreateNewObject() const {
 	];
 
 	// bind utils
-	Utils::Event<void ()>::BindToLua(luaState);
+	Utils::LuaEvent<void ()>::BindToLua(luaState);
 	Utils::Vector2::BindToLua(luaState);
 	Utils::Vector3::BindToLua(luaState);
 
@@ -97,7 +88,7 @@ bool LuaHandler::ScriptLoaded(std::wstring fileName) const {
 	std::transform(fileName.begin(), fileName.end(),
 				   fileName.begin(), std::tolower);
 
-	for (const auto& scriptObject: m_scriptObjects) {
+	for (const auto& scriptObject: m_activeObjects) {
 		std::wstring currentFile = scriptObject->GetScriptName();
 		std::transform(currentFile.begin(), currentFile.end(),
 					   currentFile.begin(), std::tolower);
@@ -116,17 +107,27 @@ boost::shared_ptr<ScriptObject> LuaHandler::LoadFromFile(const std::wstring &fil
 	const auto scriptObject = CreateNewObject();
 	const auto& luaState = scriptObject->GetLuaState();
 	scriptObject->SetScriptName(fileName);
+	m_activeScript = scriptObject;
 
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
 	std::string fileName_utf8 = conv.to_bytes(sFileMgr.GetScriptsDirectory() + L'\\' + fileName);
 
 	if (!luaL_dofile(luaState.get(), fileName_utf8.c_str()))
-		luabind::call_function<void>(luaState.get(), "Load");
+		ExecuteFunction<void>(scriptObject, "Load");
 	else
 		throw std::runtime_error(PopError(luaState.get()).c_str());
 
-	m_scriptObjects.push_back(scriptObject);
+	m_activeObjects.push_back(scriptObject);
 	return scriptObject;
+}
+
+boost::shared_ptr<ScriptObject> LuaHandler::GetObjectByInterpreter(lua_State *L) const {
+	for (const auto& object: m_activeObjects) {
+		if (object->GetLuaState().get() == L)
+			return object;
+	}
+
+	return nullptr;
 }
 
 std::string LuaHandler::PopError(lua_State *L) const {

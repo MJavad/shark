@@ -153,7 +153,7 @@ namespace Components {
 		luabind::module(luaState.get()) [
 			luabind::class_<TabPage, Button,
 							boost::shared_ptr<IComponent>>("TabPage")
-				.scope [ luabind::def("Create", &TabPage::CreateDefault) ]
+				.scope [ luabind::def("Create", &TabPage::_createLua) ]
 				.property("content", &TabPage::GetContent, &TabPage::SetContent)
 		];
 	}

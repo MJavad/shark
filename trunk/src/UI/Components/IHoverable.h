@@ -19,6 +19,7 @@
 #pragma once
 #include "IComponent.h"
 #include "IRectComponent.h"
+#include "Misc/LuaEvent.h"
 
 namespace UI {
 namespace Components {
@@ -65,8 +66,8 @@ namespace Components {
 		}
 
 		// lua wrapper
-		Utils::Event<void ()> OnHoverBeginLuaWrap;
-		Utils::Event<void ()> OnHoverEndLuaWrap;
+		Utils::LuaEvent<void ()> OnHoverBeginLuaWrap;
+		Utils::LuaEvent<void ()> OnHoverEndLuaWrap;
 
 		// returning true = no hover
 		Utils::Event<bool (const boost::shared_ptr<IHoverable>&)> OnHoverBeginEvent;
