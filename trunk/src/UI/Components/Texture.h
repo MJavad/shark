@@ -29,10 +29,6 @@ namespace Components {
 			D3DXMatrixIdentity(&m_transform);
 		}
 
-		static boost::shared_ptr<Texture> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<Texture> Create(boost::shared_ptr<D3DTexture> pTexture = nullptr);
 		virtual void OnRender(uint32 timePassed);
 
@@ -69,6 +65,11 @@ namespace Components {
 		D3DXMATRIX m_transform;
 		boost::shared_ptr<D3DTexture> m_texture;
 		D3DXCOLOR m_color;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Texture> _createLua() {
+			return Create();
+		}
 	};
 }
 }

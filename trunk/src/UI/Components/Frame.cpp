@@ -122,7 +122,7 @@ namespace Components {
 			luabind::class_<Frame,
 							luabind::bases<ItemsControl, IDraggable, ISizable>,
 							boost::shared_ptr<IComponent>>("Frame")
-				.scope [ luabind::def("Create", &Frame::CreateDefault) ]
+				.scope [ luabind::def("Create", &Frame::_createLua) ]
 				.property("sizable", &Frame::GetSizable, &Frame::SetSizable)
 		];
 	}

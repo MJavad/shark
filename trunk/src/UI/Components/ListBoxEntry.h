@@ -28,10 +28,6 @@ namespace Components {
 	{
 	public:
 		ListBoxEntry() : m_isSelected(false) {}
-		
-		static boost::shared_ptr<ListBoxEntry> CreateDefault() {
-			return Create();
-		}
 
 		static boost::shared_ptr<ListBoxEntry> Create(std::wstring textString = L"Default Entry");
 
@@ -124,6 +120,11 @@ namespace Components {
 		boost::shared_ptr<Label> m_caption;
 		boost::shared_ptr<Rectangle> m_border;
 		std::array<D3DXCOLOR, 4> m_deselectedColors, m_selectedColors;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<ListBoxEntry> _createLua() {
+			return Create();
+		}
 	};
 }
 }

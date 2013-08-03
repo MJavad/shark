@@ -660,7 +660,7 @@ namespace Components {
 			luabind::class_<EditBox,
 							luabind::bases<Rectangle, IFocusable, IPushable>,
 							boost::shared_ptr<IComponent>>("EditBox")
-				.scope [ luabind::def("Create", &EditBox::CreateDefault) ]
+				.scope [ luabind::def("Create", &EditBox::_createLua) ]
 				.def("GetCurrentText", &EditBox::GetCurrentText)
 				.def_readonly("contentChangedEvent", &EditBox::OnContentChangedLuaWrap)
 				.property("content", &EditBox::GetContent, &EditBox::SetContent)

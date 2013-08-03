@@ -17,6 +17,8 @@
  */
 
 #pragma once
+#include "ID3DInterface.h"
+#include "UI/Components/IComponent.h"
 
 class ScriptObject : public virtual Utils::IDynamicObject {
 public:
@@ -34,7 +36,12 @@ public:
 		m_scriptName = std::move(name);
 	}
 
+	void RemoveUIElements();
+
 private:
 	std::wstring m_scriptName;
 	boost::shared_ptr<lua_State> m_luaState;
+
+	std::list<boost::weak_ptr<ID3DInterface>> m_scriptInterfaces;
+	std::list<boost::weak_ptr<UI::Components::IComponent>> m_scriptComponents;
 };

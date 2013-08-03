@@ -27,10 +27,6 @@ namespace Components {
 	public:
 		TabPage() {}
 
-		static boost::shared_ptr<TabPage> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<TabPage> Create(
 			std::wstring textString = L"Default Page",
 			float width = 100.0f,
@@ -72,6 +68,11 @@ namespace Components {
 
 	private:
 		boost::shared_ptr<ItemsControl> m_content;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<TabPage> _createLua() {
+			return Create();
+		}
 	};
 }
 }

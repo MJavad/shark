@@ -28,10 +28,6 @@ namespace Components {
 	public:
 		ListBox() : m_isSelecting(false), m_isMultiSelect(false) {}
 
-		static boost::shared_ptr<ListBox> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<ListBox> Create(float width = 200.0f, float height = 160.0f);
 
 		virtual void OnRender(uint32 timePassed);
@@ -95,6 +91,11 @@ namespace Components {
 		bool m_isSelecting, m_isMultiSelect;
 		boost::shared_ptr<Rectangle> m_border;
 		std::list<boost::shared_ptr<ListBoxEntry>> m_entries;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<ListBox> _createLua() {
+			return Create();
+		}
 	};
 }
 }

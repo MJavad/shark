@@ -28,11 +28,6 @@ namespace Components {
 		Rectangle();
 		~Rectangle();
 
-		// wrapper for luabind ctor
-		static boost::shared_ptr<Rectangle> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<Rectangle> Create(float width = 100.0f, float height = 100.0f);
 
 		virtual void OnRender(uint32 timePassed);
@@ -147,6 +142,11 @@ namespace Components {
 
 		void _flushTextureCache() {
 			m_shadowTexture.reset();
+		}
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Rectangle> _createLua() {
+			return Create();
 		}
 	};
 }

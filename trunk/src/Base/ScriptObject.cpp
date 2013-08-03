@@ -18,9 +18,29 @@
 
 #include "Misc/stdafx.h"
 #include "ScriptObject.h"
+#include "D3DManager.h"
 
 ScriptObject::ScriptObject() : m_scriptName(L"<local>") {
 	m_luaState = boost::shared_ptr<lua_State>(luaL_newstate(), lua_close);
 	luaL_openlibs(m_luaState.get());
 	luabind::open(m_luaState.get());
+}
+
+void ScriptObject::RemoveUIElements() {
+	for (const auto& scriptInterface: m_scriptInterfaces) {
+		if (!scriptInterface.expired())
+			sD3DMgr.PopInterface(scriptInterface.lock());
+	}
+
+	for (const auto& scriptComponent: m_scriptComponents) {
+		const auto pComponent = scriptComponent.lock();
+		if (pComponent != nullptr) {
+			const auto pInterface = pComponent->GetLocalInterface();
+			if (pInterface != nullptr)
+				pInterface->PopControl(pComponent);
+		}
+	}
+
+	m_scriptInterfaces.clear();
+	m_scriptComponents.clear();
 }

@@ -28,10 +28,6 @@ namespace Components {
 		Label();
 		~Label();
 
-		static boost::shared_ptr<Label> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<Label> Create(
 			std::wstring textString = L"Default Label",
 			uint32 formatFlags = DT_LEFT | DT_TOP,
@@ -148,6 +144,11 @@ namespace Components {
 
 		void _flushFontCache() {
 			m_fontCache.reset();
+		}
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Label> _createLua() {
+			return Create();
 		}
 	};
 }

@@ -29,11 +29,6 @@ namespace Components {
 	public:
 		EditBox() : m_scrollPosition(0.0f), m_maxLength(80) {}
 
-		// wrapper for luabind ctor
-		static boost::shared_ptr<EditBox> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<EditBox> Create(
 			bool centerAlign = false,
 			float width = 200.0f, float height = 25.0f,
@@ -168,6 +163,11 @@ namespace Components {
 
 		uint32 _eraseText(uint32 numChars);
 		uint32 _eraseText(uint32 erasePosition, uint32 numChars);
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<EditBox> _createLua() {
+			return Create();
+		}
 	};
 }
 }

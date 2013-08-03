@@ -27,10 +27,6 @@ namespace Components {
 	public:
 		TabControl() : m_activeTab(0) {}
 
-		static boost::shared_ptr<TabControl> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<TabControl> Create(float width = 100.0f,
 			float height = 100.0f, D3DXCOLOR dwColor = 0x90000000);
 
@@ -65,6 +61,11 @@ namespace Components {
 
 		bool _hasPage(const boost::shared_ptr<const IComponent> &pComponent) const {
 			return std::find(m_tabPages.cbegin(), m_tabPages.cend(), pComponent) != m_tabPages.cend();
+		}
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<TabControl> _createLua() {
+			return Create();
 		}
 	};
 }

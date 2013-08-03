@@ -29,10 +29,6 @@ namespace Components { class IComponent; }
 	public:
 		ComponentInterface() : Visible(true) {}
 
-		static boost::shared_ptr<ComponentInterface> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<ComponentInterface> Create();
 
 		virtual void OnRender(uint32 timePassed);
@@ -50,5 +46,10 @@ namespace Components { class IComponent; }
 		std::list<boost::shared_ptr<Components::IComponent>> m_components;
 
 		bool _hasControl(const boost::shared_ptr<Components::IComponent> &pControl) const;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<ComponentInterface> _createLua() {
+			return Create();
+		}
 	};
 }

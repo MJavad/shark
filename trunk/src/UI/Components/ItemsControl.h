@@ -26,10 +26,6 @@ namespace Components {
 	public:
 		ItemsControl() {}
 
-		static boost::shared_ptr<ItemsControl> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<ItemsControl> Create();
 
 		virtual void OnRender(uint32 timePassed);
@@ -49,6 +45,11 @@ namespace Components {
 
 	private:
 		std::list<boost::shared_ptr<IComponent>> m_children;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<ItemsControl> _createLua() {
+			return Create();
+		}
 	};
 }
 }

@@ -29,11 +29,6 @@ namespace Components {
 		Frame() : m_sizable(true),
 			m_activeFocus(false) {}
 
-		// wrapper for luabind ctor
-		static boost::shared_ptr<Frame> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<Frame> Create(
 			float width = 100.0f, float height = 100.0f);
 
@@ -75,6 +70,11 @@ namespace Components {
 	private:
 		bool m_sizable;
 		bool m_activeFocus;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Frame> _createLua() {
+			return Create();
+		}
 	};
 }
 }

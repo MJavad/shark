@@ -171,7 +171,7 @@ namespace Components {
 			luabind::class_<Button,
 							luabind::bases<Rectangle, IHoverable, IFocusable, IPushable>,
 							boost::shared_ptr<IComponent>>("Button")
-				.scope [ luabind::def("Create", &Button::CreateDefault) ]
+				.scope [ luabind::def("Create", &Button::_createLua) ]
 				.def("AddTexture", &Button::AddTexture)
 				.def("RemoveTexture", &Button::RemoveTexture)
 				.property("caption", &Button::GetCaption, &Button::SetCaption)

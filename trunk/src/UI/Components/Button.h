@@ -31,11 +31,6 @@ namespace Components {
 	public:
 		Button() : m_renderBackground(true) {}
 
-		// wrapper for luabind ctor
-		static boost::shared_ptr<Button> CreateDefault() {
-			return Create();
-		}
-
 		static boost::shared_ptr<Button> Create(
 			std::wstring textString = L"Default Button",
 			float width = 100.0f, float height = 20.0f,
@@ -115,6 +110,11 @@ namespace Components {
 		boost::shared_ptr<Label> m_caption;
 		boost::shared_ptr<Rectangle> m_border;
 		std::list<boost::shared_ptr<Texture>> m_textures;
+
+		// wrapper for luabind ctor
+		static boost::shared_ptr<Button> _createLua() {
+			return Create();
+		}
 	};
 }
 }
