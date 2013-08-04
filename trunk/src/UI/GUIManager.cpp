@@ -331,10 +331,12 @@ namespace UI {
 		return pFrame;
 	}
 
-	boost::shared_ptr<Components::Frame> GUIManager::CreateBasicFrame_UTF8(
+	boost::shared_ptr<Components::Frame> GUIManager::_createBasicLuaFrame(
 		const std::string &windowTitle, float width, float height, const D3DXCOLOR &color) const {
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-		return CreateBasicFrame(conv.from_bytes(windowTitle), width, height, color);
+		const auto pFrame = CreateBasicFrame(conv.from_bytes(windowTitle), width, height, color);
+		pFrame->RegisterAsScriptElement();
+		return pFrame;
 	}
 
 	void GUIManager::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
@@ -367,7 +369,7 @@ namespace UI {
 			luabind::class_<GUIManager>("GUIManager")
 				.scope [ luabind::def("GetInstance", &GUIManager::Instance) ]
 				.def("GetInterface", &GUIManager::GetInterface)
-				.def("CreateBasicFrame", &GUIManager::CreateBasicFrame_UTF8)
+				.def("CreateBasicFrame", &GUIManager::_createBasicLuaFrame)
 		];
 	}
 }

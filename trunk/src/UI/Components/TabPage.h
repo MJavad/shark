@@ -72,7 +72,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<TabPage> _createLua() {
 			const auto pTabPage = Create();
-			pTabPage->_registerAsScriptElement();
+			pTabPage->RegisterAsScriptElement();
 			return pTabPage;
 		}
 	};

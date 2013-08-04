@@ -27,7 +27,7 @@ void ID3DInterface::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 	];
 }
 
-void ID3DInterface::_registerAsScriptElement() {
+void ID3DInterface::RegisterAsScriptElement() {
 	const auto pScript = sLuaHandler.GetActiveScript();
 	if (pScript != nullptr)
 		return pScript->_registerInterface(getThis<ID3DInterface>());

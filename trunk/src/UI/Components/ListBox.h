@@ -95,7 +95,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<ListBox> _createLua() {
 			const auto pListBox = Create();
-			pListBox->_registerAsScriptElement();
+			pListBox->RegisterAsScriptElement();
 			return pListBox;
 		}
 	};

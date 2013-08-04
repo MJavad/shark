@@ -76,7 +76,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Frame> _createLua() {
 			const auto pFrame = Create();
-			pFrame->_registerAsScriptElement();
+			pFrame->RegisterAsScriptElement();
 			return pFrame;
 		}
 	};

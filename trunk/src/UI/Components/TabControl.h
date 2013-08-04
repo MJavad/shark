@@ -66,7 +66,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<TabControl> _createLua() {
 			const auto pTabControl = Create();
-			pTabControl->_registerAsScriptElement();
+			pTabControl->RegisterAsScriptElement();
 			return pTabControl;
 		}
 	};

@@ -149,7 +149,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Label> _createLua() {
 			const auto pLabel = Create();
-			pLabel->_registerAsScriptElement();
+			pLabel->RegisterAsScriptElement();
 			return pLabel;
 		}
 	};

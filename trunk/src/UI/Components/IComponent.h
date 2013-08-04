@@ -124,12 +124,12 @@ namespace Components {
 			return m_position;
 		}
 
+		void RegisterAsScriptElement();
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 	protected:
 		IComponent();
 		virtual void OnUpdate(uint32 timePassed);
-		void _registerAsScriptElement();
 
 	private:
 		bool m_isVisible;

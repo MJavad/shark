@@ -30,5 +30,5 @@ public:
 protected:
 	ID3DInterface() {}
 
-	void _registerAsScriptElement();
+	void RegisterAsScriptElement();
 };

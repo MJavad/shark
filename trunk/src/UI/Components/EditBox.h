@@ -170,7 +170,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<EditBox> _createLua() {
 			const auto pEditBox = Create();
-			pEditBox->_registerAsScriptElement();
+			pEditBox->RegisterAsScriptElement();
 			return pEditBox;
 		}
 	};

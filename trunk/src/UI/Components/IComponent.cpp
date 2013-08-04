@@ -211,7 +211,7 @@ namespace Components {
 		}
 	}
 
-	void IComponent::_registerAsScriptElement() {
+	void IComponent::RegisterAsScriptElement() {
 		const auto pScript = sLuaHandler.GetActiveScript();
 		if (pScript != nullptr)
 			return pScript->_registerComponent(getThis<IComponent>());

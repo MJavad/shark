@@ -49,7 +49,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<ItemsControl> _createLua() {
 			const auto pItemsControl = Create();
-			pItemsControl->_registerAsScriptElement();
+			pItemsControl->RegisterAsScriptElement();
 			return pItemsControl;
 		}
 	};

@@ -125,7 +125,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<ListBoxEntry> _createLua() {
 			const auto pListBoxEntry = Create();
-			pListBoxEntry->_registerAsScriptElement();
+			pListBoxEntry->RegisterAsScriptElement();
 			return pListBoxEntry;
 		}
 	};

@@ -117,7 +117,7 @@ namespace Components {
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Button> _createLua() {
 			const auto pButton = Create();
-			pButton->_registerAsScriptElement();
+			pButton->RegisterAsScriptElement();
 			return pButton;
 		}
 	};
