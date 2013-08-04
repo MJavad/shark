@@ -18,10 +18,19 @@
 
 #include "Misc/stdafx.h"
 #include "ID3DInterface.h"
+#include "LuaHandler.h"
 
 void ID3DInterface::BindToLua(const boost::shared_ptr<lua_State> &luaState) {
 	// proxy class
 	luabind::module(luaState.get()) [
 		luabind::class_<ID3DInterface, boost::shared_ptr<ID3DInterface>>("ID3DInterface")
 	];
+}
+
+void ID3DInterface::_registerAsScriptElement() {
+	const auto pScript = sLuaHandler.GetActiveScript();
+	if (pScript != nullptr)
+		return pScript->_registerInterface(getThis<ID3DInterface>());
+
+	throw std::runtime_error("Internal error: Could not register script element!");
 }

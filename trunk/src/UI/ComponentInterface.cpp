@@ -67,7 +67,7 @@ namespace UI {
 		if (pInterface != nullptr)
 			pInterface->m_components.remove(pControl);
 
-		pControl->SetLocalInterface(get_this<ComponentInterface>());
+		pControl->SetLocalInterface(getThis<ComponentInterface>());
 		m_components.push_front(std::move(pControl));
 		return true;
 	}

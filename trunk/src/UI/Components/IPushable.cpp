@@ -34,7 +34,7 @@ namespace Components {
 			if (!sWndProc.LastMessageHandled && IsVisible() &&
 				!IsPressed() && PtInBoundingRect(position)) {
 				const auto activeClick = GetActiveClick();
-				s_activeClick = get_this<IPushable>();
+				s_activeClick = getThis<IPushable>();
 
 				// tell old control that it's no longer pressed...
 				if (activeClick != nullptr)

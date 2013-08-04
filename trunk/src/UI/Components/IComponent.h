@@ -113,7 +113,7 @@ namespace Components {
 			LOG_DEBUG("%08X: TabPressed triggered.", this);
 			const auto pParent = GetUIParent();
 			if (pParent != nullptr)
-				return pParent->OnTabPressed(get_this<IComponent>());
+				return pParent->OnTabPressed(getThis<IComponent>());
 
 			return false;
 		}
@@ -129,6 +129,7 @@ namespace Components {
 	protected:
 		IComponent();
 		virtual void OnUpdate(uint32 timePassed);
+		void _registerAsScriptElement();
 
 	private:
 		bool m_isVisible;

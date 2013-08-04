@@ -82,12 +82,12 @@ namespace Components {
 
 		virtual bool _notifyHoverBeginEvent() {
 			OnHoverBeginLuaWrap();
-			return OnHoverBeginEvent(get_this<IHoverable>());
+			return OnHoverBeginEvent(getThis<IHoverable>());
 		}
 
 		virtual bool _notifyHoverEndEvent() {
 			OnHoverEndLuaWrap();
-			return OnHoverEndEvent(get_this<IHoverable>());
+			return OnHoverEndEvent(getThis<IHoverable>());
 		}
 
 	private:

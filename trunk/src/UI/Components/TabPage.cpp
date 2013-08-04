@@ -104,7 +104,7 @@ namespace Components {
 	}
 
 	bool TabPage::OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
-		const auto pThis = get_this<IComponent>();
+		const auto pThis = getThis<IComponent>();
 		const auto pContent = GetContent();
 		const auto pParent = boost::dynamic_pointer_cast<TabControl>(GetUIParent());
 
@@ -132,7 +132,7 @@ namespace Components {
 	void TabPage::_notifyPushEvent(Utils::Vector2 *pPosition) {
 		const auto pParent = boost::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
-			uint32 index = pParent->GetPageIndex(get_this<TabPage>());
+			uint32 index = pParent->GetPageIndex(getThis<TabPage>());
 			pParent->SetActiveTab(index);
 		}
 
@@ -142,7 +142,7 @@ namespace Components {
 	void TabPage::_notifyClickEvent(Utils::Vector2 *pPosition) {
 		const auto pParent = boost::dynamic_pointer_cast<TabControl>(GetUIParent());
 		if (pParent != nullptr) {
-			uint32 index = pParent->GetPageIndex(get_this<TabPage>());
+			uint32 index = pParent->GetPageIndex(getThis<TabPage>());
 			pParent->SetActiveTab(index);
 		}
 

@@ -54,7 +54,7 @@ namespace Components {
 		virtual void SetContent(boost::shared_ptr<Label> pContent) {
 			m_content = std::move(pContent);
 			if (m_content != nullptr)
-				m_content->SetUIParent(get_this<IComponent>());
+				m_content->SetUIParent(getThis<IComponent>());
 		}
 
 		virtual boost::shared_ptr<Rectangle> GetBorder() const {
@@ -64,7 +64,7 @@ namespace Components {
 		virtual void SetBorder(boost::shared_ptr<Rectangle> pBorder) {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr)
-				m_border->SetUIParent(get_this<IComponent>());
+				m_border->SetUIParent(getThis<IComponent>());
 		}
 
 		std::wstring GetCurrentText() const;
@@ -87,7 +87,7 @@ namespace Components {
 
 		virtual void _notifyContentChangedEvent() {
 			OnContentChangedLuaWrap();
-			OnContentChangedEvent(get_this<EditBox>());
+			OnContentChangedEvent(getThis<EditBox>());
 		}
 
 	private:
@@ -169,7 +169,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<EditBox> _createLua() {
-			return Create();
+			const auto pEditBox = Create();
+			pEditBox->_registerAsScriptElement();
+			return pEditBox;
 		}
 	};
 }

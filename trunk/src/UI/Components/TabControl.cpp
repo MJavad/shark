@@ -137,12 +137,12 @@ namespace Components {
 			pContent->SetVisibility(false);
 		}
 
-		pTabPage->SetUIParent(get_this<IComponent>());
+		pTabPage->SetUIParent(getThis<IComponent>());
 		m_tabPages.push_back(std::move(pTabPage));
 	}
 
 	void TabControl::RemoveTabPage(const boost::shared_ptr<TabPage> &pTabPage) {
-		const auto pThis = get_this<IComponent>();
+		const auto pThis = getThis<IComponent>();
 		if (pTabPage->GetUIParent() != pThis)
 			return;
 
@@ -184,7 +184,7 @@ namespace Components {
 	}
 
 	bool TabControl::OnTabPressed(const boost::shared_ptr<IComponent> &pComponent) {
-		const auto pThis = get_this<IComponent>();
+		const auto pThis = getThis<IComponent>();
 		if (pComponent == pThis)
 			return false;
 

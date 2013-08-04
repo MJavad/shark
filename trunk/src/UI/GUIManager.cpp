@@ -133,6 +133,10 @@ namespace UI {
 			(const boost::shared_ptr<IPushable>&, Utils::Vector2*) {
 				if (gScript == nullptr)
 					gScript = sLuaHandler.LoadFromFile(L"test.lua");
+				else {
+					sLuaHandler.InvalidateScript(gScript);
+					gScript.reset();
+				}
 			};
 
 		testFrame1->PushChild(tabControl);

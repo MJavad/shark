@@ -50,7 +50,7 @@ namespace Components {
 		}
 
 		void StartDrag(const Utils::Vector2 &dragVector) {
-			s_activeDrag = get_this<IDraggable>();
+			s_activeDrag = getThis<IDraggable>();
 			s_dragVector = dragVector;
 		}
 
@@ -71,17 +71,17 @@ namespace Components {
 
 		virtual bool _notifyDragBeginEvent(Utils::Vector2 *pPosition) {
 			OnDragBeginLuaWrap();
-			return OnDragBeginEvent(get_this<IDraggable>(), pPosition);
+			return OnDragBeginEvent(getThis<IDraggable>(), pPosition);
 		}
 
 		virtual bool _notifyDragEndEvent(Utils::Vector2 *pPosition) {
 			OnDragEndLuaWrap();
-			return OnDragEndEvent(get_this<IDraggable>(), pPosition);
+			return OnDragEndEvent(getThis<IDraggable>(), pPosition);
 		}
 
 		virtual bool _notifyDragMoveEvent(Utils::Vector2 *pPosition) {
 			OnDragMoveLuaWrap();
-			return OnDragMoveEvent(get_this<IDraggable>(), pPosition);
+			return OnDragMoveEvent(getThis<IDraggable>(), pPosition);
 		}
 
 	private:

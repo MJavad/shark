@@ -66,7 +66,7 @@ namespace Components {
 		pInterface->ClipStack.Push(GetFullRect());
 		ItemsControl::OnMessageReceived(uMsg, wParam, lParam);
 		pInterface->ClipStack.Pop();
-		const auto pThis = get_this<Frame>();
+		const auto pThis = getThis<Frame>();
 
 		IDraggable::OnMessageReceived(uMsg, wParam, lParam);
 

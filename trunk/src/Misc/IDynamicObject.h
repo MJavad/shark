@@ -26,22 +26,22 @@ namespace Utils {
 		IDynamicObject() {}
 
 		template <typename T>
-		boost::shared_ptr<T> get_this() {
+		boost::shared_ptr<T> getThis() {
 			return boost::dynamic_pointer_cast<T>(shared_from_this());
 		}
 
 		template <typename T>
-		boost::shared_ptr<const T> get_this() const {
+		boost::shared_ptr<const T> getThis() const {
 			return boost::dynamic_pointer_cast<const T>(shared_from_this());
 		}
 
 		template <>
-		boost::shared_ptr<IDynamicObject> get_this() {
+		boost::shared_ptr<IDynamicObject> getThis() {
 			return shared_from_this();
 		}
 
 		template <>
-		boost::shared_ptr<const IDynamicObject> get_this() const {
+		boost::shared_ptr<const IDynamicObject> getThis() const {
 			return shared_from_this();
 		}
 

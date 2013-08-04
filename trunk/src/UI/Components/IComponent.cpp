@@ -20,6 +20,7 @@
 #include "IComponent.h"
 #include "Base/D3DManager.h"
 #include "Base/Engine.h"
+#include "Base/LuaHandler.h"
 
 namespace UI {
 namespace Components {
@@ -73,7 +74,7 @@ namespace Components {
 
 	std::list<boost::shared_ptr<IComponent>> IComponent::GetUIHierarchy() {
 		std::list<boost::shared_ptr<IComponent>> lstResult;
-		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent())
+		for (auto pParent = getThis<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent())
 			lstResult.push_front(pParent);
 
 		return lstResult;
@@ -81,14 +82,14 @@ namespace Components {
 
 	std::list<boost::shared_ptr<const IComponent>> IComponent::GetUIHierarchy() const {
 		std::list<boost::shared_ptr<const IComponent>> lstResult;
-		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent())
+		for (auto pParent = getThis<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent())
 			lstResult.push_front(pParent);
 
 		return lstResult;
 	}
 
 	boost::shared_ptr<ComponentInterface> IComponent::GetGlobalInterface() const {
-		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
+		for (auto pParent = getThis<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			auto pInterface = pParent->GetLocalInterface();
 			if (pInterface != nullptr)
 				return pInterface;
@@ -110,7 +111,7 @@ namespace Components {
 		if (pInterface == nullptr || !pInterface->Visible)
 			return false;
 
-		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
+		for (auto pParent = getThis<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			if (!pParent->GetVisibility())
 				return false;
 		}
@@ -129,7 +130,7 @@ namespace Components {
 
 	D3DXCOLOR IComponent::CalculateAbsoluteColor(const D3DXCOLOR &color) const {
 		D3DXCOLOR result(color);
-		for (auto pParent = get_this<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
+		for (auto pParent = getThis<IComponent>(); pParent != nullptr; pParent = pParent->GetUIParent()) {
 			const auto colorMod = pParent->GetColorMod();
 			result.a *= colorMod.a;
 			result.r *= colorMod.r;
@@ -208,6 +209,14 @@ namespace Components {
 					return TIMER_STOP_EXECUTION;
 				});
 		}
+	}
+
+	void IComponent::_registerAsScriptElement() {
+		const auto pScript = sLuaHandler.GetActiveScript();
+		if (pScript != nullptr)
+			return pScript->_registerComponent(getThis<IComponent>());
+
+		throw std::runtime_error("Internal error: Could not register script element!");
 	}
 
 	void IComponent::BindToLua(const boost::shared_ptr<lua_State> &luaState) {

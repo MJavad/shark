@@ -47,7 +47,7 @@ namespace Components {
 		void SetContent(boost::shared_ptr<ItemsControl> pContent) {
 			m_content = std::move(pContent);
 			if (m_content != nullptr)
-				m_content->SetUIParent(get_this<IComponent>());
+				m_content->SetUIParent(getThis<IComponent>());
 		}
 
 		static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
@@ -71,7 +71,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<TabPage> _createLua() {
-			return Create();
+			const auto pTabPage = Create();
+			pTabPage->_registerAsScriptElement();
+			return pTabPage;
 		}
 	};
 }

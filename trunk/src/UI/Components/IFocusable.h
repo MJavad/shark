@@ -39,7 +39,7 @@ namespace Components {
 			if (activeFocus != nullptr)
 				activeFocus->_notifyFocusEndEvent();
 
-			s_activeFocus = get_this<IFocusable>();
+			s_activeFocus = getThis<IFocusable>();
 			return !_notifyFocusBeginEvent();
 		}
 
@@ -91,12 +91,12 @@ namespace Components {
 
 		virtual bool _notifyFocusBeginEvent() {
 			OnFocusBeginLuaWrap();
-			return OnFocusBeginEvent(get_this<IFocusable>());
+			return OnFocusBeginEvent(getThis<IFocusable>());
 		}
 
 		virtual void _notifyFocusEndEvent() {
 			OnFocusEndLuaWrap();
-			OnFocusEndEvent(get_this<IFocusable>());
+			OnFocusEndEvent(getThis<IFocusable>());
 		}
 
 	private:

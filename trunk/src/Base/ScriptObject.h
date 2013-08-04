@@ -23,6 +23,9 @@
 class ScriptObject : public virtual Utils::IDynamicObject {
 public:
 	ScriptObject();
+	~ScriptObject() {
+		DestroyLuaReferences();
+	}
 
 	const boost::shared_ptr<lua_State>& GetLuaState() const {
 		return m_luaState;
@@ -36,12 +39,25 @@ public:
 		m_scriptName = std::move(name);
 	}
 
-	void RemoveUIElements();
+	void DestroyLuaReferences();
 
 private:
 	std::wstring m_scriptName;
 	boost::shared_ptr<lua_State> m_luaState;
 
+	// we need to hold a list of stuff created by our lua script
+	// so if it unloads we don't have a leak :)
 	std::list<boost::weak_ptr<ID3DInterface>> m_scriptInterfaces;
 	std::list<boost::weak_ptr<UI::Components::IComponent>> m_scriptComponents;
+
+	friend class ID3DInterface;
+	friend class UI::Components::IComponent;
+
+	void _registerInterface(const boost::shared_ptr<ID3DInterface> &pInterface) {
+		m_scriptInterfaces.push_back(pInterface);
+	}
+
+	void _registerComponent(const boost::shared_ptr<UI::Components::IComponent> &pComponent) {
+		m_scriptComponents.push_back(pComponent);
+	}
 };

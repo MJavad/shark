@@ -99,7 +99,7 @@ namespace Components {
 		virtual void SetCaption(boost::shared_ptr<Label> pCaption) {
 			m_caption = std::move(pCaption);
 			if (m_caption != nullptr)
-				m_caption->SetUIParent(get_this<IComponent>());
+				m_caption->SetUIParent(getThis<IComponent>());
 		}
 
 		virtual boost::shared_ptr<Rectangle> GetBorder() const {
@@ -110,7 +110,7 @@ namespace Components {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr) {
 				m_border->SetPosition(Utils::Vector2(-1.0f, -1.0f));
-				m_border->SetUIParent(get_this<IComponent>());
+				m_border->SetUIParent(getThis<IComponent>());
 			}
 		}
 
@@ -124,7 +124,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<ListBoxEntry> _createLua() {
-			return Create();
+			const auto pListBoxEntry = Create();
+			pListBoxEntry->_registerAsScriptElement();
+			return pListBoxEntry;
 		}
 	};
 }

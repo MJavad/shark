@@ -59,7 +59,7 @@ namespace Components {
 
 		virtual void SetPosition(const Utils::Vector2 &position) {
 			ItemsControl::SetPosition(position);
-			OnSetPositionEvent(get_this<Frame>(), position);
+			OnSetPositionEvent(getThis<Frame>(), position);
 		}
 
 		// When it handled the most recent event
@@ -75,7 +75,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Frame> _createLua() {
-			return Create();
+			const auto pFrame = Create();
+			pFrame->_registerAsScriptElement();
+			return pFrame;
 		}
 	};
 }

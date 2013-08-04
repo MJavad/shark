@@ -68,7 +68,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Texture> _createLua() {
-			return Create();
+			const auto pTexture = Create();
+			pTexture->_registerAsScriptElement();
+			return pTexture;
 		}
 	};
 }

@@ -29,4 +29,6 @@ public:
 
 protected:
 	ID3DInterface() {}
+
+	void _registerAsScriptElement();
 };

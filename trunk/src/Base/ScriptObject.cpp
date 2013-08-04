@@ -26,7 +26,7 @@ ScriptObject::ScriptObject() : m_scriptName(L"<local>") {
 	luabind::open(m_luaState.get());
 }
 
-void ScriptObject::RemoveUIElements() {
+void ScriptObject::DestroyLuaReferences() {
 	for (const auto& scriptInterface: m_scriptInterfaces) {
 		if (!scriptInterface.expired())
 			sD3DMgr.PopInterface(scriptInterface.lock());

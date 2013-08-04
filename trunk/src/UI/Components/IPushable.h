@@ -53,22 +53,22 @@ namespace Components {
 
 		virtual void _notifyClickEvent(Utils::Vector2 *pPosition) {
 			OnClickLuaWrap();
-			OnClickEvent(get_this<IPushable>(), pPosition);
+			OnClickEvent(getThis<IPushable>(), pPosition);
 		}
 
 		virtual void _notifyDblClickEvent(Utils::Vector2 *pPosition) {
 			OnDblClickLuaWrap();
-			OnDblClickEvent(get_this<IPushable>(), pPosition);
+			OnDblClickEvent(getThis<IPushable>(), pPosition);
 		}
 
 		virtual void _notifyPushEvent(Utils::Vector2 *pPosition) {
 			OnPushLuaWrap();
-			OnPushEvent(get_this<IPushable>(), pPosition);
+			OnPushEvent(getThis<IPushable>(), pPosition);
 		}
 
 		virtual void _notifyReleaseEvent(Utils::Vector2 *pPosition) {
 			OnReleaseLuaWrap();
-			OnReleaseEvent(get_this<IPushable>(), pPosition);
+			OnReleaseEvent(getThis<IPushable>(), pPosition);
 		}
 
 	private:

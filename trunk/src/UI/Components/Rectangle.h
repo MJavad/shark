@@ -146,7 +146,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Rectangle> _createLua() {
-			return Create();
+			const auto pRectangle = Create();
+			pRectangle->_registerAsScriptElement();
+			return pRectangle;
 		}
 	};
 }

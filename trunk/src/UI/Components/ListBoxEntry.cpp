@@ -74,7 +74,7 @@ namespace Components {
 		case WM_MOUSEMOVE:
 		case WM_LBUTTONDOWN:
 			if (!GetSelected() && PtInBoundingRect(position))
-				pParent->SelectItem(get_this<ListBoxEntry>());
+				pParent->SelectItem(getThis<ListBoxEntry>());
 			break;
 		};
 	}

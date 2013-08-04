@@ -56,7 +56,7 @@ namespace Components {
 		virtual void SetCaption(boost::shared_ptr<Label> pCaption) {
 			m_caption = std::move(pCaption);
 			if (m_caption != nullptr)
-				m_caption->SetUIParent(get_this<IComponent>());
+				m_caption->SetUIParent(getThis<IComponent>());
 		}
 
 		virtual boost::shared_ptr<Rectangle> GetBorder() const {
@@ -66,7 +66,7 @@ namespace Components {
 		virtual void SetBorder(boost::shared_ptr<Rectangle> pBorder) {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr)
-				m_border->SetUIParent(get_this<IComponent>());
+				m_border->SetUIParent(getThis<IComponent>());
 		}
 
 		virtual std::list<boost::shared_ptr<Texture>> GetTextures() const {
@@ -74,7 +74,7 @@ namespace Components {
 		}
 
 		virtual void AddTexture(boost::shared_ptr<Texture> pTexture) {
-			pTexture->SetUIParent(get_this<IComponent>());
+			pTexture->SetUIParent(getThis<IComponent>());
 			m_textures.push_back(std::move(pTexture));
 		}
 
@@ -116,7 +116,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<Button> _createLua() {
-			return Create();
+			const auto pButton = Create();
+			pButton->_registerAsScriptElement();
+			return pButton;
 		}
 	};
 }

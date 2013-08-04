@@ -49,7 +49,9 @@ namespace Components { class IComponent; }
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<ComponentInterface> _createLua() {
-			return Create();
+			const auto pInterface = Create();
+			pInterface->_registerAsScriptElement();
+			return pInterface;
 		}
 	};
 }

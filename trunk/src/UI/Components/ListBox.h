@@ -42,7 +42,7 @@ namespace Components {
 		
 		virtual void AddItem(boost::shared_ptr<ListBoxEntry> pItem) {
 			pItem->SetWidth(GetWidth());
-			pItem->SetUIParent(get_this<IComponent>());
+			pItem->SetUIParent(getThis<IComponent>());
 			m_entries.push_back(std::move(pItem));
 		}
 
@@ -81,7 +81,7 @@ namespace Components {
 			m_border = std::move(pBorder);
 			if (m_border != nullptr) {
 				m_border->SetPosition(Utils::Vector2(-1.0f, -1.0f));
-				m_border->SetUIParent(get_this<IComponent>());
+				m_border->SetUIParent(getThis<IComponent>());
 			}
 		}
 
@@ -94,7 +94,9 @@ namespace Components {
 
 		// wrapper for luabind ctor
 		static boost::shared_ptr<ListBox> _createLua() {
-			return Create();
+			const auto pListBox = Create();
+			pListBox->_registerAsScriptElement();
+			return pListBox;
 		}
 	};
 }

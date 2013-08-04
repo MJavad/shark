@@ -48,7 +48,7 @@ namespace Components {
 		}
 
 		void StartSizing(const Utils::Vector2 &vSizeVector) {
-			s_activeSizer = get_this<ISizable>();
+			s_activeSizer = getThis<ISizable>();
 			s_sizeVector = vSizeVector;
 		}
 
@@ -114,17 +114,17 @@ namespace Components {
 
 		virtual bool _notifyResizeBeginEvent(Utils::Vector2 *pPosition) {
 			OnResizeBeginLuaWrap();
-			return OnResizeBeginEvent(get_this<ISizable>(), pPosition);
+			return OnResizeBeginEvent(getThis<ISizable>(), pPosition);
 		}
 
 		virtual bool _notifyResizeEndEvent(Utils::Vector2 *pPosition) {
 			OnResizeEndLuaWrap();
-			return OnResizeEndEvent(get_this<ISizable>(), pPosition);
+			return OnResizeEndEvent(getThis<ISizable>(), pPosition);
 		}
 
 		virtual bool _notifyResizeEvent(float width, float height) {
 			OnResizeLuaWrap();
-			return OnResizeEvent(get_this<ISizable>(), width, height);
+			return OnResizeEvent(getThis<ISizable>(), width, height);
 		}
 
 	private:
