@@ -25,10 +25,9 @@ public:
 	virtual void OnRender(uint32 timePassed) = 0;
 	virtual void OnMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
+	void RegisterAsScriptElement();
 	static void BindToLua(const boost::shared_ptr<lua_State> &luaState);
 
 protected:
 	ID3DInterface() {}
-
-	void RegisterAsScriptElement();
 };
