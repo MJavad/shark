@@ -29,10 +29,7 @@ public:
 	boost::shared_ptr<ScriptObject> CreateNewObject() const;
 	boost::shared_ptr<ScriptObject> LoadFromFile(const std::wstring &fileName);
 	boost::shared_ptr<ScriptObject> GetObjectByInterpreter(lua_State *L) const;
-
-	void InvalidateScript(const boost::shared_ptr<ScriptObject> &scriptObject) {
-		m_activeObjects.remove(scriptObject);
-	}
+	void InvalidateScript(const boost::shared_ptr<ScriptObject> &pScript);
 
 	boost::shared_ptr<ScriptObject> GetActiveScript() const {
 		return m_activeScript.lock();

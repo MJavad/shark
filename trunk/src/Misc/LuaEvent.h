@@ -109,10 +109,10 @@ namespace Utils
 			luabind::module(luaState.get()) [
 				luabind::class_<SLuaEventDelegate<fnconv_t>>(),
 				luabind::class_<LuaEvent<fnconv_t>>()
-					.def("AddCallback", &LuaEvent<fnconv_t>::connect_lua)
-					.def("RemoveCallback", &LuaEvent<fnconv_t>::remove_deleg)
-					.def("ClearAll", &LuaEvent<fnconv_t>::clear)
-					.property("numCallbacks", &LuaEvent<fnconv_t>::size)
+					.def("connect", &LuaEvent<fnconv_t>::connect_lua)
+					.def("remove", &LuaEvent<fnconv_t>::remove_deleg)
+					.def("clear", &LuaEvent<fnconv_t>::clear)
+					.property("size", &LuaEvent<fnconv_t>::size)
 			];
 		}
 
@@ -223,10 +223,10 @@ namespace Utils
 			luabind::module(luaState.get()) [
 				luabind::class_<SLuaEventDelegate<fnconv_t>>(),
 				luabind::class_<LuaEvent<fnconv_t>>()
-					.def("AddCallback", &LuaEvent<fnconv_t>::connect_lua)
-					.def("RemoveCallback", &LuaEvent<fnconv_t>::remove_deleg)
-					.def("ClearAll", &LuaEvent<fnconv_t>::clear)
-					.property("numCallbacks", &LuaEvent<fnconv_t>::size)
+					.def("connect", &LuaEvent<fnconv_t>::connect_lua)
+					.def("remove", &LuaEvent<fnconv_t>::remove_deleg)
+					.def("clear", &LuaEvent<fnconv_t>::clear)
+					.property("size", &LuaEvent<fnconv_t>::size)
 			];
 		}
 
@@ -336,10 +336,10 @@ namespace Utils
 			luabind::module(luaState.get()) [
 				luabind::class_<SLuaEventDelegate<fnconv_t>>(),
 				luabind::class_<LuaEvent<fnconv_t>>()
-					.def("AddCallback", &LuaEvent<fnconv_t>::connect_lua)
-					.def("RemoveCallback", &LuaEvent<fnconv_t>::remove_deleg)
-					.def("ClearAll", &LuaEvent<fnconv_t>::clear)
-					.property("numCallbacks", &LuaEvent<fnconv_t>::size)
+					.def("connect", &LuaEvent<fnconv_t>::connect_lua)
+					.def("remove", &LuaEvent<fnconv_t>::remove_deleg)
+					.def("clear", &LuaEvent<fnconv_t>::clear)
+					.property("size", &LuaEvent<fnconv_t>::size)
 			];
 		}
 
@@ -449,10 +449,10 @@ namespace Utils
 			luabind::module(luaState.get()) [
 				luabind::class_<SLuaEventDelegate<fnconv_t>>(),
 				luabind::class_<LuaEvent<fnconv_t>>()
-					.def("AddCallback", &LuaEvent<fnconv_t>::connect_lua)
-					.def("RemoveCallback", &LuaEvent<fnconv_t>::remove_deleg)
-					.def("ClearAll", &LuaEvent<fnconv_t>::clear)
-					.property("numCallbacks", &LuaEvent<fnconv_t>::size)
+					.def("connect", &LuaEvent<fnconv_t>::connect_lua)
+					.def("remove", &LuaEvent<fnconv_t>::remove_deleg)
+					.def("clear", &LuaEvent<fnconv_t>::clear)
+					.property("size", &LuaEvent<fnconv_t>::size)
 			];
 		}
 
@@ -562,10 +562,10 @@ namespace Utils
 			luabind::module(luaState.get()) [
 				luabind::class_<SLuaEventDelegate<fnconv_t>>(),
 				luabind::class_<LuaEvent<fnconv_t>>()
-					.def("AddCallback", &LuaEvent<fnconv_t>::connect_lua)
-					.def("RemoveCallback", &LuaEvent<fnconv_t>::remove_deleg)
-					.def("ClearAll", &LuaEvent<fnconv_t>::clear)
-					.property("numCallbacks", &LuaEvent<fnconv_t>::size)
+					.def("connect", &LuaEvent<fnconv_t>::connect_lua)
+					.def("remove", &LuaEvent<fnconv_t>::remove_deleg)
+					.def("clear", &LuaEvent<fnconv_t>::clear)
+					.property("size", &LuaEvent<fnconv_t>::size)
 			];
 		}
 
@@ -675,10 +675,10 @@ namespace Utils
 			luabind::module(luaState.get()) [
 				luabind::class_<SLuaEventDelegate<fnconv_t>>(),
 				luabind::class_<LuaEvent<fnconv_t>>()
-					.def("AddCallback", &LuaEvent<fnconv_t>::connect_lua)
-					.def("RemoveCallback", &LuaEvent<fnconv_t>::remove_deleg)
-					.def("ClearAll", &LuaEvent<fnconv_t>::clear)
-					.property("numCallbacks", &LuaEvent<fnconv_t>::size)
+					.def("connect", &LuaEvent<fnconv_t>::connect_lua)
+					.def("remove", &LuaEvent<fnconv_t>::remove_deleg)
+					.def("clear", &LuaEvent<fnconv_t>::clear)
+					.property("size", &LuaEvent<fnconv_t>::size)
 			];
 		}
 

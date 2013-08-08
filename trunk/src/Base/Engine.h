@@ -53,6 +53,7 @@ public:
 
 	// Events and Timers...
 	Utils::TimerDispatcher PulseTimer;
+	Utils::Event<void (uint32, uint32)> NextPulse;
 	Utils::Event<void (uint32, uint32)> OnPulseEvent;
 
 protected:

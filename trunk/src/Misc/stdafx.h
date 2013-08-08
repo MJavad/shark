@@ -138,3 +138,13 @@ struct float3 {
 struct float4 {
 	float _1, _2, _3, _4;
 };
+
+template <typename T, typename U>
+T& brutal_cast(U& u) {
+	return *reinterpret_cast<T*>(&u);
+}
+
+template <typename T, typename U>
+const T& brutal_cast(const U& u) {
+	return *reinterpret_cast<const T*>(&u);
+}

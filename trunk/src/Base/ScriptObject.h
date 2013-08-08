@@ -23,9 +23,6 @@
 class ScriptObject : public virtual Utils::IDynamicObject {
 public:
 	ScriptObject();
-	~ScriptObject() {
-		DestroyLuaReferences();
-	}
 
 	const boost::shared_ptr<lua_State>& GetLuaState() const {
 		return m_luaState;

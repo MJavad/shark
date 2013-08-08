@@ -18,6 +18,7 @@
 
 #include "Misc/stdafx.h"
 #include "LuaHandler.h"
+#include "Engine.h"
 #include "Misc/LuaEvent.h"
 
 #include "UI/GUIManager.h"
@@ -88,8 +89,8 @@ bool LuaHandler::ScriptLoaded(std::wstring fileName) const {
 	std::transform(fileName.begin(), fileName.end(),
 				   fileName.begin(), std::tolower);
 
-	for (const auto& scriptObject: m_activeObjects) {
-		std::wstring currentFile = scriptObject->GetScriptName();
+	for (const auto& pScript: m_activeObjects) {
+		std::wstring currentFile = pScript->GetScriptName();
 		std::transform(currentFile.begin(), currentFile.end(),
 					   currentFile.begin(), std::tolower);
 
@@ -104,21 +105,28 @@ boost::shared_ptr<ScriptObject> LuaHandler::LoadFromFile(const std::wstring &fil
 	if (ScriptLoaded(fileName))
 		throw std::runtime_error("The script you tried to load is already loaded!");
 
-	const auto scriptObject = CreateNewObject();
-	const auto& luaState = scriptObject->GetLuaState();
-	scriptObject->SetScriptName(fileName);
-	m_activeScript = scriptObject;
+	const auto pScript = CreateNewObject();
+	const auto& luaState = pScript->GetLuaState();
+	pScript->SetScriptName(fileName);
+	m_activeScript = pScript;
 
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
 	std::string fileName_utf8 = conv.to_bytes(sFileMgr.GetScriptsDirectory() + L'\\' + fileName);
 
 	if (!luaL_dofile(luaState.get(), fileName_utf8.c_str()))
-		ExecuteFunction<void>(scriptObject, "Load");
+		ExecuteFunction<void>(pScript, "Load");
 	else
 		throw std::runtime_error(PopError(luaState.get()).c_str());
 
-	m_activeObjects.push_back(scriptObject);
-	return scriptObject;
+	m_activeObjects.push_back(pScript);
+	return pScript;
+}
+
+void LuaHandler::InvalidateScript(const boost::shared_ptr<ScriptObject> &pScript) {
+	sEngine.NextPulse += [this, pScript] (uint32, uint32) {
+		pScript->DestroyLuaReferences();
+		m_activeObjects.remove(pScript);
+	};
 }
 
 boost::shared_ptr<ScriptObject> LuaHandler::GetObjectByInterpreter(lua_State *L) const {

@@ -34,6 +34,9 @@ void Engine::OnPulse() {
 
 	OnPulseEvent(time_now, time_diff);
 	PulseTimer.DispatchTimers(time_now);
+
+	NextPulse(time_now, time_diff);
+	NextPulse.clear();
 }
 
 void Engine::InitializeEnvironment() {

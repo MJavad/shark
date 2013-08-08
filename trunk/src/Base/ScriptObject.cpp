@@ -21,7 +21,13 @@
 #include "D3DManager.h"
 
 ScriptObject::ScriptObject() : m_scriptName(L"<local>") {
-	m_luaState = boost::shared_ptr<lua_State>(luaL_newstate(), lua_close);
+	m_luaState = boost::shared_ptr<lua_State>(luaL_newstate(), [] (lua_State *L) {
+		if (luabind::is_state_unreferenced(L))
+			lua_close(L);
+		else
+			luabind::set_state_unreferenced_callback(L, &lua_close);
+	});
+
 	luaL_openlibs(m_luaState.get());
 	luabind::open(m_luaState.get());
 }
